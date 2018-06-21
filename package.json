@@ -1,6 +1,12 @@
 {
-  "name": "",
-  "version": "",
+  "name": "tracking-app",
+  "version": "1.0.0",
+  "scripts":{
+    "start" :"node server.js"
+  },
+  "engines":{
+     "node" : "8.11.1"
+  },
   "dependencies": {
     "@easypost/api": "^3.4.0",
     "aftership": "^5.4.4",
