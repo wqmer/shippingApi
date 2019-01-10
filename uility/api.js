@@ -39,7 +39,6 @@ var getDhlTracking = ( id, retry = 3) => {
                    }
          })
     })                      
-
 }
 
 
@@ -47,7 +46,7 @@ var detectCarrier = ( id ) => {
        let body = {
                  'tracking': {
                      'tracking_number': id,
-                     'slug': ['dhl', 'usps']
+                     'slug': ['dhl', 'usps' ,'ups' ,'fedex' ,'sf-express']
                  }
              };
 
