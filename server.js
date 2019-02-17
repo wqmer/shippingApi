@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const myapi = require('./public/app')
 const uility = require('./uility/api')
+const parseString = require('xml2js').parseString;
 
 var app = express();
 var port = process.env.PORT || 5000 ;
@@ -12,7 +13,6 @@ app.get('/', (req, res) => {
     let hello = 'Hello, Server is running'
     res.send(hello),(e) => res.sendStatus(400) ; 
 })
-
 
 // app.get('/tracking/:id', (req, res) => {
 //     let num = req.params.id
@@ -26,6 +26,20 @@ app.get('/trackingAndShow/:id', (req, res) => {
         res.redirect(`https://www.kuaidi100.com/chaxun?com=${result}&nu=${num}`)
     })
     .catch(err => console.log(err))
+})
+
+app.post('/zoneLookUp', (req, res) => {
+    let from = req.body.from ;
+    let to = req.body.to ;
+    uility.getUspsZone(from, to).then(result => { 
+           parseString(result, (err, result) => { 
+               let error = result.RateV4Response.Package[0].Error
+               let zoneCode = result.RateV4Response.Package[0].Zone
+               error?res.send( { success:false, description : error[0].Description[0]}):res.send( { success:true , zone : zoneCode[0]}) 
+            })    
+    }).catch(err => 
+        res.send({sucess:false,description:'server is down'})
+    )
 })
 
 

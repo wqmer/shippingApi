@@ -6,6 +6,49 @@ const apiKey ="29833628d495d7a5";
 
 
 
+var getUspsZone = (ZipCodeFrom, ZipCodeTo) => {
+    return new Promise ((resolve , reject) => {
+           request({
+               url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="849XUEHU5746">
+               <Revision>2</Revision>
+               <Package ID="1ST">
+               <Service>PRIORITY</Service>
+               <ZipOrigination>${ZipCodeFrom}</ZipOrigination>
+               <ZipDestination>${ZipCodeTo}</ZipDestination>
+               <Pounds>0</Pounds>
+               <Ounces>3.5</Ounces>
+               <Container>VARIABLE</Container>
+               <Size>REGULAR</Size>
+               <Machinable>true</Machinable>
+               <DropOffTime>08:00</DropOffTime>
+               <ShipDate>02/17/2019</ShipDate>
+               </Package>
+               </RateV4Request>`
+            }, (error, response, body) => {
+         if (error) {
+             reject('Unable to connect server');
+         } else if (response.statusCode === 400) {
+             reject('Unable to fetch data.');
+         } else if (response.statusCode === 200) {
+                //response.body.state == undefined && retry > 0 ? resolve(getUspsTracking(id , retry - 1) ) : resolve(response.body.state);
+                resolve(response.body);
+               }
+ })
+
+
+
+
+
+
+
+
+
+
+    })
+}
+
+
+
 var getUspsTracking = (id, retry = 3 ) => { 
     return new Promise (( resolve ,reject ) => {
            request({
@@ -97,4 +140,4 @@ var testSelf = (id) => {
 
 
 
-module.exports ={getUspsTracking,getDhlTracking,detectCarrier,testSelf}
+module.exports ={getUspsZone,getUspsTracking,getDhlTracking,detectCarrier,testSelf}

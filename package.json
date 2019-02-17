@@ -1,11 +1,11 @@
 {
   "name": "tracking-app",
   "version": "1.0.0",
-  "scripts":{
-    "start" :"node server.js"
+  "scripts": {
+    "start": "node server.js"
   },
-  "engines":{
-     "node" : "8.11.1"
+  "engines": {
+    "node": "8.11.1"
   },
   "dependencies": {
     "@easypost/api": "^3.4.0",
@@ -14,11 +14,13 @@
     "delivery-tracker": "^1.7.2",
     "express": "^4.16.3",
     "http": "0.0.0",
+    "nodemon": "^1.18.10",
     "querystring": "^0.2.0",
     "request": "^2.87.0",
     "shipit": "^1.0.2",
     "shipmethod": "^2.1.2",
     "shippo": "^1.3.1",
+    "xml2js": "^0.4.19",
     "xto": "^1.1.7"
   }
 }
