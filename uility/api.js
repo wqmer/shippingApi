@@ -3,7 +3,7 @@ const xto = require("xto");
 const request = require('request');
 const Aftership = require('aftership')('23a9737b-d9d7-45c1-851e-f85cb58bbcbc');
 const apiKey ="29833628d495d7a5";
-
+const moment = require('moment')
 
 
 var getUspsZone = (ZipCodeFrom, ZipCodeTo) => {
@@ -21,7 +21,7 @@ var getUspsZone = (ZipCodeFrom, ZipCodeTo) => {
                <Size>REGULAR</Size>
                <Machinable>true</Machinable>
                <DropOffTime>08:00</DropOffTime>
-               <ShipDate>02/17/2019</ShipDate>
+               <ShipDate>${moment().format('L')}</ShipDate>
                </Package>
                </RateV4Request>`
             }, (error, response, body) => {
