@@ -1,4 +1,4 @@
-const api = require('../uility/api')
+const api = require('../service/api')
 
 
  getTrackingByOne = (number, retry = 3) =>{

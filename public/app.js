@@ -1,4 +1,4 @@
-const Result = require('../uility/model').Result
+const Result = require('../service/model').Result
 const async = require('../public/async')
 
 var trackOne = (number) => {
