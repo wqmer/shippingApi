@@ -64,7 +64,7 @@ router.post('/zoneLookUp', (req, res) => {
 router.post('/createOrders', (req, res) => {
     let {Orders} = req.body
     console.log(req.body)
-    async.mapLimit(Orders, 25, function (order, callback) {
+    async.mapLimit(Orders, 200, function (order, callback) {
         service.createOrder(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
