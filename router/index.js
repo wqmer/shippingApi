@@ -36,22 +36,21 @@ router.get('/trackingAndShow/:id', (req, res) => {
 //     )
 // })
 
-router.post('/verifyAddress', (req, res) => {
+router.post('/verifyAddressUPS', (req, res) => {
     // service.varifyAddress().then(result => res.send(result)).catch(err => console.log(err))
     let {addressList} = req.body
-    async.mapLimit(addressList, 9, function (address, callback) {
-        service.varifyAddress(address, callback);
+    async.mapLimit(addressList, 50, function (address, callback) {
+        service.verifyAddressUPS(address, callback);
      }, function (err, result) {
         // console.log(result)
         // res.json(result)
         res.send({result:result});
      });
-
 })
 
 router.post('/zoneLookUp', (req, res) => {
     let {Zone_Pairs} = req.body
-    async.mapLimit(Zone_Pairs, 9, function (record, callback) {
+    async.mapLimit(Zone_Pairs, 50, function (record, callback) {
         service.getUspsZone(record, callback);
      }, function (err, result) {
          if(err)console.log(err)

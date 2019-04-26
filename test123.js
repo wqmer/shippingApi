@@ -31,8 +31,8 @@ request({
 
 
 var cancel_orders = []
-var Orders = fs.readFileSync('85.txt').toString().split("\n");
-// console.log(Orders)
+var Orders = fs.readFileSync('1.txt').toString().split("\n");
+console.log(Orders.length)
 for(i in Orders) {
     Orders[i] = Orders[i].replace(/(\r\n|\n|\r)/gm, "");
     // conle.log(Orders[i])
@@ -119,7 +119,7 @@ for(i in Orders) {
 
 
 
-async.mapLimit( cancel_orders, 9, function (order, callback) {
+async.mapLimit( cancel_orders, 50, function (order, callback) {
   cancelOrder(order, callback);
 }, function (err, result) {
  console.log('final');

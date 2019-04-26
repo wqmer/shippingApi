@@ -2,7 +2,7 @@
 const xto = require("xto");
 const request = require('request');
 const Aftership = require('aftership')('23a9737b-d9d7-45c1-851e-f85cb58bbcbc');
-const apiKey ="29833628d495d7a5";
+const apiKey = "29833628d495d7a5";
 const moment = require('moment')
 const parseString = require('xml2js').parseString;
 
@@ -16,6 +16,112 @@ var createOrder = (order , callback) =>{
       }, function(error, response, body){
          let orderId = order.order.referenceNumber
         callback(null, {...JSON.parse(response.body), referenceNumber: orderId });
+      }); 
+}
+
+//设定简单地址请求信息
+
+
+// let requet_example = 
+// { 
+//     referenceNumber: 'test',
+//     address1 :   "test",
+//     address2 : "test",
+//     city: "123",
+//     state:"123",
+//     zipcode:"123"
+// }
+
+// let  response_example = 
+// {   
+//      referenceNumber :"213321",
+//      status : "success" ,  
+//      VarifiedAddress : {
+//                  address1 : "test",
+//                  address2 : "test",
+//                  city: "123",
+//                  state:"123",
+//                  zipcode:"123"
+//               }
+// }
+
+
+// let response_example = 
+// {
+//     referenceNumber :"213321",
+//     status : "failed" , 
+//     message :""
+//     address : null
+// }
+
+
+
+
+
+
+
+
+
+var verifyAddressUPS = (request_chukoula , callback) =>{
+    let template = {
+        "UPSSecurity": {
+        "UsernameToken": {
+        "Username": "Ebuysinotrans", "Password": "14113Cerritos"
+        }, "ServiceAccessToken": {
+        "AccessLicenseNumber": "3D49FA354B0943B8" }
+        }, "XAVRequest": {
+        "Request": {
+        "RequestOption": "1", 
+        "TransactionReference": {
+        "CustomerContext": `${request_chukoula.referenceNumber}` }
+        },
+        "MaximumListSize": "10", 
+        "AddressKeyFormat": {
+        "ConsigneeName": "Consignee Name", 
+        "BuildingName": "Building Name",
+        "AddressLine": [`${request_chukoula.address1}`,`${request_chukoula.address2}`],
+        "PoliticalDivision2": `${request_chukoula.city}`, 
+        "PoliticalDivision1":  `${request_chukoula.state}`, 
+        "PostcodePrimaryLow":  `${request_chukoula.zipcode}`, 
+        "CountryCode": "US"
+        } }
+    }
+
+    let response_template =  {
+        referenceNumber : request_chukoula.referenceNumber,
+        status : "failed" , 
+        VarifiedAddress : {
+            address1  : undefined,
+            address2 : undefined,
+            city : undefined,
+            state : undefined,
+            zipcode : undefined,
+        },
+       
+     }
+    
+    request({
+        method: 'POST',
+        headers: { "content-type": "application/json"},
+        url:    'https://onlinetools.ups.com/rest/XAV',
+        body:   JSON.stringify(template )
+      }, function(error, response, body){
+          let myReponse =  JSON.parse(response.body)
+        //   callback(null, myReponse)
+
+        if(myReponse.XAVResponse.Candidate == undefined){
+            response_template.message = 'can not find any match address'
+            callback(null, response_template)
+        } else {
+            response_template.status = 'success'
+            response_template.VarifiedAddress.address1 = myReponse.XAVResponse.Candidate.AddressKeyFormat.AddressLine[0]
+            response_template.VarifiedAddress.address2 =myReponse.XAVResponse.Candidate.AddressKeyFormat.AddressLine[1]
+            response_template.VarifiedAddress.zipcode = myReponse.XAVResponse.Candidate.AddressKeyFormat.PostcodePrimaryLow +"-"+ myReponse.XAVResponse.Candidate.AddressKeyFormat.PostcodeExtendedLow
+            response_template.VarifiedAddress.city = myReponse.XAVResponse.Candidate.AddressKeyFormat.PoliticalDivision2
+            response_template.VarifiedAddress.state = myReponse.XAVResponse.Candidate.AddressKeyFormat.PoliticalDivision1
+            callback(null,   response_template)
+        }
+    
       }); 
 }
 
@@ -276,4 +382,4 @@ var testSelf = (id) => {
 
 
 
-module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress}
+module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress , verifyAddressUPS}
