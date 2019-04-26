@@ -3,126 +3,124 @@
 const uuid = require('uuid')
 const request = require('request');
 var async = require('async');
-let order = 
-{
-	"authorization": {
-		"token": "f665224bd2a2b27565f17d4ed0bb13cd",
-		"key": "f665224bd2a2b27565f17d4ed0bb13cdb342919df05b1ab44d9c160456827169"
-	},
-	"order": {
-		"shippingMethodCode": "PK0006",
-		"referenceNumber": "ck1231132132123123",
-		"orderWeight": 0.5
-	},
-	"recipient": {
-		"recipientName": "recipientName",
-		"recipientAddress1": "recipientAddress1",
-		"recipientCity": "recipientCity",
-		"recipientProvince": "recipientProvince",
-		"recipientPostCode": "recipientPostCode",
-		"recipientCountryCode": "US",
-		"recipientTelephone":"2155880271"
-	},
-		"shipper": {
-		"shipperName": "TestByKimi",
-		"shipperCountrycode": "US",
-		"shipperProvince": "CA",
-		"shipperCity": "Irvine",
-		"shipperStreet": "shipperStreet",
-		"shipperPostcode": "92606",
-		"shipperTelephone": "63312345"
-	},
+// let order = 
+// {
+// 	"authorization": {
+// 		"token": "f665224bd2a2b27565f17d4ed0bb13cd",
+// 		"key": "f665224bd2a2b27565f17d4ed0bb13cdb342919df05b1ab44d9c160456827169"
+// 	},
+// 	"order": {
+// 		"shippingMethodCode": "PK0006",
+// 		"referenceNumber": "ck1231132132123123",
+// 		"orderWeight": 0.5
+// 	},
+// 	"recipient": {
+// 		"recipientName": "recipientName",
+// 		"recipientAddress1": "recipientAddress1",
+// 		"recipientCity": "recipientCity",
+// 		"recipientProvince": "recipientProvince",
+// 		"recipientPostCode": "recipientPostCode",
+// 		"recipientCountryCode": "US",
+// 		"recipientTelephone":"2155880271"
+// 	},
+// 		"shipper": {
+// 		"shipperName": "TestByKimi",
+// 		"shipperCountrycode": "US",
+// 		"shipperProvince": "CA",
+// 		"shipperCity": "Irvine",
+// 		"shipperStreet": "shipperStreet",
+// 		"shipperPostcode": "92606",
+// 		"shipperTelephone": "63312345"
+// 	},
 
-	"declarationArr": [{
-		"declareEnName": "NewTestByKimi",
-		"declareQuantity": 1,
-		"declareWeight": 3,
-		"declareValue": 4,
-		"declareCurrencycode": "USD",
-		"sku": "PBK"
-	}]
-}
+// 	"declarationArr": [{
+// 		"declareEnName": "NewTestByKimi",
+// 		"declareQuantity": 1,
+// 		"declareWeight": 3,
+// 		"declareValue": 4,
+// 		"declareCurrencycode": "USD",
+// 		"sku": "PBK"
+// 	}]
+// }
 
-// createOrder(order)
-
-
-
-var concurrencyCount = 0; 
-// fetchUrl 模拟创建订单
-// var fetchUrl = function (url, callback) {
-//   var delay = parseInt((Math.random() * 10000000) % 10000, 10);//模拟创建订单耗时
-//   concurrencyCount++;
-//   console.log('现在的并发数是', concurrencyCount, '，正在生产订单的是', url, '，耗时' + delay + '毫秒');
-//   setTimeout(function () {
-//     concurrencyCount--;
-//     callback(null, url + ' 订单内容');
-//   }, delay);
-// };
+// // createOrder(order)
 
 
-var createOrder = (order , callback) =>{
-    request({
-        method: 'POST',
-        headers: { "content-type": "application/json"},
-        url:     'http://119.23.188.252/api/v1/orders/service/create',
-        body:   JSON.stringify(order)
-      }, function(error, response, body){
-        callback(null,response.body);
-      }); 
-}
 
-var Orders = [];
-for(var i = 0; i < 300; i++) {
-    let order = 
-    {
-        "authorization": {
-            "token": "f665224bd2a2b27565f17d4ed0bb13cd",
-            "key": "f665224bd2a2b27565f17d4ed0bb13cdb342919df05b1ab44d9c160456827169"
-        },
-        "order": {
-            "shippingMethodCode": "PK0006",
-            "referenceNumber": `${uuid()}`,
-            "orderWeight": 0.5
-        },
-        "recipient": {
-            "recipientName": "recipientName",
-            "recipientAddress1": "recipientAddress1",
-            "recipientCity": "recipientCity",
-            "recipientProvince": "recipientProvince",
-            "recipientPostCode": "recipientPostCode",
-            "recipientCountryCode": "US",
-            "recipientTelephone":"2155880271"
-        },
-            "shipper": {
-            "shipperName": "TestByKimi",
-            "shipperCountrycode": "US",
-            "shipperProvince": "CA",
-            "shipperCity": "Irvine",
-            "shipperStreet": "shipperStreet",
-            "shipperPostcode": "92606",
-            "shipperTelephone": "63312345"
-        },
+// var concurrencyCount = 0; 
+// // fetchUrl 模拟创建订单
+// // var fetchUrl = function (url, callback) {
+// //   var delay = parseInt((Math.random() * 10000000) % 10000, 10);//模拟创建订单耗时
+// //   concurrencyCount++;
+// //   console.log('现在的并发数是', concurrencyCount, '，正在生产订单的是', url, '，耗时' + delay + '毫秒');
+// //   setTimeout(function () {
+// //     concurrencyCount--;
+// //     callback(null, url + ' 订单内容');
+// //   }, delay);
+// // };
+
+
+// var createOrder = (order , callback) =>{
+//     request({
+//         method: 'POST',
+//         headers: { "content-type": "application/json"},
+//         url:     'http://119.23.188.252/api/v1/orders/service/create',
+//         body:   JSON.stringify(order)
+//       }, function(error, response, body){
+//         callback(null,response.body);
+//       }); 
+// }
+
+// var Orders = [];
+// for(var i = 0; i < 300; i++) {
+//     let order = 
+//     {
+//         "authorization": {
+//             "token": "f665224bd2a2b27565f17d4ed0bb13cd",
+//             "key": "f665224bd2a2b27565f17d4ed0bb13cdb342919df05b1ab44d9c160456827169"
+//         },
+//         "order": {
+//             "shippingMethodCode": "PK0006",
+//             "referenceNumber": `${uuid()}`,
+//             "orderWeight": 0.5
+//         },
+//         "recipient": {
+//             "recipientName": "recipientName",
+//             "recipientAddress1": "recipientAddress1",
+//             "recipientCity": "recipientCity",
+//             "recipientProvince": "recipientProvince",
+//             "recipientPostCode": "recipientPostCode",
+//             "recipientCountryCode": "US",
+//             "recipientTelephone":"2155880271"
+//         },
+//             "shipper": {
+//             "shipperName": "TestByKimi",
+//             "shipperCountrycode": "US",
+//             "shipperProvince": "CA",
+//             "shipperCity": "Irvine",
+//             "shipperStreet": "shipperStreet",
+//             "shipperPostcode": "92606",
+//             "shipperTelephone": "63312345"
+//         },
     
-        "declarationArr": [{
-            "declareEnName": "NewTestByKimi",
-            "declareQuantity": 1,
-            "declareWeight": 3,
-            "declareValue": 4,
-            "declareCurrencycode": "USD",
-            "sku": "PBK"
-        }]
-    }
-  Orders.push(order);
-}
+//         "declarationArr": [{
+//             "declareEnName": "NewTestByKimi",
+//             "declareQuantity": 1,
+//             "declareWeight": 3,
+//             "declareValue": 4,
+//             "declareCurrencycode": "USD",
+//             "sku": "PBK"
+//         }]
+//     }
+//   Orders.push(order);
+// }
 
-// console.log(Orders)
-
-async.mapLimit(Orders, 200, function (order, callback) {
-   createOrder(order, callback);
-}, function (err, result) {
-  console.log('final');
-  console.log(result);//模拟返回订单信息
-});
+// async.mapLimit(Orders, 200, function (order, callback) {
+//    createOrder(order, callback);
+// }, function (err, result) {
+//   console.log('final');
+//   console.log(result);//模拟返回订单信息
+// });
 
 
 
@@ -153,3 +151,6 @@ async.mapLimit(Orders, 200, function (order, callback) {
 //         });
 //     });
 // });
+let a = {b : 1}
+let b = [1,23,4]
+console.log(Array.isArray(b))

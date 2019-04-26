@@ -90,6 +90,7 @@ var verifyAddressUPS = (request_chukoula , callback) =>{
     let response_template =  {
         referenceNumber : request_chukoula.referenceNumber,
         status : "failed" , 
+        message:'',
         VarifiedAddress : {
             address1  : undefined,
             address2 : undefined,
@@ -109,16 +110,23 @@ var verifyAddressUPS = (request_chukoula , callback) =>{
           let myReponse =  JSON.parse(response.body)
         //   callback(null, myReponse)
 
-        if(myReponse.XAVResponse.Candidate == undefined){
-            response_template.message = 'can not find any match address'
+        if(error ){
+           response_template.message = error
+           callback(null, response_template)
+
+        } else if(myReponse.XAVResponse.Candidate == undefined){
+            response_template.message = 'Can not find any address to match'
             callback(null, response_template)
         } else {
+            response_template.message = 'Return a vaild address'
+            let record = undefined
+            Array.isArray(myReponse.XAVResponse.Candidate) ? record = myReponse.XAVResponse.Candidate[0]: record = myReponse.XAVResponse.Candidate
             response_template.status = 'success'
-            response_template.VarifiedAddress.address1 = myReponse.XAVResponse.Candidate.AddressKeyFormat.AddressLine[0]
-            response_template.VarifiedAddress.address2 =myReponse.XAVResponse.Candidate.AddressKeyFormat.AddressLine[1]
-            response_template.VarifiedAddress.zipcode = myReponse.XAVResponse.Candidate.AddressKeyFormat.PostcodePrimaryLow +"-"+ myReponse.XAVResponse.Candidate.AddressKeyFormat.PostcodeExtendedLow
-            response_template.VarifiedAddress.city = myReponse.XAVResponse.Candidate.AddressKeyFormat.PoliticalDivision2
-            response_template.VarifiedAddress.state = myReponse.XAVResponse.Candidate.AddressKeyFormat.PoliticalDivision1
+            response_template.VarifiedAddress.address1 = Array.isArray(record.AddressKeyFormat.AddressLine)? record.AddressKeyFormat.AddressLine[0]:record.AddressKeyFormat.AddressLine
+            response_template.VarifiedAddress.address2 = Array.isArray(record.AddressKeyFormat.AddressLine)? record.AddressKeyFormat.AddressLine[1]:''
+            response_template.VarifiedAddress.zipcode = record.AddressKeyFormat.PostcodePrimaryLow +"-"+ record.AddressKeyFormat.PostcodeExtendedLow
+            response_template.VarifiedAddress.city = record.AddressKeyFormat.PoliticalDivision2
+            response_template.VarifiedAddress.state = record.AddressKeyFormat.PoliticalDivision1
             callback(null,   response_template)
         }
     
