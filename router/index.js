@@ -7,7 +7,6 @@ const parseString = require('xml2js').parseString;
 var   async = require('async');
 
 const router = express.Router();
-
 // router.get('/tracking/:id', (req, res) => {
 //     let num = req.params.id
 //     myapi.trackOne(num).then( result => res.send( JSON.stringify(result) ),(e) => res.sendStatus(400)); 
@@ -71,6 +70,33 @@ router.post('/createOrders', (req, res) => {
         // res.json(result)
         res.send({result:result});
      });
+})
+
+
+router.post('/getReceivingExpense', (req, res) => {
+    // console.log(req.body);
+    
+    let {Reference_No} = req.body
+    // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+    async.mapLimit(Reference_No, 50, function (id, callback) {
+        service.getReceivingExpense(id, callback);
+     }, function (err, result) {
+        if(err)console.log(err)
+        // console.log(result)
+        // res.json(result)
+        res.send({result:result});
+     });
+    // res.send(res)
+    // let {Orders} = req.body
+    // console.log(req.body)
+    // async.mapLimit(Orders, 50, function (order, callback) {
+    //     service.createOrder(order, callback);
+    //  }, function (err, result) {
+    //     if(err)console.log(err)
+    //     console.log(result)
+    //     // res.json(result)
+    //     res.send({result:result});
+    //  });
 })
 
 

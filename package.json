@@ -11,6 +11,7 @@
     "@easypost/api": "^3.4.0",
     "aftership": "^5.4.4",
     "body-parser": "^1.18.3",
+    "body-parser-xml": "^1.1.0",
     "delivery-tracker": "^1.7.2",
     "express": "^4.16.3",
     "http": "0.0.0",

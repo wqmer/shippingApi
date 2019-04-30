@@ -20,8 +20,6 @@ var createOrder = (order , callback) =>{
 }
 
 //设定简单地址请求信息
-
-
 // let requet_example = 
 // { 
 //     referenceNumber: 'test',
@@ -57,11 +55,6 @@ var createOrder = (order , callback) =>{
 
 
 
-
-
-
-
-
 var verifyAddressUPS = (request_chukoula , callback) =>{
     let template = {
         "UPSSecurity": {
@@ -81,8 +74,8 @@ var verifyAddressUPS = (request_chukoula , callback) =>{
         "BuildingName": "Building Name",
         "AddressLine": [`${request_chukoula.address1}`,`${request_chukoula.address2}`],
         "PoliticalDivision2": `${request_chukoula.city}`, 
-        "PoliticalDivision1":  `${request_chukoula.state}`, 
-        "PostcodePrimaryLow":  `${request_chukoula.zipcode}`, 
+        "PoliticalDivision1": `${request_chukoula.state}`, 
+        "PostcodePrimaryLow": `${request_chukoula.zipcode}`, 
         "CountryCode": "US"
         } }
     }
@@ -127,7 +120,7 @@ var verifyAddressUPS = (request_chukoula , callback) =>{
             response_template.VarifiedAddress.zipcode = record.AddressKeyFormat.PostcodePrimaryLow +"-"+ record.AddressKeyFormat.PostcodeExtendedLow
             response_template.VarifiedAddress.city = record.AddressKeyFormat.PoliticalDivision2
             response_template.VarifiedAddress.state = record.AddressKeyFormat.PoliticalDivision1
-            callback(null,   response_template)
+            callback(null,  response_template)
         }
     
       }); 
@@ -167,6 +160,38 @@ var getUspsZone = (zipcode_pair , callback) => {
         }
     })
 }
+
+const getReceivingExpense = (ref , callback) => {
+    request({
+        method: 'POST',
+        headers: { "content-type": "text/xml"},
+        url: 'http://119.23.188.252/default/svc/web-service',
+        body: `<?xml version="1.0" encoding="UTF-8"?>\n<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.example.org/Ec/">\n\t<SOAP-ENV:Body>\n\t\t<ns1:callService>\n\t\t\t<paramsJson>\n   {"reference_no":${ref}}\n            </paramsJson>\t\t\t\n\t\t\t<appToken>f665224bd2a2b27565f17d4ed0bb13cd</appToken>\n\t\t\t<appKey>f665224bd2a2b27565f17d4ed0bb13cdb342919df05b1ab44d9c160456827169</appKey>\n\t\t\t<service>getReceivingExpense</service>\n\t\t</ns1:callService>\n\t</SOAP-ENV:Body>\n</SOAP-ENV:Envelope>`
+
+     }, (error, response, body) => {
+  if (error) {
+      callback('Unable to connect server');
+  } else if (response.statusCode === 400) {
+      callback('Unable to fetch data.');
+  } else if (response.statusCode === 200) {
+         //response.body.state == undefined && retry > 0 ? resolve(getUspsTracking(id , retry - 1) ) : resolve(response.body.state);
+     
+    //  parseString(response.body, (err, result) => { 
+    //     let error = result.RateV4Response.Package[0].Error
+    //     let zoneCode = result.RateV4Response.Package[0].Zone
+    //     error?callback(null ,  { success:false, description : error[0].Description[0]}):callback( null , { success:true , zone : zoneCode[0]}) 
+    //  })  
+
+      parseString(response.body, (err, result) => { 
+        // let error = result.RateV4Response.Package[0].Error
+        // let zoneCode = result.RateV4Response.Package[0].Zone
+      callback(null ,  JSON.parse(result['SOAP-ENV:Envelope']["SOAP-ENV:Body"][0]['ns1:callServiceResponse'][0].response[0]))
+     })  
+    // callback(null , response.body)  
+  }
+})
+}
+
 
 
 // var getUspsZone = (ZipCodeFrom, ZipCodeTo) => {
@@ -390,4 +415,4 @@ var testSelf = (id) => {
 
 
 
-module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress , verifyAddressUPS}
+module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress , verifyAddressUPS , getReceivingExpense }
