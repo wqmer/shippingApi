@@ -74,8 +74,6 @@ router.post('/createOrders', (req, res) => {
 
 
 router.post('/getReceivingExpense', (req, res) => {
-    // console.log(req.body);
-    
     let {Reference_No} = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
     async.mapLimit(Reference_No, 50, function (id, callback) {
