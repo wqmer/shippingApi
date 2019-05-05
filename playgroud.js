@@ -3,6 +3,81 @@
 const uuid = require('uuid')
 const request = require('request');
 var async = require('async');
+var fs = require('fs');
+
+//     PNG = require('pngjs').PNG;
+
+    // var data = fs.readFileSync('test.png');
+    // var png = PNG.sync.read(data);  
+    // console.log(png)
+
+
+    const PDFDocument = require('pdfkit');
+    const doc = new PDFDocument;
+
+    doc.pipe(fs.createWriteStream('outputNew.pdf'));
+
+    doc.addPage()
+       .image('./test.png', {
+        fit: [500,400],
+        align: 'center',
+        valign: 'center'
+});
+
+    // doc.image('blank.png', {
+    //     fit: [800, 1200],
+    //     align: 'center',
+    //     valign: 'center'
+    //  });
+    // //  doc.addPage()
+    //  doc.end();
+   
+
+
+
+    // const HummusRecipe = require('hummus-recipe');
+    // const pdfDoc = new HummusRecipe('new', 'output-new.pdf');
+    // pdfDoc.createPage('A4')
+    // pdfDoc.image('test.png',1,1  ,
+    //     { width: 300, keepAspectRatio: true}
+    // )
+    // .endPage()
+    // // end and save
+    // .endPDF();
+
+// const pdfDoc = new HummusRecipe('output-new.pdf', 'output.pdf');
+// pdfDoc
+//     // edit 1st page
+//     .editPage(1)
+//     // .text('example-sku', 80, 1100 , {   color: '066099' ,   fontSize: 60,  })
+//     // .rectangle(20, 20, 40, 100)
+//     // .comment('Add 1st comment annotaion', 200, 300)
+//     .image('test.png', 5, 3,{width: 200, height: 100})
+//     .endPage()
+//     // edit 2nd page
+//     // .editPage(2)
+//     // .comment('Add 2nd comment annotaion', 200, 100)
+//     // .endPage()
+//     // end and save
+//     .endPDF();
+
+    // const pdfDoc = new HummusRecipe('input.pdf', 'output.pdf');
+// console.log(pdfDoc.metadata);
+
+// const pdfDoc = new HummusRecipe('input.pdf', 'output.pdf');
+// const longPDF = 'test.pdf';
+// pdfDoc
+//     // // just page 10
+//     // .appendPage(longPDF, 10)
+//     // // page 4 and page 6
+//     // .appendPage(longPDF, [4, 6])
+//     // // page 1-3 and 6-20
+//     // .appendPage(longPDF, [[1, 3], [6, 20]])
+//     // all pages
+//     .appendPage(longPDF)
+//     .endPDF();
+
+
 // let order = 
 // {
 // 	"authorization": {
@@ -151,6 +226,6 @@ var async = require('async');
 //         });
 //     });
 // });
-let a = {b : 1}
-let b = [1,23,4]
-console.log(Array.isArray(b))
+// let a = {b : 1}
+// let b = [1,23,4]
+// console.log(Array.isArray(b))

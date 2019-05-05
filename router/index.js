@@ -66,6 +66,19 @@ router.post('/createOrders', (req, res) => {
         service.createOrder(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
+        // console.log(result)
+        // res.json(result)
+        res.send({result:result});
+     });
+})
+
+router.post('/createShippment', (req, res) => {
+    let {Orders} = req.body
+    console.log(req.body)
+    async.mapLimit(Orders, 50, function (order, callback) {
+        service.getLabel(order, callback);
+     }, function (err, result) {
+        if(err)console.log(err)
         console.log(result)
         // res.json(result)
         res.send({result:result});

@@ -19,6 +19,51 @@ var createOrder = (order , callback) =>{
       }); 
 }
 
+const createOrder_async = (order) =>{
+    return new Promise ((resolve , reject) => {
+    request({
+        method: 'POST',
+        headers: { "content-type": "application/json"},
+        url:     'http://119.23.188.252/api/v1/orders/service/create',
+        body:   JSON.stringify(order)
+      }, function(error, response, body){
+          if(error){
+              reject(error)
+            }
+        let orderId = order.order.referenceNumber
+        resolve({...JSON.parse(response.body), referenceNumber: orderId });
+      }); 
+    })
+}
+
+
+const getLabel = (order, callback) => {
+    createOrder_async(order).then( result => {
+    if(result.ask == 0){
+        callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } )
+    } else {
+        let param = {
+            "authorization": {
+            "token": order.authorization.token,
+            "key":  order.authorization.key
+               },
+            "waybillNumber": result.data.waybillNumber
+            }
+        request({
+                 method: 'POST',
+                 headers: { "content-type": "application/json"},
+                 url:   'http://119.23.188.252/api/v1/orders/service/getLabel',
+                 body:   JSON.stringify(param)
+            }, function(error, response, body){
+                let myReponse = JSON.parse(  response.body )
+                // callback(null, response.body)
+            callback(null, { ask: 1 , message: "Success", ...result.data, labelUrl:myReponse.data?myReponse.data.url:'' });
+        });     
+    }
+    // console.log(result)
+    })
+}
+
 //设定简单地址请求信息
 // let requet_example = 
 // { 
@@ -166,7 +211,7 @@ const getReceivingExpense = (ref , callback) => {
         method: 'POST',
         headers: { "content-type": "text/xml"},
         url: 'http://119.23.188.252/default/svc/web-service',
-        body: `<?xml version="1.0" encoding="UTF-8"?>\n<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.example.org/Ec/">\n\t<SOAP-ENV:Body>\n\t\t<ns1:callService>\n\t\t\t<paramsJson>\n   {"reference_no":${ref}}\n            </paramsJson>\t\t\t\n\t\t\t<appToken>895949c155f7dd332d1654e55c013b1f</appToken>\n\t\t\t<appKey>895949c155f7dd332d1654e55c013b1fd3138682d84354dc4b8341decf22b6a7</appKey>\n\t\t\t<service>getReceivingExpense</service>\n\t\t</ns1:callService>\n\t</SOAP-ENV:Body>\n</SOAP-ENV:Envelope>`
+        body: `<?xml version="1.0" encoding="UTF-8"?>\n<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.example.org/Ec/">\n\t<SOAP-ENV:Body>\n\t\t<ns1:callService>\n\t\t\t<paramsJson>\n   {"reference_no":"${ref}"}\n            </paramsJson>\t\t\t\n\t\t\t<appToken>895949c155f7dd332d1654e55c013b1f</appToken>\n\t\t\t<appKey>895949c155f7dd332d1654e55c013b1fd3138682d84354dc4b8341decf22b6a7</appKey>\n\t\t\t<service>getReceivingExpense</service>\n\t\t</ns1:callService>\n\t</SOAP-ENV:Body>\n</SOAP-ENV:Envelope>`
 
      }, (error, response, body) => {
   if (error) {
@@ -415,4 +460,4 @@ var testSelf = (id) => {
 
 
 
-module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress , verifyAddressUPS , getReceivingExpense }
+module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress , verifyAddressUPS , getReceivingExpense , getLabel }
