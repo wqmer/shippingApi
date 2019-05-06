@@ -70,7 +70,7 @@ const getLabel = (order, callback) => {
             }, function(error, response, body){
                 let myReponse = JSON.parse(  response.body )
                 // callback(null, response.body)
-            callback(null, { ask: 1 , message: "Success", ...result.data, labelUrl:myReponse.data?myReponse.data.url:'' });
+            callback(null, { ask: 1 , message: "Success", ...result.data, sku:order.declarationArr[0].declareEnName, labelUrl:myReponse.data?myReponse.data.url:'' });
         });     
     }
     // console.log(result)
