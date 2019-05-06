@@ -7,7 +7,7 @@ const moment = require('moment')
 const parseString = require('xml2js').parseString;
 
 
-var createOrder = (order , callback) =>{
+const createOrder = (order , callback) =>{
     request({
         method: 'POST',
         headers: { "content-type": "application/json"},
@@ -18,6 +18,19 @@ var createOrder = (order , callback) =>{
         callback(null, {...JSON.parse(response.body), referenceNumber: orderId });
       }); 
 }
+
+const getTrakcingNumber = (order , callback) =>{
+    request({
+        method: 'POST',
+        headers: { "content-type": "application/json"},
+        url:     'http://119.23.188.252/api/v1/orders/service/getTrackingNumber',
+        body:   JSON.stringify(order)
+      }, function(error, response, body){
+         let myReponse =  JSON.parse(response.body)
+        callback(null, myReponse.data);
+      }); 
+}
+
 
 const createOrder_async = (order) =>{
     return new Promise ((resolve , reject) => {
@@ -460,4 +473,4 @@ var testSelf = (id) => {
 
 
 
-module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress , verifyAddressUPS , getReceivingExpense , getLabel }
+module.exports ={getUspsZone, getUspsTracking, getDhlTracking, detectCarrier, testSelf, createOrder, varifyAddress , verifyAddressUPS , getReceivingExpense , getLabel ,getTrakcingNumber}

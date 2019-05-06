@@ -74,12 +74,25 @@ router.post('/createOrders', (req, res) => {
 
 router.post('/createShippment', (req, res) => {
     let {Orders} = req.body
-    console.log(req.body)
+    // console.log(req.body)
     async.mapLimit(Orders, 50, function (order, callback) {
         service.getLabel(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
-        console.log(result)
+        // console.log(result)
+        // res.json(result)
+        res.send({result:result});
+     });
+})
+
+router.post('/getTrackingNo', (req, res) => {
+    let {order_id_list} = req.body
+    // console.log(req.body)
+    async.mapLimit(order_id_list, 50, function (order, callback) {
+        service.getTrakcingNumber(order, callback);
+     }, function (err, result) {
+        if(err)console.log(err)
+        // console.log(result)
         // res.json(result)
         res.send({result:result});
      });
