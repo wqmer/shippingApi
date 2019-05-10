@@ -21,10 +21,12 @@ app.use(bodyParser.xml({
 
 app.use(bodyParser.json());
 
-app.use('/', require('./router'));
+app.use('/', require('./router/Chukoula'));
+
+// app.use('/LosAPIService', require('./router/LosAPIService'));
 
 app.get('/', (req, res) => {
-    let hello = 'Hello, Server is running'
+    let hello = `Hello, Api Server is running on ${port}`
     res.send(hello),(e) => res.sendStatus(400) ; 
 })
 

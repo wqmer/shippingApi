@@ -199,7 +199,7 @@ var getUspsZone = (zipcode_pair , callback) => {
                <Size>REGULAR</Size>
                <Machinable>true</Machinable>
                <DropOffTime>08:00</DropOffTime>
-               <ShipDate>${moment().format('L')}</ShipDate>
+               <ShipDate>${moment().add(1,'days').format('L')}</ShipDate>
                </Package>
                </RateV4Request>`
             }, (error, response, body) => {

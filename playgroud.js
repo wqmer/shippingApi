@@ -5,6 +5,40 @@ const request = require('request');
 var async = require('async');
 var fs = require('fs');
 
+
+
+// var soap = require('strong-soap').soap;
+var url = 'http://hfapiserver.hofdl.com?wsdl'  ;
+// var StrPlaceName = '深圳'
+// var isytle = '3'
+
+// var url = 'http://www.webservicex.net/stockquote.asmx?WSDL';
+ 
+var requestArgs = {
+    APIKey:'A8BE7F3E7325EC62BE70E77343498B39',
+};
+ 
+// var options = {};
+// soap.createClient(url, options, function(err, client) {
+//     if(err) console.log(err)
+//     console.log(client)
+    //  console.log(client)
+//   var method = client['GetChannelList']
+//   method(requestArgs, function(err, result, envelope, soapHeader) {
+//     //response envelope
+//     console.log('Response Envelope: \n' + envelope);
+//     //'result' is the response body
+//     console.log('Result: \n' + JSON.stringify(result));
+//   });
+// });
+var soap = require('soap');
+soap.createClient(url, function(err, client) {
+    if(err)console.log(err)
+    client.GetChannelList( requestArgs,function(err, result) {
+        console.log(JSON.stringify(result));
+    });
+});
+
 //     PNG = require('pngjs').PNG;
 
     // var data = fs.readFileSync('test.png');
@@ -12,17 +46,17 @@ var fs = require('fs');
     // console.log(png)
 
 
-    const PDFDocument = require('pdfkit');
-    const doc = new PDFDocument;
+//     const PDFDocument = require('pdfkit');
+//     const doc = new PDFDocument;
 
-    doc.pipe(fs.createWriteStream('outputNew.pdf'));
+//     doc.pipe(fs.createWriteStream('outputNew.pdf'));
 
-    doc.addPage()
-       .image('./test.png', {
-        fit: [500,400],
-        align: 'center',
-        valign: 'center'
-});
+//     doc.addPage()
+//        .image('./test.png', {
+//         fit: [500,400],
+//         align: 'center',
+//         valign: 'center'
+// });
 
     // doc.image('blank.png', {
     //     fit: [800, 1200],

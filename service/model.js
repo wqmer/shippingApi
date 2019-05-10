@@ -1,3 +1,7 @@
+const config = require('./config')
+
+
+
 class Result {
     constructor() {
             this.hold = 0 ;
@@ -23,13 +27,67 @@ class Result {
                   break;
                 default:
                   this.justCreated_or_noRecord ++;
-                  break;
-                  
+                  break;     
             }
-   }
+     }
 }
+
+const UPSRequestAuth = {
+      "UPSSecurity": { 
+                       "UsernameToken": {
+                                          "Username": config.ups.Username ,
+                                          "Password": config.ups.Password
+                        },
+                       "ServiceAccessToken": {
+                                           "AccessLicenseNumber": config.ups.AccessLicenseNumber
+                        }   
+        },
+}
+
+
+
+// class UpsRequest {
+
+//       constructor() {
+//                    this.request_content = undefined ;
+//        }
+
+//        getRequest(code) {
+//           switch (code) {
+//                 case 'tracking':
+//                      this.request_content = 
+//                                           { 
+//                                               UPSRequestAuth ,
+//                                               "TrackRequest": { 
+//                                               "Request": {
+//                                               "RequestOption": "1", "TransactionReference": {
+//                                               "CustomerContext": "Your Test Case Summary Description" }
+//                                               },
+//                                               "InquiryNumber": "1Z7AT5270219361709" 
+//                                               }     
+//                                           };
+//                   break;
+//                 case 'verifyAddress':
+//                        this.request_content = 
+//                                             { 
+//                                                 UPSRequestAuth ,
+//                                                 "TrackRequest": { 
+//                                                 "Request": {
+//                                                 "RequestOption": "1", "TransactionReference": {
+//                                                 "CustomerContext": "Your Test Case Summary Description" }
+//                                                 },
+//                                                 "InquiryNumber": "1Z7AT5270219361709" 
+//                                                 }     
+//                                             };
+//                   break;
+//                 default:
+//                           this.request_content = undefined ;
+//                   break;     
+//         } 
+//     }
+// }
 
  
 
 
-module.exports = {Result}
+module.exports = { Result, UPSRequestAuth}
