@@ -44,6 +44,12 @@ const UPSRequestAuth = {
         },
 }
 
+const handelresposne = {
+
+
+
+}
+
 
 
 // class UpsRequest {
@@ -90,4 +96,4 @@ const UPSRequestAuth = {
  
 
 
-module.exports = { Result, UPSRequestAuth}
+module.exports = { Result, handelresposne,  UPSRequestAuth}

@@ -2,7 +2,11 @@
   "name": "tracking-app",
   "version": "1.0.0",
   "scripts": {
-    "start": "node server.js"
+    "deploy": "gcloud app deploy",
+    "start": "node server.js",
+    "test": "cross-env NODE_ENV=test nodemon server.js",
+    "prod": "cross-env NODE_ENV=prod nodemon server.js",
+    "play": "cross-env NODE_ENV=test node playground.js"
   },
   "engines": {
     "node": "8.11.1"
@@ -10,8 +14,10 @@
   "dependencies": {
     "@easypost/api": "^3.4.0",
     "aftership": "^5.4.4",
+    "base64topdf": "^1.1.8",
     "body-parser": "^1.18.3",
     "body-parser-xml": "^1.1.0",
+    "convert-units": "^2.3.4",
     "delivery-tracker": "^1.7.2",
     "express": "^4.16.3",
     "http": "0.0.0",
@@ -32,5 +38,8 @@
     "uuid": "^3.3.2",
     "xml2js": "^0.4.19",
     "xto": "^1.1.7"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0"
   }
 }

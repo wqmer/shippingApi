@@ -1,5 +1,5 @@
 const request = require('request');
-const model = require ('./model')
+const model = require ('../model')
 
 const verifyAddressUPS = (request_chukoula , callback) => {
 
