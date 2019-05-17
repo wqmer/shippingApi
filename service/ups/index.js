@@ -1,10 +1,10 @@
 const request = require('request');
-const model = require ('../model')
+const uility = require ('./uility')
 
 const verifyAddressUPS = (request_chukoula , callback) => {
 
     let template = {
-        ...model.UPSRequestAuth,
+        ...uility.UPSRequestAuth,
         "XAVRequest": {
         "Request": {
         "RequestOption": "1", 
@@ -72,7 +72,7 @@ request({
 
 const TrackingUPS = (request_chukoula , callback) => {
     let template = {
-        ...model.UPSRequestAuth,
+        ...uility.UPSRequestAuth,
             "TrackRequest": { "Request": {
             "RequestOption": "1", 
             "TransactionReference": {

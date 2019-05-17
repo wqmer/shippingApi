@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const myapi = require('./public/app')
 const PDFDocument = require('pdfkit');
 const parseString = require('xml2js').parseString;
 var   async = require('async');
@@ -22,8 +21,6 @@ app.use(bodyParser.xml({
 app.use(bodyParser.json());
 
 app.use('/', require('./router/Chukoula'));
-
-// app.use('/LosAPIService', require('./router/LosAPIService'));
 
 app.get('/', (req, res) => {
     let hello = `Hello, Api Server is running on ${port}`

@@ -25,8 +25,6 @@ return record
 }
 
 
-
-
 const handleShipRequest = (request) => { 
       let order = {
           "MailClass" : request.shipMethod,

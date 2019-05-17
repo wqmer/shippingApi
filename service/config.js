@@ -1,12 +1,12 @@
-const uspsId = '849XUEHU5746';
+const usps = {
+    user_id : "849XUEHU5746"
+}
 
 const ups = {
              Username: "Ebuysinotrans",
              Password: "14113Cerritos" ,
              AccessLicenseNumber: "3D49FA354B0943B8"
 }
-
-
 
 const fedex_test  = {
       password : "TSMYGLMI5ak8mh2kCi8aRkDLR",
@@ -23,6 +23,7 @@ const fedex_prod  = {
 }
 
 
+
 const usps_endicia_test = {
       wsdl_url : "https://elstestserver.endicia.com/LabelService/EwsLabelService.asmx?wsdl",
       passPhrase :  "`@198811532Ww",
@@ -37,10 +38,19 @@ const usps_endicia_product = {
       accountNumber : "2552889" 
 }
 
+const kuaidi365 = {
+    apiKey : "29833628d495d7a5"
+}
+const Aftership = {
+    apiKey : "23a9737b-d9d7-45c1-851e-f85cb58bbcbc"
+}
+
 module.exports =  {
-      uspsId ,
       ups,
       fedex : process.env.NODE_ENV == 'test'? fedex_test : fedex_prod ,
-      usps_endicia : process.env.NODE_ENV == 'test'? usps_endicia_test  : usps_endicia_product  
+      usps_endicia : process.env.NODE_ENV == 'test'? usps_endicia_test  : usps_endicia_product  ,
+      usps ,
+      kuaidi365,
+      Aftership
 }
 
