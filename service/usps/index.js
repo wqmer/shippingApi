@@ -142,7 +142,7 @@ const varifyAddress = (args, callback) => {
      let myResponse = { 
         referenceNumber:args.referenceNumber ,
         status: 'failed',
-        ChineseMessage:'未找到地址',
+        ChineseMessage:'未找到地址 ，UPS对该地址无法投递。',
         message :'Can not find any address to match',
         varifyAddress: {
             address1:undefined ,
@@ -193,7 +193,7 @@ const varifyAddress = (args, callback) => {
 
                 case 'N':
                 myResponse.message = 'Both Primary and (if present) Secondary number information failed to DPV Confirm'    
-                myResponse.ChineseMessage = '地址错误！ 街道名和公寓门牌号都错误。请同时检查地址1和地址2'          
+                myResponse.ChineseMessage = '地址错误！ 街道名和公寓门牌号都错误。请同时检查地址1和地址2 。 UPS对该地址无法投递'          
                 break;
                 default:
                   // code block
