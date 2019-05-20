@@ -151,7 +151,7 @@ const varifyAddress = (args, callback) => {
 
                 case 'S':
                 myResponse.message = 'Address was DPV confirmed for the primary number only, and Secondary number information was present but unconfirmed'
-                myResponse.ChineseMessage = '地址错误！ 街道和路名正确，门牌号或者公寓号错误。请检查地址2格式是否正确'
+                myResponse.ChineseMessage = '地址错误！ 街道和路名正确，门牌号或者公寓号错误。如有地址2，请检查地址2格式是否正确。'
                 break;
 
                 case 'N':
