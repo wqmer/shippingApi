@@ -46,6 +46,43 @@ var getUspsZone = (zipcode_pair , callback) => {
 }
 
 
+var getUspsZoneUpdate = (zipcode_pair , callback) => {
+    request({
+        url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="${config.usps.user_id}">
+        <Revision>2</Revision>
+        <Package ID="1ST">
+        <Service>PRIORITY</Service>
+        <ZipOrigination>${zipcode_pair.from}</ZipOrigination>
+        <ZipDestination>${zipcode_pair.to}</ZipDestination>
+        <Pounds>0</Pounds>
+        <Ounces>3.5</Ounces>
+        <Container>VARIABLE</Container>
+        <Size>REGULAR</Size>
+        <Machinable>true</Machinable>
+        <DropOffTime>08:00</DropOffTime>
+        <ShipDate>${moment().add(1,'days').format('L')}</ShipDate>
+        </Package>
+        </RateV4Request>`,
+        headers: { "content-type": "text/plain"},
+     }, (error, response, body) => {
+  if (error) {
+      callback('Unable to connect server');
+  } else if (response.statusCode === 400) {
+      callback('Unable to fetch data.');
+  } else if (response.statusCode === 200) {
+         //response.body.state == undefined && retry > 0 ? resolve(getUspsTracking(id , retry - 1) ) : resolve(response.body.state);
+     
+     parseString(response.body, (err, result) => { 
+        let error = result.RateV4Response.Package[0].Error
+        let zoneCode = result.RateV4Response.Package[0].Zone
+        error?callback(null ,  { referenceNumber: zipcode_pair.referenceNumber, success:false, description : error[0].Description[0]}):callback( null , { referenceNumber: zipcode_pair.referenceNumber , success:true , zone : zoneCode[0]}) 
+     })    
+    }
+  })
+}
+
+
+
 // const varifyAddress = (address, callback) => {
 //     request({
 //         url: `https://secure.shippingapis.com/ShippingAPI.dll?API=Verify&XML=<AddressValidateRequest USERID="${config.usps.user_id}">` +
@@ -186,4 +223,5 @@ const varifyAddress = (args, callback) => {
 module.exports = { 
         varifyAddress,
         getUspsZone,
+        getUspsZoneUpdate
 }

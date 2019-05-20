@@ -18,21 +18,25 @@ const USPS = require('usps-webtools');
 // let decodedBase64 = base64.base64Decode(label, 'LABEL.pdf');
 
 
-const usps = new USPS({
-    server: 'http://production.shippingapis.com/ShippingAPI.dll',
-    userId: '849XUEHU5746',
-    ttl: 10000 //TTL in milliseconds for request
-  });
+// const usps = new USPS({
+//     server: 'http://production.shippingapis.com/ShippingAPI.dll',
+//     userId: '849XUEHU5746',
+//     ttl: 10000 //TTL in milliseconds for request
+//   });
 
-  usps.verify({
-    street1: '202 W 45TH ST',
-    street2: '',
-    city: 'HIALEAH',
-    state: 'FL',
-    zip: '33012-3941'
-  }, function(err, address) {
-    console.log(address);
-  });
+//   usps.pricingRateV4({
+//     Service: 'PRIORITY',
+//     ZipOrigination: '92606',
+//     ZipDestination: '19103',
+//     Pounds :'1',
+//     Ounces: '5',
+//     Container:'VARIABLE',
+//     Size: 'REGULAR',
+//     Machinable :'true'
+//   }, function(err, result) {
+//     // if(err)console.log(err)
+//     console.log(result);
+//   });
 
 // console.log(convert(16).from('oz').to('lb'))
 // const a = {x : 1}

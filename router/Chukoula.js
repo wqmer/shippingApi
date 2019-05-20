@@ -59,6 +59,17 @@ router.post('/zoneLookUp', (req, res) => {
      });
 })
 
+router.post('/zoneLookUpNew', (req, res) => {
+    let {Zone_Pairs} = req.body
+    async.mapLimit(Zone_Pairs, 50, function (record, callback) {
+      USPS.getUspsZoneUpdate(record, callback);
+     }, function (err, result) {
+         if(err)console.log(err)
+        // res.json(result)
+        res.send({result:result});
+     });
+})
+
 router.post('/createOrders', (req, res) => {
     let {Orders} = req.body
     console.log(req.body)
