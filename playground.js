@@ -18,25 +18,21 @@ const USPS = require('usps-webtools');
 // let decodedBase64 = base64.base64Decode(label, 'LABEL.pdf');
 
 
-// const usps = new USPS({
-//     server: 'http://production.shippingapis.com/ShippingAPI.dll',
-//     userId: '849XUEHU5746',
-//     ttl: 10000 //TTL in milliseconds for request
-//   });
+const usps = new USPS({
+    server: 'http://production.shippingapis.com/ShippingAPI.dll',
+    userId: '849XUEHU5746',
+    ttl: 10000 //TTL in milliseconds for request
+  });
 
-//   usps.pricingRateV4({
-//     Service: 'PRIORITY',
-//     ZipOrigination: '92606',
-//     ZipDestination: '19103',
-//     Pounds :'1',
-//     Ounces: '5',
-//     Container:'VARIABLE',
-//     Size: 'REGULAR',
-//     Machinable :'true'
-//   }, function(err, result) {
-//     // if(err)console.log(err)
-//     console.log(result);
-//   });
+  usps.verify({
+    street1: '202 W 45TH ST',
+    street2: '',
+    city: 'HIALEAH',
+    state: 'FL',
+    zip: '33012-3941'
+  }, function(err, address) {
+    console.log(address);
+  });
 
 // console.log(convert(16).from('oz').to('lb'))
 // const a = {x : 1}
@@ -321,8 +317,8 @@ var querystring = require('querystring');
 //     //   'Content-Length': contentLength,
 //       'Content-Type': 'application/x-www-form-urlencoded'
 //     },
-//     form: { key: 'bf6759d9e27e27975dc660b83ac924a4' } ,
-//     url: 'http://apis.juhe.cn/lottery/types',
+//     form: { key: 'bf6759d9e27e27975dc660b83ac924a4' } ，
+//     url: 'http://http://apis.juhe.cn/lottery/types',
 //     method: 'POST'
 //   }, function (err, res, body) {
 //       console.log(body)

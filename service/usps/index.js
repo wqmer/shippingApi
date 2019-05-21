@@ -142,6 +142,7 @@ const varifyAddress = (args, callback) => {
      let myResponse = { 
         referenceNumber:args.referenceNumber ,
         status: 'failed',
+        deliverable:'false',
         ChineseMessage:'未找到地址 ，UPS对该地址无法投递。',
         message :'Can not find any address to match',
         varifyAddress: {
@@ -179,21 +180,24 @@ const varifyAddress = (args, callback) => {
                 case 'Y':
                   myResponse.message = 'Address was DPV confirmed for both primary and (if present) secondary numbers'
                   myResponse.ChineseMessage = '地址1和地址2全部正确'
+                  myResponse.deliverable = 'true'
                   break;
 
                 case 'D':
                  myResponse.message = 'Address was DPV confirmed for the primary number only, and Secondary number information was missing.'
                  myResponse.ChineseMessage = '地址错误！ 街道和路名正确，门牌号或者公寓号缺失。请检查地址2是否有填写，或者是否填写在正确位置'
+                 myResponse.deliverable = 'true'
                   break;
 
                 case 'S':
                 myResponse.message = 'Address was DPV confirmed for the primary number only, and Secondary number information was present but unconfirmed'
                 myResponse.ChineseMessage = '地址错误！ 街道和路名正确，门牌号或者公寓号错误。如有地址2，请检查地址2格式是否正确。'
+                myResponse.deliverable = 'true'
                 break;
 
                 case 'N':
                 myResponse.message = 'Both Primary and (if present) Secondary number information failed to DPV Confirm'    
-                myResponse.ChineseMessage = '地址错误！ 街道名和公寓门牌号都错误。请同时检查地址1和地址2 。 UPS对该地址无法投递'          
+                myResponse.ChineseMessage = '地址错误！ 街道名和公寓门牌号都错误。请同时检查地址1和地址2 。 UPS对该地址无法投递'        
                 break;
                 default:
                   // code block
