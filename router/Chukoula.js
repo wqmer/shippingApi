@@ -56,10 +56,6 @@ router.post('/isDeliverable', (req, res) => {
      }, function (err, result) {
         var undeliverable_address  =  result.filter( item => item.deliverable == 'false' ).map(item => item.referenceNumber)
         var deliverable_address  =  result.filter( item => item.deliverable == 'true' ).map(item => item.referenceNumber)
-        console.log(undeliverable_address)
-
-        // console.log(result)
-        // res.json(result)
         res.send({result:{undeliverable : undeliverable_address , deliverable : deliverable_address } });
      });
  })
