@@ -25,11 +25,11 @@ const usps = new USPS({
   });
 
   usps.verify({
-    street1: '202 W 45TH ST',
+    street1: 'PO BOX 135',
     street2: '',
-    city: 'HIALEAH',
-    state: 'FL',
-    zip: '33012-3941'
+    city: 'CASSEL',
+    state: 'CA',
+    zip: '96016-0135'
   }, function(err, address) {
     console.log(address);
   });

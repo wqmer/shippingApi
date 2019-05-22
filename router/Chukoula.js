@@ -48,6 +48,22 @@ router.post('/verifyAddressUSPS', (req, res) => {
     });
 })
 
+router.post('/isDeliverable', (req, res) => {
+    // service.varifyAddress().then(result => res.send(result)).catch(err => console.log(err))
+    let {addressList} = req.body
+    async.mapLimit(addressList, 50, function (address, callback) {
+        USPS.varifyAddress(address, callback);
+     }, function (err, result) {
+        var undeliverable_address  =  result.filter( item => item.deliverable == 'false' ).map(item => item.referenceNumber)
+        var deliverable_address  =  result.filter( item => item.deliverable == 'true' ).map(item => item.referenceNumber)
+        console.log(undeliverable_address)
+
+        // console.log(result)
+        // res.json(result)
+        res.send({result:{undeliverable : undeliverable_address , deliverable : deliverable_address } });
+     });
+ })
+
 router.post('/zoneLookUp', (req, res) => {
     let {Zone_Pairs} = req.body
     async.mapLimit(Zone_Pairs, 50, function (record, callback) {

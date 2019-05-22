@@ -87,6 +87,7 @@ var getUspsZoneUpdate = (zipcode_pair , callback) => {
 //     request({
 //         url: `https://secure.shippingapis.com/ShippingAPI.dll?API=Verify&XML=<AddressValidateRequest USERID="${config.usps.user_id}">` +
 //         // '<?xml version="1.0" encoding="UTF-8"?>'+
+//         '<Revision>1</Revision>'+
 //         '<Address>'+
 //         `<Address1>${address.address1}</Address1>` +
 //         `<Address2>${address.address2}</Address2>` +
@@ -154,7 +155,7 @@ const varifyAddress = (args, callback) => {
         }
      }
 
-    const usps = new USPS({
+const usps = new USPS({
         server: 'http://production.shippingapis.com/ShippingAPI.dll',
         userId: config.usps.user_id,
         // ttl: 10000 //TTL in milliseconds for request
@@ -203,24 +204,20 @@ const varifyAddress = (args, callback) => {
                   // code block
               }
             callback(null, myResponse);
-          }
-        
+          }     
       });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
