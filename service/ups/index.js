@@ -27,6 +27,7 @@ const verifyAddressUPS = (request_chukoula , callback) => {
     let response_template =  {
         referenceNumber : request_chukoula.referenceNumber,
         status : "failed" , 
+        deliverable :'false' ,
         message:'',
         VarifiedAddress : {
             address1  : undefined,
@@ -53,8 +54,10 @@ request({
 
     } else if(myReponse.XAVResponse.Candidate == undefined){
         response_template.message = 'Can not find any address to match'
+
         callback(null, response_template)
     } else {
+        response_template.deliverable = 'true'
         response_template.message = 'Verify address successfully'
         let record = undefined
         Array.isArray(myReponse.XAVResponse.Candidate) ? record = myReponse.XAVResponse.Candidate[0]: record = myReponse.XAVResponse.Candidate

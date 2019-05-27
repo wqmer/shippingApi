@@ -301,7 +301,7 @@ const usps = new USPS({
 
 
 
-var querystring = require('querystring');
+// var querystring = require('querystring');
 // var request = require('request');
 
 // var form = {

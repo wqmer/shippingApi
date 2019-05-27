@@ -292,9 +292,43 @@ const handleShipRequest = (request) => {
 }
 
 
-const handleShipResponse = ( )=> {
+const handleAddressValidate = (request)=> {
 
-
+    const args = 	{
+      "WebAuthenticationDetail": { 
+              "UserCredential": {
+                        "Key":      "F8GMIFLD4QEFhvjh",
+                        "Password":  "TSMYGLMI5ak8mh2kCi8aRkDLR"
+               }   
+           },
+           
+          "ClientDetail":{
+              "AccountNumber": "510087100" ,
+              "MeterNumber":   "119146125" ,
+              "Localization": { 
+                                "LanguageCode": "EN" ,
+                                "LocaleCode" :  "US"
+               }
+           },
+            
+           "Version": {
+                      "ServiceId":     "aval",
+                      "Major":          4,
+                      "Intermediate":   0,
+                      "Minor":          0
+            },
+          "AddressesToValidate" : {
+            "Address":{
+              "StreetLines" : "202w w 45th st",
+              "City" :"HIALEAH",
+              "StateOrProvinceCode" :"FL",
+              "PostalCode":"33012-3941",
+              "UrbanizationCode":"",
+              "CountryCode":"us"
+            }
+          }
+            
+  }
 
 
 

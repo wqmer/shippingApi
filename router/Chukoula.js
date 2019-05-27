@@ -52,7 +52,7 @@ router.post('/isDeliverable', (req, res) => {
     // service.varifyAddress().then(result => res.send(result)).catch(err => console.log(err))
     let {addressList} = req.body
     async.mapLimit(addressList, 50, function (address, callback) {
-        USPS.varifyAddress(address, callback);
+       UPS.verifyAddressUPS(address, callback);
      }, function (err, result) {
         var undeliverable_address  =  result.filter( item => item.deliverable == 'false' ).map(item => item.referenceNumber)
         var deliverable_address  =  result.filter( item => item.deliverable == 'true' ).map(item => item.referenceNumber)
@@ -216,7 +216,6 @@ router.post('/buyPostageEndicia', (req, res) => {
    let {
        orders
    } = req.body
-   // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
    async.mapLimit(orders, 50, function (order, callback) {
        ENDICIA.BuyPostage(order, callback);
       //  console.log(order)
