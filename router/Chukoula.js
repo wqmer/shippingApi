@@ -27,7 +27,7 @@ router.get('/trackingAndShow/:id', (req, res) => {
 router.post('/verifyAddressUPS', (req, res) => {
     // service.varifyAddress().then(result => res.send(result)).catch(err => console.log(err))
     let {addressList} = req.body
-    async.mapLimit(addressList, 50, function (address, callback) {
+    async.mapLimit(addressList, 25, function (address, callback) {
         UPS.verifyAddressUPS(address, callback);
      }, function (err, result) {
         // console.log(result)
@@ -39,7 +39,7 @@ router.post('/verifyAddressUPS', (req, res) => {
 router.post('/verifyAddressUSPS', (req, res) => {
    // service.varifyAddress().then(result => res.send(result)).catch(err => console.log(err))
    let {addressList} = req.body
-   async.mapLimit(addressList, 50, function (address, callback) {
+   async.mapLimit(addressList, 25, function (address, callback) {
        USPS.varifyAddress(address, callback);
     }, function (err, result) {
        // console.log(result)
@@ -51,7 +51,7 @@ router.post('/verifyAddressUSPS', (req, res) => {
 router.post('/isDeliverable', (req, res) => {
     // service.varifyAddress().then(result => res.send(result)).catch(err => console.log(err))
     let {addressList} = req.body
-    async.mapLimit(addressList, 50, function (address, callback) {
+    async.mapLimit(addressList, 25, function (address, callback) {
        UPS.verifyAddressUPS(address, callback);
      }, function (err, result) {
         var undeliverable_address  =  result.filter( item => item.deliverable == 'false' ).map(item => item.referenceNumber)
@@ -62,7 +62,7 @@ router.post('/isDeliverable', (req, res) => {
 
 router.post('/zoneLookUp', (req, res) => {
     let {Zone_Pairs} = req.body
-    async.mapLimit(Zone_Pairs, 50, function (record, callback) {
+    async.mapLimit(Zone_Pairs, 25, function (record, callback) {
       USPS.getUspsZone(record, callback);
      }, function (err, result) {
          if(err)console.log(err)
@@ -73,7 +73,7 @@ router.post('/zoneLookUp', (req, res) => {
 
 router.post('/zoneLookUpNew', (req, res) => {
     let {Zone_Pairs} = req.body
-    async.mapLimit(Zone_Pairs, 50, function (record, callback) {
+    async.mapLimit(Zone_Pairs, 25, function (record, callback) {
       USPS.getUspsZoneUpdate(record, callback);
      }, function (err, result) {
          if(err)console.log(err)
@@ -85,7 +85,7 @@ router.post('/zoneLookUpNew', (req, res) => {
 router.post('/createOrders', (req, res) => {
     let {Orders} = req.body
     console.log(req.body)
-    async.mapLimit(Orders, 50, function (order, callback) {
+    async.mapLimit(Orders, 25, function (order, callback) {
       UPS_YI.createOrder(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -98,7 +98,7 @@ router.post('/createOrders', (req, res) => {
 router.post('/createShippment', (req, res) => {
     let {Orders} = req.body
     // console.log(req.body)
-    async.mapLimit(Orders, 50, function (order, callback) {
+    async.mapLimit(Orders, 25, function (order, callback) {
       UPS_YI.getLabel(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -111,7 +111,7 @@ router.post('/createShippment', (req, res) => {
 router.post('/getTrackingNo', (req, res) => {
     let {order_id_list} = req.body
     // console.log(req.body)
-    async.mapLimit(order_id_list, 50, function (order, callback) {
+    async.mapLimit(order_id_list, 25, function (order, callback) {
       UPS_YI.getTrakcingNumber(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -125,7 +125,7 @@ router.post('/getTrackingNo', (req, res) => {
 router.post('/getReceivingExpense', (req, res) => {
     let {Reference_No} = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-    async.mapLimit(Reference_No, 50, function (id, callback) {
+    async.mapLimit(Reference_No, 25, function (id, callback) {
         UPS_YI.getReceivingExpense(id, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -139,7 +139,7 @@ router.post('/getReceivingExpense', (req, res) => {
  router.post('/trackingUps', (req, res) => {
     let {parcels} = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-    async.mapLimit(parcels, 50, function (parcel, callback) {
+    async.mapLimit(parcels, 25, function (parcel, callback) {
         UPS.TrackingUPS(parcel, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -154,7 +154,7 @@ router.post('/getReceivingExpense', (req, res) => {
         addresList
     } = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-    async.mapLimit(addresList, 50, function (address, callback) {
+    async.mapLimit(addresList, 25, function (address, callback) {
         FEDEX.addressValidation(address, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -169,7 +169,7 @@ router.post('/getReceivingExpense', (req, res) => {
         orders
     } = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-    async.mapLimit(orders, 50, function (order, callback) {
+    async.mapLimit(orders, 25, function (order, callback) {
         FEDEX.processShipment(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -184,7 +184,7 @@ router.post('/getReceivingExpense', (req, res) => {
         args
     } = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-    async.mapLimit(args, 50, function (arg, callback) {
+    async.mapLimit(args, 25, function (arg, callback) {
         FEDEX.getRates(arg, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -199,7 +199,7 @@ router.post('/getReceivingExpense', (req, res) => {
        orders
    } = req.body
    // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-   async.mapLimit(orders, 50, function (order, callback) {
+   async.mapLimit(orders, 25, function (order, callback) {
        ENDICIA.GetPostageLabel(order, callback);
       //  console.log(order)
     }, function (err, result) {

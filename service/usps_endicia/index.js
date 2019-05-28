@@ -25,7 +25,7 @@ const GetPostageLabel = (requestArgs , callback) => {
       // console.log(client)
       if(err)console.log(err)
       let args = extend(uility.endicia_auth, uility.handleShipRequest(requestArgs))
-      let order = {LabelRequest:undefined  }
+      let order = {  LabelRequest:undefined  }
       order.LabelRequest = args
       console.log(order)
       client.GetPostageLabel(order,  function(err, result) {
