@@ -7,6 +7,7 @@ const parseString = require('xml2js').parseString;
 const UPS = require('../service/ups')
 const USPS = require('../service/usps')
 const FEDEX = require('../service/fedex')
+const CHUKOULA = require('../service/chukoula')
 const ENDICIA = require('../service/usps_endicia')
 const async = require('async');
 const base64 = require('base64topdf');
@@ -84,7 +85,6 @@ router.post('/zoneLookUpNew', (req, res) => {
 
 router.post('/createOrders', (req, res) => {
     let {Orders} = req.body
-    console.log(req.body)
     async.mapLimit(Orders, 25, function (order, callback) {
       UPS_YI.createOrder(order, callback);
      }, function (err, result) {
@@ -146,6 +146,32 @@ router.post('/getReceivingExpense', (req, res) => {
         // console.log(result)
         // res.json(result)
         res.send({result:result});
+     });
+ })
+
+ router.post('/getUpsTrackingStatus', (req, res) => {
+    let {trackings} = req.body
+    // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+    async.mapLimit(trackings, 25, function (tracking, callback) {
+        UPS.GetUpsTrackingStatus(tracking, callback);
+     }, function (err, result) {
+        if(err)console.log(err)
+        var created_array =  result.filter( item => item.status == 'created' ).map(item => item.trackingNo)
+        var intransit_array =  result.filter( item => item.status == 'in transit' ).map(item => item.trackingNo)
+        var devlivery_array =  result.filter( item => item.status == 'delivered' ).map(item => item.trackingNo)
+        var no_information_array =  result.filter( item => item.status == 'no information' ).map(item => item.trackingNo)
+
+        res.send(
+            {
+             result:{ 
+                      created : created_array  , 
+                      in_transit : intransit_array ,
+                      delivery: devlivery_array,
+                      no_information : no_information_array ,
+                    } 
+            });
+        // console.log(result)
+        // res.json(result)
      });
  })
 
@@ -227,6 +253,24 @@ router.post('/buyPostageEndicia', (req, res) => {
    
     });
 })
+
+
+router.post('/createShippmentChukoula', (req, res) => {
+    let {
+        orders
+    } = req.body
+    // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+    async.mapLimit(orders, 3, function (order, callback) {
+        CHUKOULA.createOrder(order, callback);
+     }, function (err, result) {
+        if(err)console.log(err)
+        // console.log(result)
+        // res.json(result)
+        res.send({result:result});
+     });
+ })
+
+ 
 
  
 module.exports = router

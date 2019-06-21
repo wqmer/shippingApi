@@ -55,7 +55,7 @@ request({
     } else if(myReponse.XAVResponse.Candidate == undefined){
         response_template.message = 'Can not find any address to match'
 
-        callback(null, response_template)
+       callback(null, response_template)
     } else {
         response_template.deliverable = 'true'
         response_template.message = 'Verify address successfully'
@@ -86,6 +86,7 @@ const TrackingUPS = (request_chukoula , callback) => {
 
     let response_template =  {
         orderId : request_chukoula.orderId,
+        trackingNo:request_chukoula.trackingNumber,
         status : "failed" , 
         message:'',
         data : { 
@@ -118,7 +119,57 @@ const TrackingUPS = (request_chukoula , callback) => {
       }); 
     }
 
+
+    const GetUpsTrackingStatus = (trackingNumber , callback) => {
+        let template = {
+            ...uility.UPSRequestAuth,
+                "TrackRequest": { "Request": {
+                "RequestOption": "1", 
+                "TransactionReference": {
+                "CustomerContext": trackingNumber }
+                },
+                "InquiryNumber": trackingNumber }
+        }
+    
+        let response_template =  {
+            trackingNo:trackingNumber,
+            status : "no information" ,       
+         }
+        request({
+            method: 'POST',
+            headers: { "content-type": "application/json"},
+            url:    'https://onlinetools.ups.com/rest/Track',
+            body:   JSON.stringify(template)
+          }, function(error, response, body){
+              let myReponse =  JSON.parse(response.body)
+            //   callback(null, myReponse)
+        
+            if(error){
+                response_template.message = error
+                callback(null, response_template) 
+            } else if(myReponse.Fault){
+                callback(null,  response_template)
+            } else if( myReponse.TrackResponse.Response.ResponseStatus.Code == "1"  ){ 
+                 let info = myReponse.TrackResponse.Shipment.Package
+                if( Array.isArray(info.Activity)){
+                    info.Activity[0].Status.Description == 'Delivered'?response_template.status = 'delivered':
+                    response_template.status = 'in transit'
+                    callback(null, response_template)
+                }else {
+                    response_template.status = 'created'
+                    callback(null, response_template)
+                //   info.Activity.Status.Description == 'Order Processed: Ready for UPS'?
+                }
+ 
+            }
+          }); 
+        }
+    
+
+
+
 module.exports ={ 
     verifyAddressUPS,
-    TrackingUPS
+    TrackingUPS,
+    GetUpsTrackingStatus,
 }

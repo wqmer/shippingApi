@@ -106,7 +106,7 @@ const handleRateRequest = (request) => {
          "ShipTimestamp" : new Date(date.getTime() + (24*60*60*1000)).toISOString(),
       //    "ShipTimestamp" : "2019-05-13T23:09:16",
          "DropoffType" :  "REGULAR_PICKUP",
-         "ServiceType" :  request.shipMethod, //"FEDEX_GROUND", SMART_POST
+         "ServiceType" :  request.shipMethod, //FEDEX_GROUND, SMART_POST
          "PackagingType": "YOUR_PACKAGING",
          "PreferredCurrency" : "USD",
          "Shipper" : { 

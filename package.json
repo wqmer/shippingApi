@@ -41,6 +41,7 @@
     "xto": "^1.1.7"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "cross-env": "^5.2.0"
   }
 }

@@ -9,10 +9,10 @@ const ups = {
 }
 
 const fedex_test  = {
-      password : "TSMYGLMI5ak8mh2kCi8aRkDLR",
-      key : "F8GMIFLD4QEFhvjh",
-      Account_Number : "510087100",
-      Meter_Number : "119146125" ,
+      password : "nDL641ljD029QgVj459viquRc",
+      key : "SjgF06iYpTJ9hyFz",
+      Account_Number : "510087640",
+      Meter_Number : "119152006" ,
 }
 
 const fedex_prod  = {
@@ -21,7 +21,6 @@ const fedex_prod  = {
       Account_Number : "630270839",
       Meter_Number : "114648773" 
 }
-
 
 
 const usps_endicia_test = {
