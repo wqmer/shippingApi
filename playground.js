@@ -10,8 +10,82 @@ const convert = require('convert-units')
 const moment = require('moment')
 const config = require('./service/config')
 const USPS = require('usps-webtools');
+var md5 = require('md5');
 
 
+
+// const date = new Date();
+// console.log(new Date(date.getTime() + (24*60*60*1000)).toISOString())
+// var myjson = { '123' : '123'}
+// var mystring = '123'
+// console.log((myjson + mystring).toString())
+const myJson = 
+{
+  "instructionList": [
+      {
+          "channelCode": "UpsGround",
+          "userOrderNumber": "5296000000587938---20190625888296",
+          "remark": "",
+          "sender": {
+              "contactName": "NC",
+              "telephone": "5412545474",
+              "countryCode": "US",
+              "state": "NC",
+              "city": "Raleigh",
+              "street": "2434 Bertie Drive",
+              "street1": "",
+              "street2": "",
+              "county": "",
+              "zipCode": "27610",
+              "zip4": ""
+          },
+          "recipient": {
+              "contactName": "Lisa Thompson",
+              "telephone": "6627926425",
+              "countryCode": "US",
+              "state": "MS",
+              "city": "West",
+              "street": "2071 Attala Road#3009",
+              "street1": "",
+              "street2": "",
+              "county": "",
+              "zipCode": "39192",
+              "zip4": ""
+          },
+          "packageDetailList": [
+              {
+                  "packageRecord": {
+                      "sonOrderNumber": "",
+                      "boxNumber": "",
+                      "weight": 0.23,
+                      "length": 1,
+                      "width": 1,
+                      "height": 1
+                  },
+                  "itemList": [
+                      {
+                          "productName": "891914284586850",
+                          "productNameEn": "891914284586850",
+                          "productSku": "",
+                          "hsCode": 1,
+                          "quantity": "1",
+                          "unitPrice": "891914284586850",
+                          "unitWeight": 0.23
+                      }
+                  ]
+              }
+          ]
+      }
+  ]
+}
+const myString =  JSON.stringify(myJson)
+
+// var result = myString.slice(1,-1);
+// console.log(result)
+var readytoMd5 =  myString + "/xoU5d/d7a+xDOboQmiOx/xsVRYuiOE8PfSH6OSl" + "2019-06-26 13:15:00"
+console.log(readytoMd5)
+
+console.log(md5(readytoMd5));
 
 // class Carrier {
 //       password = 0 ;
@@ -347,17 +421,17 @@ const USPS = require('usps-webtools');
 // // console.log(formData)
 // // var contentLength = formData.length;
 
-request({
-    // headers: {
-    // //   'Content-Length': contentLength,
-    //   'Content-Type': 'application/pdf'
-    // },
-    url: 'http://150.109.55.134:8089/order/FastRpt/PDF_NEW.aspx?Format=A4_EMS_BGD.frx&PrintType=1&order_id=279372',
-    method: 'POST'
-  }, function (err, res, body) {
-    console.log('http://150.109.55.134:8089' + res.headers.location)
-    //it works!
-  });
+// request({
+//     // headers: {
+//     // //   'Content-Length': contentLength,
+//     //      'Content-Type': 'application/pdf'
+//     // },
+//     url: 'http://150.109.55.134:8089/order/FastRpt/PDF_NEW.aspx?Format=A4_EMS_BGD.frx&PrintType=1&order_id=279372',
+//     method: 'POST'
+//   }, function (err, res, body) {
+//     console.log('http://150.109.55.134:8089' + res.headers.location)
+//     //it works!
+// });
 
 
 

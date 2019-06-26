@@ -1,5 +1,6 @@
 const request = require('request');
 const uility = require ('./uility')
+const moment = require('moment')
 
 const verifyAddressUPS = (request_chukoula , callback) => {
 
@@ -118,7 +119,101 @@ const TrackingUPS = (request_chukoula , callback) => {
         }
       }); 
     }
+ 
+const GetUpsInTransitTime = (postcode_pairs,  callback) => {
 
+        let template = {
+            ...uility.UPSRequestAuth,
+  "TimeInTransitRequest": {
+        "Request": {
+            "RequestOption": "TNT",
+            "TransactionReference": {
+                "CustomerContext": "",
+                "TransactionIdentifier": ""
+            }
+        },
+        "ShipFrom": {
+            "Address": {
+                "StateProvinceCode": "StateProvinceCode",
+                "CountryCode": "US",
+                "PostalCode": postcode_pairs.from
+            }
+        },
+        "ShipTo": {
+            "Address": {
+                "StateProvinceCode": "StateProvinceCode",
+                "CountryCode": "US",
+                "PostalCode": postcode_pairs.to
+            }
+        },
+        "Pickup": {
+            "Date": moment().format('YYYYMMDD')
+        },
+        "ShipmentWeight": {
+            "UnitOfMeasurement": {
+                "Code": "LBS",
+                "Description": "Description"
+            },
+            "Weight": "1"
+        },
+        "MaximumListSize": "5"
+    }
+        }
+    
+        let response_template =  {
+            // orderId : request_chukoula.orderId,
+            // trackingNo:request_chukoula.trackingNumber,
+            status : "failed" , 
+            message:'',
+            data : { 
+          
+            }
+         }
+
+         request({
+            method: 'POST',
+            headers: { "content-type": "application/json"},
+            url:    'https://onlinetools.ups.com/rest/TimeInTransit',
+            body:   JSON.stringify(template)
+          }, function(error, response, body){
+              let myReponse =  JSON.parse(response.body)
+            //   callback(null, myReponse)
+        
+            if(error){
+                response_template.message = error
+                callback(null, response_template) 
+            } else if(myReponse.Fault){
+                response_template.message = myReponse.Fault.detail.Errors.ErrorDetail.PrimaryErrorCode.Description
+                callback(null,  response_template)
+            } else if( myReponse.TimeInTransitResponse.Response.ResponseStatus.Code == "1"   ){ 
+           
+               if(myReponse.TimeInTransitResponse.hasOwnProperty('TransitResponse')){
+                let serivceList = myReponse.TimeInTransitResponse.TransitResponse.ServiceSummary
+                response_template.status = 'success',
+                response_template.message = 'correct query'
+                // delete myReponse.TrackResponse.Shipment.Package.ReferenceNumber
+
+           
+                let getGoundInTransit = serivceList.find(item => item.Service.Code == "GND")
+                // console.log(getGoundInTransit)
+                response_template.data = {
+                    'UPS 2nd day air' :  "2 busniess days" ,
+                    'UPS next day air' : "1 busniess day" ,
+                    'UPS Ground' : getGoundInTransit.EstimatedArrival.BusinessDaysInTransit + " business days"
+                }
+                callback(null, response_template)        
+               } else {
+                response_template.message = 'no service found , check your input'
+                callback(null, response_template)       
+               }
+            }
+          }); 
+
+
+
+
+
+}
 
     const GetUpsTrackingStatus = (trackingNumber , callback) => {
         let template = {
@@ -164,12 +259,11 @@ const TrackingUPS = (request_chukoula , callback) => {
             }
           }); 
         }
-    
-
 
 
 module.exports ={ 
     verifyAddressUPS,
     TrackingUPS,
+    GetUpsInTransitTime,
     GetUpsTrackingStatus,
 }
