@@ -99,7 +99,7 @@ router.post('/createOrders', (req, res) => {
 router.post('/createShippment', (req, res) => {
     let {Orders} = req.body
     // console.log(req.body)
-    async.mapLimit(Orders, 25, function (order, callback) {
+    async.mapLimit(Orders, 10, function (order, callback) {
       UPS_YI.getLabel(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -290,27 +290,24 @@ router.post('/createShippmentChukoula', (req, res) => {
  })
 
 router.post('/testdelay', (req , res)=> {
-    res.setTimeout(40000, function(){
-        // console.log('Request has timed out.');
-            res.send({status:'time our for 40s'});
-    });
+    res.setTimeout(6000, function(){ res.send({status:'success'}); })
 })
 
-// router.post('/testSelf', (req , res)=> {
-//         request({
-//             method: 'POST',
-//             // url:     'https://chukoula-api-update.herokuapp.com/testdelay',
-//             url:     'http://localhost:5000/testdelay',
-//           }, function(error, response, body){
-//             // console.log(error)
-//             try {  
-//                      res.send(JSON.parse(body));
-//               } catch {
-//                      res.send({error})
-//               } 
-//           }); 
-
-// })
+router.post('/testSelf', (req , res)=> {
+        request({
+            timeout: 5000 ,
+            method: 'POST',
+            // url:     'https://chukoula-api-update.herokuapp.com/testdelay',
+            url:     'http://localhost:5000/testdelay',
+          }, function(error, response, body){
+            // console.log(error)
+            try {  
+                     res.send(JSON.parse(body));
+              } catch {
+                     res.send({ask:0 ,message:error.code})
+              } 
+          }); 
+})
 
 router.get('/testBatchRequest', (req, res) => {
     let { 

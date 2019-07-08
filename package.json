@@ -17,6 +17,7 @@
     "base64topdf": "^1.1.8",
     "body-parser": "^1.18.3",
     "body-parser-xml": "^1.1.0",
+    "connect-timeout": "^1.9.0",
     "convert-units": "^2.3.4",
     "delivery-tracker": "^1.7.2",
     "express": "^4.16.3",

@@ -34,13 +34,14 @@ const getTrakcingNumber = (order , callback) =>{
 const createOrder_async = (order) =>{
     return new Promise ((resolve , reject) => {
     request({
+        timeout: 25000,
         method: 'POST',
         headers: { "content-type": "application/json"},
         url:     'http://119.23.188.252/api/v1/orders/service/create',
         body:   JSON.stringify(order)
       }, function(error, response, body){
           if(error){
-              reject(error)
+            resolve({ask : 0, message: error.code ,  referenceNumber: orderId });
             }
         let orderId = order.order.referenceNumber
         resolve({...JSON.parse(response.body), referenceNumber: orderId });
@@ -75,7 +76,7 @@ const getLabel = (order, callback) => {
         });     
     }
     // console.log(result)
-    }).catch(err => callback(null, {ask:0 , message:"Interal error"}))
+    }).catch(err => callback(null, { ask:0 , message:"Interal error"}))
 }
 
 //设定简单地址请求信息

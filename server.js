@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const PDFDocument = require('pdfkit');
 const parseString = require('xml2js').parseString;
 var   async = require('async');
+var timeout = require('connect-timeout')
 
 require('body-parser-xml')(bodyParser);
 
@@ -18,6 +19,17 @@ var port = process.env.PORT || 5000 ;
 //     }
 //   }));
 
+// function haltOnTimedout(req,res,next) {
+//     if (req.timedout) {
+//         res.send('timeout!')
+//     } else {
+//         next();
+//     }
+// };
+// app.use(timeout('2s', ))
+// app.use(haltOnTimedout);
+
+
 app.use(bodyParser.json());
 
 app.use('/', require('./router/Chukoula'));
@@ -31,6 +43,9 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Started up at port ${port}`);
 });
+
+var server = app.listen();
+
   
 
   
