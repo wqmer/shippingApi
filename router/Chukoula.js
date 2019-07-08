@@ -296,21 +296,21 @@ router.post('/testdelay', (req , res)=> {
     });
 })
 
-router.post('/testSelf', (req , res)=> {
-        request({
-            method: 'POST',
-            // url:     'https://chukoula-api-update.herokuapp.com/testdelay',
-            url:     'http://localhost:5000/testdelay',
-          }, function(error, response, body){
-            // console.log(error)
-            try {  
-                     res.send(JSON.parse(body));
-              } catch {
-                     res.send({error})
-              } 
-          }); 
+// router.post('/testSelf', (req , res)=> {
+//         request({
+//             method: 'POST',
+//             // url:     'https://chukoula-api-update.herokuapp.com/testdelay',
+//             url:     'http://localhost:5000/testdelay',
+//           }, function(error, response, body){
+//             // console.log(error)
+//             try {  
+//                      res.send(JSON.parse(body));
+//               } catch {
+//                      res.send({error})
+//               } 
+//           }); 
 
-})
+// })
 
 router.get('/testBatchRequest', (req, res) => {
     let { 
