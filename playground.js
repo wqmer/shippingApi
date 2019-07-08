@@ -15,6 +15,7 @@ var md5 = require('md5');
 
 // const stripe = require("stripe")("sk_test_DivqW1nuPGpPCn8ZvHFaTs5400A7SdV62Y");
 
+
 // stripe.customers.list(
 //   { limit: 3 },
 //   function(err, customers) {
@@ -114,93 +115,93 @@ var md5 = require('md5');
 // // };
 
 
-var createOrder = (order , callback) =>{
-    request({
-        method: 'POST',
-        headers: { "content-type": "application/json"},
-        // url:     'http://119.23.188.252/api/v1/orders/service/create',
-        url:     'http://test.chukou.la/action/interface.api.php',
-        body:   JSON.stringify(order)
-      }, function(error, response, body){
-        callback(null,response.body);
-      }); 
-}
+// var createOrder = (order , callback) =>{
+//     request({
+//         method: 'POST',
+//         headers: { "content-type": "application/json"},
+//         // url:     'http://119.23.188.252/api/v1/orders/service/create',
+//         url:     'http://test.chukou.la/action/interface.api.php',
+//         body:   JSON.stringify(order)
+//       }, function(error, response, body){
+//         callback(null,response.body);
+//       }); 
+// }
 
-var Orders = [];
-for(var i = 0; i < 10; i++) {
-    let order = 
-    // {
-    //     "authorization": {
-    //         "token": "8c5b11fe10b339b586e1dbce234e2552",
-    //         "key": "8c5b11fe10b339b586e1dbce234e255252defb9b893f1d963665c9df97b3d7f2"
-    //     },
-    //     "order": {
-    //         "shippingMethodCode": "PK0006",
-    //         "referenceNumber": `${uuid()}`,
-    //         "orderWeight": 0.5
-    //     },
-    //     "recipient": {
-    //         "recipientName": "recipientName",
-    //         "recipientAddress1": "recipientAddress1",
-    //         "recipientCity": "recipientCity",
-    //         "recipientProvince": "recipientProvince",
-    //         "recipientPostCode": "recipientPostCode",
-    //         "recipientCountryCode": "US",
-    //         "recipientTelephone":"2155880271"
-    //     },
-    //         "shipper": {
-    //         "shipperName": "TestByKimi",
-    //         "shipperCountrycode": "US",
-    //         "shipperProvince": "CA",
-    //         "shipperCity": "Irvine",
-    //         "shipperStreet": "shipperStreet",
-    //         "shipperPostcode": "92606",
-    //         "shipperTelephone": "63312345"
-    //     },
+// var Orders = [];
+// for(var i = 0; i < 10; i++) {
+//     let order = 
+//     // {
+//     //     "authorization": {
+//     //         "token": "8c5b11fe10b339b586e1dbce234e2552",
+//     //         "key": "8c5b11fe10b339b586e1dbce234e255252defb9b893f1d963665c9df97b3d7f2"
+//     //     },
+//     //     "order": {
+//     //         "shippingMethodCode": "PK0006",
+//     //         "referenceNumber": `${uuid()}`,
+//     //         "orderWeight": 0.5
+//     //     },
+//     //     "recipient": {
+//     //         "recipientName": "recipientName",
+//     //         "recipientAddress1": "recipientAddress1",
+//     //         "recipientCity": "recipientCity",
+//     //         "recipientProvince": "recipientProvince",
+//     //         "recipientPostCode": "recipientPostCode",
+//     //         "recipientCountryCode": "US",
+//     //         "recipientTelephone":"2155880271"
+//     //     },
+//     //         "shipper": {
+//     //         "shipperName": "TestByKimi",
+//     //         "shipperCountrycode": "US",
+//     //         "shipperProvince": "CA",
+//     //         "shipperCity": "Irvine",
+//     //         "shipperStreet": "shipperStreet",
+//     //         "shipperPostcode": "92606",
+//     //         "shipperTelephone": "63312345"
+//     //     },
     
-    //     "declarationArr": [{
-    //         "declareEnName": "NewTestByKimi",
-    //         "declareQuantity": 1,
-    //         "declareWeight": 3,
-    //         "declareValue": 4,
-    //         "declareCurrencycode": "USD",
-    //         "sku": "PBK"
-    //     }]
-    // }
+//     //     "declarationArr": [{
+//     //         "declareEnName": "NewTestByKimi",
+//     //         "declareQuantity": 1,
+//     //         "declareWeight": 3,
+//     //         "declareValue": 4,
+//     //         "declareCurrencycode": "USD",
+//     //         "sku": "PBK"
+//     //     }]
+//     // }
 
-    {
-      "AppKey": "10d676c62b9d30c7471b2ec7f05f89b6",
-      "AppSecret": "d6b538c614ec9d1d83e0d6c336e93a83975ab85f",
-      "Method": "UPSTEST",
-      "OrderID": `${uuid()}`,
-      "Weight": 12,
-      "Sname": "KimiTest",
-      "Scompany": "KimiCompany",
-      "Sstate": "CA",
-      "Sadd1": " 2777 Alton Parkway",
-      "Sadd2": "Apt 347",
-      "Scity": "Irvine",
-      "Spostcode": "92606",
-      "Stel": "2155880271",
-      "Scountry": "US",
-      "Fname": "KimiTest",
-      "Fcountry": "US",
-      "Fstate": "CA",
-      "Fcity": "Irvine",
-      "Fadd1": "2513 Sullivan",
-      "Fadd2": "",
-      "Fpostcode": "92614",
-      "Ftel": "2155880271",
-      "Note": "test sku"
-  }
-  Orders.push(order);
-}
+//     {
+//       "AppKey": "10d676c62b9d30c7471b2ec7f05f89b6",
+//       "AppSecret": "d6b538c614ec9d1d83e0d6c336e93a83975ab85f",
+//       "Method": "UPSTEST",
+//       "OrderID": `${uuid()}`,
+//       "Weight": 12,
+//       "Sname": "KimiTest",
+//       "Scompany": "KimiCompany",
+//       "Sstate": "CA",
+//       "Sadd1": " 2777 Alton Parkway",
+//       "Sadd2": "Apt 347",
+//       "Scity": "Irvine",
+//       "Spostcode": "92606",
+//       "Stel": "2155880271",
+//       "Scountry": "US",
+//       "Fname": "KimiTest",
+//       "Fcountry": "US",
+//       "Fstate": "CA",
+//       "Fcity": "Irvine",
+//       "Fadd1": "2513 Sullivan",
+//       "Fadd2": "",
+//       "Fpostcode": "92614",
+//       "Ftel": "2155880271",
+//       "Note": "test sku"
+//   }
+//   Orders.push(order);
+// }
 
-async.mapLimit(Orders, 10, function (order, callback) {
-   createOrder(order, callback);
-}, function (err, result) {
-  console.log('final');
-  console.log(result);//模拟返回订单信息
-});
+// async.mapLimit(Orders, 10, function (order, callback) {
+//    createOrder(order, callback);
+// }, function (err, result) {
+//   console.log('final');
+//   console.log(result);//模拟返回订单信息
+// });
 
 

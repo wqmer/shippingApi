@@ -86,7 +86,7 @@ router.post('/zoneLookUpNew', (req, res) => {
 
 router.post('/createOrders', (req, res) => {
     let {Orders} = req.body
-    async.mapLimit(Orders, 25, function (order, callback) {
+    async.mapLimit(Orders, 20, function (order, callback) {
       UPS_YI.createOrder(order, callback);
      }, function (err, result) {
         if(err)console.log(err)
@@ -153,14 +153,19 @@ router.post('/getReceivingExpense', (req, res) => {
  router.post('/inTransitTimeUps', (req, res) => {
     let {Postcode_Pairs} = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-    async.mapLimit(Postcode_Pairs, 25, function (record, callback) {
+    try {  async.mapLimit(Postcode_Pairs, 25, function (record, callback) {
         UPS.GetUpsInTransitTime(record, callback);
      }, function (err, result) {
         if(err)console.log(err)
         // console.log(result)
         // res.json(result)
         res.send({result:result});
-     });
+     }); } 
+     catch (err){
+        res.send({  "code": 500 , "message": "internal error" });
+
+     }
+
  })
 
  router.post('/getUpsTrackingStatus', (req, res) => {
@@ -284,10 +289,28 @@ router.post('/createShippmentChukoula', (req, res) => {
      });
  })
 
+router.post('/testdelay', (req , res)=> {
+    res.setTimeout(40000, function(){
+        // console.log('Request has timed out.');
+            res.send({status:'time our for 40s'});
+    });
+})
 
+router.post('/testSelf', (req , res)=> {
+        request({
+            method: 'POST',
+            // url:     'https://chukoula-api-update.herokuapp.com/testdelay',
+            url:     'http://localhost:5000/testdelay',
+          }, function(error, response, body){
+            // console.log(error)
+            try {  
+                     res.send(JSON.parse(body));
+              } catch {
+                     res.send({error})
+              } 
+          }); 
 
-
-
+})
 
 router.get('/testBatchRequest', (req, res) => {
     let { 
@@ -300,7 +323,7 @@ router.get('/testBatchRequest', (req, res) => {
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
 
 // console.log(req.query)
-    const createOrder = (order , callback) =>{
+    const createOrder = (order) =>{
         request({
             method: 'POST',
             headers: { "content-type": "application/json"},

@@ -51,7 +51,8 @@ const createOrder_async = (order) =>{
 
 const getLabel = (order, callback) => {
     createOrder_async(order).then( result => {
-    if(result.ask == 0){
+    if(result.ask == 0 && !result.message.includes("参考单号已存在")){
+        // console.log("test" )
         callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } )
     } else {
         let param = {
@@ -59,7 +60,7 @@ const getLabel = (order, callback) => {
             "token": order.authorization.token,
             "key":  order.authorization.key
                },
-            "waybillNumber": result.data.waybillNumber
+            "waybillNumber": order.order.referenceNumber
             }
         request({
                  method: 'POST',
@@ -69,11 +70,12 @@ const getLabel = (order, callback) => {
             }, function(error, response, body){
                 let myReponse = JSON.parse(  response.body )
                 // callback(null, response.body)
+                // console.log(param)
             callback(null, { ask: 1 , message: "Success", ...result.data, sku:order.declarationArr[0].declareEnName, labelUrl:myReponse.data?myReponse.data.url:'' });
         });     
     }
     // console.log(result)
-    })
+    }).catch(err => callback(null, {ask:0 , message:"Interal error"}))
 }
 
 //设定简单地址请求信息
