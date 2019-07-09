@@ -32,6 +32,12 @@ var port = process.env.PORT || 5000 ;
 
 app.use(bodyParser.json());
 
+app.use(function(err, req, res, next) {
+    if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+      res.status(400).send({ code: 400, message: "bad request" });
+    } else next();
+  });
+
 app.use('/', require('./router/Chukoula'));
 
 app.get('/', (req, res) => {
@@ -44,7 +50,6 @@ app.listen(port, () => {
     console.log(`Started up at port ${port}`);
 });
 
-var server = app.listen();
 
   
 

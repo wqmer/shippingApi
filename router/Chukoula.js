@@ -99,7 +99,7 @@ router.post('/createOrders', (req, res) => {
 router.post('/createShippment', (req, res) => {
     let {Orders} = req.body
     // console.log(req.body)
-    async.mapLimit(Orders, 10, function (order, callback) {
+    async.mapLimit(Orders, 50, function (order, callback) {
       UPS_YI.getLabel(order, callback);
      }, function (err, result) {
         if(err)console.log(err)

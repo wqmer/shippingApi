@@ -12,9 +12,93 @@ const config = require('./service/config')
 const USPS = require('usps-webtools');
 var md5 = require('md5');
 
+const parseString = require('xml2js').parseString;
+const builder = require('xmlbuilder');
 
+
+// url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="${config.usps.user_id}">
+// <Revision>2</Revision>
+// <Package ID="1ST">
+// <Service>PRIORITY</Service>
+// <ZipOrigination>${zipcode_pair.from}</ZipOrigination>
+// <ZipDestination>${zipcode_pair.to}</ZipDestination>
+// <Pounds>0</Pounds>
+// <Ounces>3.5</Ounces>
+// <Container>VARIABLE</Container>
+// <Size>REGULAR</Size>
+// <Machinable>true</Machinable>
+// <DropOffTime>08:00</DropOffTime>
+// <ShipDate>${moment().add(1,'days').format('L')}</ShipDate>
+// </Package>
+// </RateV4Request>`,
+const param = {
+    Package: {
+      '@ID': '1ST',
+      Service: 'PRIORITY',
+      ZipOrigination: '92606',
+      ZipDestination: '19103',
+      Pounds: '1',
+      Ounces: '0' ,
+      Container: 'VARIABLE',
+      Size: 'REGULAR',
+      Machinable: true
+    }
+  };
+const obj = {
+    ['RateV4Request']: {
+      // Until jshint 2.10.0 comes out, we have to explicitly ignore spread operators in objects
+      // jshint ignore:start
+        ...param , 
+      // jshint ignore:end
+    ['@USERID']: '849XUEHU5746'
+    }
+  };
+const xml = builder.create(obj).end();
+const opts = {
+    url: 'http://production.shippingapis.com/ShippingAPI.dll',
+    qs: {
+      API: 'RateV4',
+      XML: xml
+    },
+  };
+
+request(opts, (err, res, body) => {
+    parseString(res.body, (err, result) => { 
+        let error = result.RateV4Response.Package[0].Error
+        let zoneCode = result.RateV4Response.Package[0].Zone
+        error? console.log ({ success:false, description : error[0].Description[0]}):console.log( { success:true , zone : zoneCode[0]}) 
+     })  
+})
+ 
+// var xml = builder.create('root')
+//   .ele('Revision')
+//   .ele('Package')
+//   .ele('Service')
+//   .ele('ZipOrigination')
+//   .ele('ZipDestination')
+//   .ele('repo', {'type': 'git'}, 'git://github.com/oozcitak/xmlbuilder-js.git')
+//   .end({ pretty: true});
+ 
+// console.log(xml);
 // const stripe = require("stripe")("sk_test_DivqW1nuPGpPCn8ZvHFaTs5400A7SdV62Y");
-
+// const usps = new USPS({
+//     server: 'http://production.shippingapis.com/ShippingAPI.dll',
+//     userId: '849XUEHU5746',
+//     // ttl: 10000 //TTL in milliseconds for request
+//   });
+//   usps.pricingRateV4({        
+//   Service: 'PRIORITY',
+//   ZipOrigination:  92606,
+//   ZipDestination: 19103,
+//   Pounds: 1,
+//   Ounces: 0,
+//   Container: 'VARIABLE',
+//   Size: 'REGULAR',
+// //   Girth: pricingRate.Girth,
+//   Machinable: true
+// } ,  function(err, ZONE) {
+//     if(err)console.log(err)
+//     console.log(ZONE); })
 
 // stripe.customers.list(
 //   { limit: 3 },

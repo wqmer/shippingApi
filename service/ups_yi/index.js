@@ -44,7 +44,12 @@ const createOrder_async = (order) =>{
             resolve({ask : 0, message: error.code ,  referenceNumber: orderId });
             }
         let orderId = order.order.referenceNumber
-        resolve({...JSON.parse(response.body), referenceNumber: orderId });
+        try{
+            resolve({...JSON.parse(response.body), referenceNumber: orderId });
+        } catch(error) { 
+            resolve({ask : 0, message: error ,  referenceNumber: orderId });
+        }
+      
       }); 
     })
 }

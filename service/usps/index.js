@@ -7,35 +7,50 @@ const request = require('request');
 const moment = require('moment')
 const USPS = require('usps-webtools');
 const parseString = require('xml2js').parseString;
+const builder = require('xmlbuilder');
 
 
 
 var getUspsZone = (zipcode_pair , callback) => {
-    request({
-        url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="${config.usps.user_id}">
-        <Revision>2</Revision>
-        <Package ID="1ST">
-        <Service>PRIORITY</Service>
-        <ZipOrigination>${zipcode_pair.from}</ZipOrigination>
-        <ZipDestination>${zipcode_pair.to}</ZipDestination>
-        <Pounds>0</Pounds>
-        <Ounces>3.5</Ounces>
-        <Container>VARIABLE</Container>
-        <Size>REGULAR</Size>
-        <Machinable>true</Machinable>
-        <DropOffTime>08:00</DropOffTime>
-        <ShipDate>${moment().add(1,'days').format('L')}</ShipDate>
-        </Package>
-        </RateV4Request>`,
-        headers: { "content-type": "text/plain"},
-     }, (error, response, body) => {
+  const param = {
+    Package: {
+      '@ID': '1ST',
+      Service: 'PRIORITY',
+      ZipOrigination: zipcode_pair.from,
+      ZipDestination: zipcode_pair.to,
+      Pounds: '1',
+      Ounces: '0' ,
+      Container: 'VARIABLE',
+      Size: 'REGULAR',
+      Machinable: true
+    }
+  };
+const obj = {
+    ['RateV4Request']: {
+      // Until jshint 2.10.0 comes out, we have to explicitly ignore spread operators in objects
+      // jshint ignore:start
+        ...param , 
+      // jshint ignore:end
+    ['@USERID']: config.usps.user_id
+    }
+  };
+const xml = builder.create(obj).end();
+const opts = {
+    url: 'http://production.shippingapis.com/ShippingAPI.dll',
+    qs: {
+      API: 'RateV4',
+      XML: xml
+    },
+  };
+
+
+
+  request(opts, (error, response, body) => {
   if (error) {
       callback('Unable to connect server');
   } else if (response.statusCode === 400) {
       callback('Unable to fetch data.');
-  } else if (response.statusCode === 200) {
-         //response.body.state == undefined && retry > 0 ? resolve(getUspsTracking(id , retry - 1) ) : resolve(response.body.state);
-     
+  } else if (response.statusCode === 200) {   
      parseString(response.body, (err, result) => { 
         let error = result.RateV4Response.Package[0].Error
         let zoneCode = result.RateV4Response.Package[0].Zone
@@ -129,10 +144,8 @@ var getUspsZoneUpdate = (zipcode_pair , callback) => {
 //         //     myResponse.VarifiedAddress.city = result.AddressValidateResponse.Address[0].City[0]
 //         //     myResponse.VarifiedAddress.state = result.AddressValidateResponse.Address[0].State[0]
 //         //     myResponse.VarifiedAddress.zipcode = result.AddressValidateResponse.Address[0].Zip5[0]
-
 //         //      callback(null,myResponse )
 //         //  }
-
 //         callback(null, result )
 //      })     
 //    }
