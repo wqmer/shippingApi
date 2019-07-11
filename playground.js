@@ -15,7 +15,11 @@ var md5 = require('md5');
 const parseString = require('xml2js').parseString;
 const builder = require('xmlbuilder');
 
+const requestData = {"instructionList":[{"channelCode":"FirstParcel","userOrderNumber":"5296000000587938---20190625888296","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.23,"length":1,"width":1,"height":1},"itemList":[{"productName":"891914284586850","productNameEn":"891914284586850","productSku":"","hsCode":1,"quantity":"1","unitPrice":"891914284586850","unitWeight":0.23}]}]}]}
+const AppSecret = '/xoU5d/d7a+xDOboQmiOx/xsVRYuiOE8PfSH6OSl'
+const date = '2019-06-26 13:15:00'
 
+console.log(md5(JSON.stringify(requestData) + AppSecret + date));
 // url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="${config.usps.user_id}">
 // <Revision>2</Revision>
 // <Package ID="1ST">
@@ -31,44 +35,44 @@ const builder = require('xmlbuilder');
 // <ShipDate>${moment().add(1,'days').format('L')}</ShipDate>
 // </Package>
 // </RateV4Request>`,
-const param = {
-    Package: {
-      '@ID': '1ST',
-      Service: 'PRIORITY',
-      ZipOrigination: '92606',
-      ZipDestination: '19103',
-      Pounds: '1',
-      Ounces: '0' ,
-      Container: 'VARIABLE',
-      Size: 'REGULAR',
-      Machinable: true
-    }
-  };
-const obj = {
-    ['RateV4Request']: {
-      // Until jshint 2.10.0 comes out, we have to explicitly ignore spread operators in objects
-      // jshint ignore:start
-        ...param , 
-      // jshint ignore:end
-    ['@USERID']: '849XUEHU5746'
-    }
-  };
-const xml = builder.create(obj).end();
-const opts = {
-    url: 'http://production.shippingapis.com/ShippingAPI.dll',
-    qs: {
-      API: 'RateV4',
-      XML: xml
-    },
-  };
+// const param = {
+//     Package: {
+//       '@ID': '1ST',
+//       Service: 'PRIORITY',
+//       ZipOrigination: '92606',
+//       ZipDestination: '19103',
+//       Pounds: '1',
+//       Ounces: '0' ,
+//       Container: 'VARIABLE',
+//       Size: 'REGULAR',
+//       Machinable: true
+//     }
+//   };
+// const obj = {
+//     ['RateV4Request']: {
+//       // Until jshint 2.10.0 comes out, we have to explicitly ignore spread operators in objects
+//       // jshint ignore:start
+//         ...param , 
+//       // jshint ignore:end
+//     ['@USERID']: '849XUEHU5746'
+//     }
+//   };
+// const xml = builder.create(obj).end();
+// const opts = {
+//     url: 'http://production.shippingapis.com/ShippingAPI.dll',
+//     qs: {
+//       API: 'RateV4',
+//       XML: xml
+//     },
+//   };
 
-request(opts, (err, res, body) => {
-    parseString(res.body, (err, result) => { 
-        let error = result.RateV4Response.Package[0].Error
-        let zoneCode = result.RateV4Response.Package[0].Zone
-        error? console.log ({ success:false, description : error[0].Description[0]}):console.log( { success:true , zone : zoneCode[0]}) 
-     })  
-})
+// request(opts, (err, res, body) => {
+//     parseString(res.body, (err, result) => { 
+//         let error = result.RateV4Response.Package[0].Error
+//         let zoneCode = result.RateV4Response.Package[0].Zone
+//         error? console.log ({ success:false, description : error[0].Description[0]}):console.log( { success:true , zone : zoneCode[0]}) 
+//      })  
+// })
  
 // var xml = builder.create('root')
 //   .ele('Revision')

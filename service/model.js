@@ -21,7 +21,7 @@ class UPS {
                           "ServiceAccessToken": {
                                              "AccessLicenseNumber": this.AccessLicenseNumber 
                            }   
-                        },
+                        }
                   }
     }
 

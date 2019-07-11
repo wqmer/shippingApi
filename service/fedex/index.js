@@ -13,8 +13,7 @@ const addressValidation = (requestArgs , callback) => {
         // console.log(client)
         if(err)console.log(err)
         client.addressValidation(requestArgs,  function(err, result) {
-            console.log(requestArgs)
-            callback(null, result);
+          callback(null, result);
         });
     }); 
 }       
@@ -29,12 +28,12 @@ const processShipment = (requestArgs , callback) => {
 }   
 
 const getRates = (requestArgs , callback) => {
-    soap.createClient(path.join(__dirname, wsdl, 'RateService_v24.wsdl'), function(err, client) {
-    if(err)console.log(err)
-    let args = extend(uility.FEDEXRequestAuth, uility.handleRateRequest(requestArgs))
-    client.getRates(args,  function(err, result) {
-        // console.log(args)
-        callback(null, result);
+      soap.createClient(path.join(__dirname, wsdl, 'RateService_v24.wsdl'), function(err, client) {
+      if(err)console.log(err)
+      let args = extend(uility.FEDEXRequestAuth, uility.handleRateRequest(requestArgs))
+      client.getRates(args,  function(err, result) {
+          // console.log(args)
+          callback(null, result);
     });
 });
 }    

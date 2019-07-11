@@ -34,7 +34,7 @@ const getTrakcingNumber = (order , callback) =>{
 const createOrder_async = (order) =>{
     return new Promise ((resolve , reject) => {
     request({
-        timeout: 25000,
+        timeout: 20000,
         method: 'POST',
         headers: { "content-type": "application/json"},
         url:     'http://119.23.188.252/api/v1/orders/service/create',
@@ -69,11 +69,13 @@ const getLabel = (order, callback) => {
             "waybillNumber": order.order.referenceNumber
             }
         request({
+                 timeout: 10000,
                  method: 'POST',
                  headers: { "content-type": "application/json"},
                  url:   'http://119.23.188.252/api/v1/orders/service/getLabel',
                  body:   JSON.stringify(param)
             }, function(error, response, body){
+                if(error) callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
                 let myReponse = JSON.parse(  response.body )
                 // callback(null, response.body)
                 // console.log(param)

@@ -208,11 +208,6 @@ const GetUpsInTransitTime = (postcode_pairs,  callback) => {
                }
             }
           }); 
-
-
-
-
-
 }
 
     const GetUpsTrackingStatus = (trackingNumber , callback) => {

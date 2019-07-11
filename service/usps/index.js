@@ -2,7 +2,6 @@ const soap = require('soap');
 const config = require('../config')
 const path = require('path')
 const extend = require('extend')
-
 const request = require('request');
 const moment = require('moment')
 const USPS = require('usps-webtools');
@@ -25,6 +24,7 @@ var getUspsZone = (zipcode_pair , callback) => {
       Machinable: true
     }
   };
+
 const obj = {
     ['RateV4Request']: {
       // Until jshint 2.10.0 comes out, we have to explicitly ignore spread operators in objects
@@ -35,7 +35,9 @@ const obj = {
     }
   };
 const xml = builder.create(obj).end();
+
 const opts = {
+    timeout: 25000,
     url: 'http://production.shippingapis.com/ShippingAPI.dll',
     qs: {
       API: 'RateV4',
@@ -45,9 +47,9 @@ const opts = {
 
 
 
-  request(opts, (error, response, body) => {
+request(opts, (error, response, body) => {
   if (error) {
-      callback('Unable to connect server');
+      callback({ success: false, message: error.code});
   } else if (response.statusCode === 400) {
       callback('Unable to fetch data.');
   } else if (response.statusCode === 200) {   
@@ -96,61 +98,6 @@ var getUspsZoneUpdate = (zipcode_pair , callback) => {
   })
 }
 
-
-
-// const varifyAddress = (address, callback) => {
-//     request({
-//         url: `https://secure.shippingapis.com/ShippingAPI.dll?API=Verify&XML=<AddressValidateRequest USERID="${config.usps.user_id}">` +
-//         // '<?xml version="1.0" encoding="UTF-8"?>'+
-//         '<Revision>1</Revision>'+
-//         '<Address>'+
-//         `<Address1>${address.address1}</Address1>` +
-//         `<Address2>${address.address2}</Address2>` +
-//         `<City>${address.city}</City>` +
-//         `<State>${address.state}</State>` +
-//         `<Zip5>${address.zipcode}</Zip5>` +
-//        `<Zip4></Zip4>` +
-//         `</Address>`+
-//         `</AddressValidateRequest>`
-//      }, (error, response, body) => {
-//   if (error) {
-//       callback('Unable to connect server');
-//   } else if (response.statusCode === 400) {
-//       callback('Unable to fetch data.');
-//   } else if (response.statusCode === 200) {
-//          //response.body.state == undefined && retry > 0 ? resolve(getUspsTracking(id , retry - 1) ) : resolve(response.body.state);
-  
-//      let myResponse = { 
-//         referenceNumber:address.referenceNumber ,
-//         status: 'failed',
-//         message :'Can not find any address to match',
-//         VarifiedAddress: {
-//             address1:undefined ,
-//             address2: undefined,
-//             city: undefined,
-//             state: undefined,
-//             zipcode: undefined,
-//         }
-//      }
-//      parseString(response.body, (err, result) => { 
-//         //  if(result.AddressValidateResponse.Address[0].Error != undefined){
-//         //      callback(null, myResponse)
-//         //  }
-//         //  else {
-//         //     myResponse.status = 'success',
-//         //     myResponse.message = Array.isArray(result.AddressValidateResponse.Address[0].ReturnText)?result.AddressValidateResponse.Address[0].ReturnText[0]:'Verify address successfully'
-//         //     myResponse.VarifiedAddress.address1 = result.AddressValidateResponse.Address[0].Address2[0]
-//         //     myResponse.VarifiedAddress.address2 = Array.isArray(result.AddressValidateResponse.Address[0].Address1)?result.AddressValidateResponse.Address[0].Address1[0]:undefined
-//         //     myResponse.VarifiedAddress.city = result.AddressValidateResponse.Address[0].City[0]
-//         //     myResponse.VarifiedAddress.state = result.AddressValidateResponse.Address[0].State[0]
-//         //     myResponse.VarifiedAddress.zipcode = result.AddressValidateResponse.Address[0].Zip5[0]
-//         //      callback(null,myResponse )
-//         //  }
-//         callback(null, result )
-//      })     
-//    }
-//  })
-// }
 
 const varifyAddress = (args, callback) => {      
      let myResponse = { 
@@ -220,17 +167,6 @@ const usps = new USPS({
           }     
       });
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

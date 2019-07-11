@@ -39,6 +39,8 @@ app.use(function(err, req, res, next) {
   });
 
 app.use('/', require('./router/Chukoula'));
+app.use('/', require('./router/ShippingTool.js'));
+app.use('/', require('./router/Test.js'));
 
 app.get('/', (req, res) => {
     let hello = `Hello, Api Server is running on ${port}`
