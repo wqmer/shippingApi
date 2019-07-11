@@ -114,8 +114,6 @@ const getLabel = (order, callback) => {
                     if(error) callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
                 let myReponse = JSON.parse(  response.body )
                 // console.log(myReponse)
-                    // callback(null, response.body)
-                    // console.log(param)d
              callback(null, { 
                     ask: 1 , message: "Success", 
                     referenceNumber: order.order.referenceNumber ,
@@ -138,7 +136,7 @@ const getLabel = (order, callback) => {
                 ask: 1 , message: "Success", 
                 ...result.data,
                 sku:order.declarationArr[0].declareEnName, 
-                labelUrl:`http://119.23.188.252/index/get-label/code/${result.waybillNumber}`
+                labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`
             });
     }
     // console.log(result)
