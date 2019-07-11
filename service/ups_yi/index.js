@@ -111,8 +111,10 @@ const getLabel = (order, callback) => {
                      url:  'http://119.23.188.252/api/v1/orders/service/getTrackingNumber',
                      body:   JSON.stringify(param)
                 }, function(error, response, body){
-                    if(error) callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
-                let myReponse = JSON.parse(  response.body )
+            if(error) {
+                callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
+            }else {
+                let myReponse = JSON.parse( response.body )
                 // console.log(myReponse)
              callback(null, { 
                     ask: 1 , message: "Success", 
@@ -124,10 +126,10 @@ const getLabel = (order, callback) => {
                     sku:order.declarationArr[0].declareEnName, 
                     labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`
                 });
-            });
-       
+            }
 
-        }else {     
+            });
+        } else {     
             callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } ) 
          }
     
