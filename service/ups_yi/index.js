@@ -113,7 +113,7 @@ const getLabel = (order, callback) => {
                 }, function(error, response, body){
                     if(error) callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
                 let myReponse = JSON.parse(  response.body )
-                console.log(myReponse)
+                // console.log(myReponse)
                     // callback(null, response.body)
                     // console.log(param)d
              callback(null, { 
