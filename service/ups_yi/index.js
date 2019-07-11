@@ -55,32 +55,91 @@ const createOrder_async = (order) =>{
 }
 
 
+// const getLabel = (order, callback) => {
+//     createOrder_async(order).then( result => {
+//     if(result.ask == 0 && !result.message.includes("参考单号已存在")){
+//         // console.log("test" )
+//         callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } )   
+//     } else {
+//         let param = {
+//             "authorization": {
+//             "token": order.authorization.token,
+//             "key":  order.authorization.key
+//                },
+//             "waybillNumber": order.order.referenceNumber
+//             }
+//         request({
+//                  timeout: 10000,
+//                  method: 'POST',
+//                  headers: { "content-type": "application/json"},
+//                  url:   'http://119.23.188.252/api/v1/orders/service/getLabel',
+//                  body:   JSON.stringify(param)
+//             }, function(error, response, body){
+//                 if(error) callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
+//                 let myReponse = JSON.parse(  response.body )
+//                 // callback(null, response.body)
+//                 // console.log(param)
+//             callback(null, { 
+//                 ask: 1 , message: "Success", 
+//                 referenceNumber: order.order.referenceNumber ,
+//                 waybillNumber: "YMAF20190711000031",
+//                 trackingNumber: "YMAF20190711000031",
+//                 sku:order.declarationArr[0].declareEnName, 
+//                 labelUrl:myReponse.data?myReponse.data.url:'' });
+//         });     
+//     }
+//     // console.log(result)
+//     }).catch(err => callback(null, { ask:0 , message:"Interal error"}))
+// }
+
+
 const getLabel = (order, callback) => {
     createOrder_async(order).then( result => {
-    if(result.ask == 0 && !result.message.includes("参考单号已存在")){
-        // console.log("test" )
-        callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } )
-    } else {
-        let param = {
-            "authorization": {
-            "token": order.authorization.token,
-            "key":  order.authorization.key
-               },
-            "waybillNumber": order.order.referenceNumber
-            }
-        request({
-                 timeout: 10000,
-                 method: 'POST',
-                 headers: { "content-type": "application/json"},
-                 url:   'http://119.23.188.252/api/v1/orders/service/getLabel',
-                 body:   JSON.stringify(param)
-            }, function(error, response, body){
-                if(error) callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
+    if(result.ask == 0 ){
+        if (result.message.includes("参考单号已存在")){
+            let param = {
+                "authorization": {
+                "token": order.authorization.token,
+                "key":  order.authorization.key
+                   },
+                "waybillNumber": order.order.referenceNumber
+                }
+            request({
+                     timeout: 10000,
+                     method: 'POST',
+                     headers: { "content-type": "application/json"},
+                     url:  'http://119.23.188.252/api/v1/orders/service/getTrackingNumber',
+                     body:   JSON.stringify(param)
+                }, function(error, response, body){
+                    if(error) callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
                 let myReponse = JSON.parse(  response.body )
-                // callback(null, response.body)
-                // console.log(param)
-            callback(null, { ask: 1 , message: "Success", ...result.data, sku:order.declarationArr[0].declareEnName, labelUrl:myReponse.data?myReponse.data.url:'' });
-        });     
+                console.log(myReponse)
+                    // callback(null, response.body)
+                    // console.log(param)d
+             callback(null, { 
+                    ask: 1 , message: "Success", 
+                    referenceNumber: order.order.referenceNumber ,
+                    waybillNumber: myReponse.data.waybillNumber,
+                    trackingNumber: myReponse.data.trackingNumber,
+                    serverNumber: "",
+                    isAsynch: "N",
+                    sku:order.declarationArr[0].declareEnName, 
+                    labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`
+                });
+            });
+       
+
+        }else {     
+            callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } ) 
+         }
+    
+    } else {
+            callback(null, { 
+                ask: 1 , message: "Success", 
+                ...result.data,
+                sku:order.declarationArr[0].declareEnName, 
+                labelUrl:`http://119.23.188.252/index/get-label/code/${result.waybillNumber}`
+            });
     }
     // console.log(result)
     }).catch(err => callback(null, { ask:0 , message:"Interal error"}))
