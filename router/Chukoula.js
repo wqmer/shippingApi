@@ -1,18 +1,22 @@
 const express = require('express');
-const UPS_YI = require('../service/ups_yi')
 const TOOL = require('../service/tool')
 const PDFDocument = require('pdfkit');
 const parseString = require('xml2js').parseString;
+
+const UPS_YI = require('../service/ups_yi')
+const USPS_MEIYUN = require('../service/usps_meiyun')
 const UPS = require('../service/ups')
 const USPS = require('../service/usps')
 const FEDEX = require('../service/fedex')
 const CHUKOULA = require('../service/chukoula')
 const ENDICIA = require('../service/usps_endicia')
+
 const async = require('async');
 const base64 = require('base64topdf');
 const uuid = require('uuid')
 const request = require('request');
 const router = express.Router();
+const base64ToImage = require('base64-to-image');
 
 
 
@@ -124,7 +128,7 @@ router.post('/createShippmentFEDEX', (req, res) => {
  })
 
 //--fedex预估运费
- router.post('/getRateFEDEX', (req, res) => {
+router.post('/getRateFEDEX', (req, res) => {
     let {
         args
     } = req.body
@@ -139,6 +143,7 @@ router.post('/createShippmentFEDEX', (req, res) => {
      });
  })
 
+ 
 
 //出口拉创建订单
 router.post('/createShippmentChukoula', (req, res) => {
@@ -152,6 +157,35 @@ router.post('/createShippmentChukoula', (req, res) => {
         if(err)console.log(err)
         // console.log(result)
         // res.json(result)
+        res.send({result:result});
+     });
+ })
+
+
+ router.post('/addSenderAddress', (req, res) => {
+    let {
+        address
+    } = req.body
+    // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+    async.mapLimit(address, 10, function (record, callback) {
+         USPS_MEIYUN.addSenderAddress(record, callback);
+     }, function (err, result) {
+        if(err)console.log(err)
+        // console.log(result)
+        // res.json(result)
+        res.send({result:result});
+     });
+ })
+
+ router.post('/createOrderMeiyun', (req, res) => {
+    let {
+        orders
+    } = req.body
+    // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+    async.mapLimit(orders, 10, function (record, callback) {
+         USPS_MEIYUN.getLabel(record, callback);
+     }, function (err, result) {
+        if(err)console.log(err)
         res.send({result:result});
      });
  })

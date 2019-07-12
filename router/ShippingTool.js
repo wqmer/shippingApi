@@ -103,7 +103,8 @@ router.post('/trackingUps', (req, res) => {
  router.post('/inTransitTimeUps', (req, res) => {
     let {Postcode_Pairs} = req.body
     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-    try {  async.mapLimit(Postcode_Pairs, 25, function (record, callback) {
+    try {  
+        async.mapLimit(Postcode_Pairs, 25, function (record, callback) {
         UPS.GetUpsInTransitTime(record, callback);
      }, function (err, result) {
         if(err)console.log(err)

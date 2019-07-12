@@ -40,10 +40,11 @@ const createOrder_async = (order) =>{
         url:     'http://119.23.188.252/api/v1/orders/service/create',
         body:   JSON.stringify(order)
       }, function(error, response, body){
-          if(error){
+        let orderId = order.order.referenceNumber
+        if(error){
             resolve({ask : 0, message: error.code ,  referenceNumber: orderId });
             }
-        let orderId = order.order.referenceNumber
+       
         try{
             resolve({...JSON.parse(response.body), referenceNumber: orderId });
         } catch(error) { 
@@ -96,7 +97,7 @@ const createOrder_async = (order) =>{
 const getLabel = (order, callback) => {
     createOrder_async(order).then( result => {
     if(result.ask == 0 ){
-        if (result.message.includes("参考单号已存在")){
+        if(result.message.includes("参考单号已存在")){
             let param = {
                 "authorization": {
                 "token": order.authorization.token,
@@ -116,7 +117,7 @@ const getLabel = (order, callback) => {
             }else {
                 let myReponse = JSON.parse( response.body )
                 // console.log(myReponse)
-             callback(null, { 
+                callback(null, { 
                     ask: 1 , message: "Success", 
                     referenceNumber: order.order.referenceNumber ,
                     waybillNumber: myReponse.data.waybillNumber,

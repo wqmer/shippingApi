@@ -6,18 +6,26 @@ const async = require('async');
 const fs = require('fs');
 const extend = require('extend');
 const base64 = require('base64topdf');
+const base64ToImage = require('base64-to-image');
 const convert = require('convert-units')
 const moment = require('moment')
 const config = require('./service/config')
 const USPS = require('usps-webtools');
-var md5 = require('md5');
+const md5 = require('md5');
 
 const parseString = require('xml2js').parseString;
 const builder = require('xmlbuilder');
 
-const requestData = {"instructionList":[{"channelCode":"FirstParcel","userOrderNumber":"5296000000587938---20190625888296","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.23,"length":1,"width":1,"height":1},"itemList":[{"productName":"891914284586850","productNameEn":"891914284586850","productSku":"","hsCode":1,"quantity":"1","unitPrice":"891914284586850","unitWeight":0.23}]}]}]}
-const AppSecret = '/xoU5d/d7a+xDOboQmiOx/xsVRYuiOE8PfSH6OSl'
-const date = '2019-06-26 13:15:00'
+var optionalObj = {'fileName': 'testlabel', 'type':'png'};
+var path = './'
+var base64Str = 
+ base64ToImage(base64Str,path,optionalObj); 
+
+
+// const requestData = {"instructionList":[{"channelCode":"FirstParcel","userOrderNumber":"5296000000587938---20190625888296","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.23,"length":1,"width":1,"height":1},"itemList":[{"productName":"891914284586850","productNameEn":"891914284586850","productSku":"","hsCode":1,"quantity":"1","unitPrice":"891914284586850","unitWeight":0.23}]}]}]}
+// const AppSecret = '/xoU5d/d7a+xDOboQmiOx/xsVRYuiOE8PfSH6OSl'
+// const date = '2019-06-26 13:15:00'
+
 
 console.log(md5(JSON.stringify(requestData) + AppSecret + date));
 // url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="${config.usps.user_id}">

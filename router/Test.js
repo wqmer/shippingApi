@@ -17,7 +17,7 @@ const router = express.Router();
 
 
 
-module.exports = router
+
 
 
 
@@ -115,3 +115,7 @@ router.get('/testBatchRequest', (req, res) => {
         res.send({result:result});
      });
  })
+
+
+
+ module.exports = router
