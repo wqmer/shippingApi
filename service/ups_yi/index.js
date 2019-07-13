@@ -279,7 +279,7 @@ const getLabel = (order, callback) => {
                                             });
                           //获取失败 ，返回
                            }else{  
-                                  callback(null, {  ask: 0 , message: myReponse.message + " ,请联系管理员" });
+                                  callback(null, {  ask: 0 , message: myReponse.message + " ,请联系管理员" ,  referenceNumber:order.order.referenceNumber });
 
                 // label 转换成 base64
                 // if(order.order.shippingMethodCode == "PK0006"){
