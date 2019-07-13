@@ -111,20 +111,27 @@ const getLabel = (order, callback) => {
                      url:  'http://119.23.188.252/api/v1/orders/service/getTrackingNumber',
                      body:   JSON.stringify(param)
             }, function(error, response, body){
-            let myReponse = JSON.parse(response.body )
+                var myReponse = JSON.parse(response.body )    
             if(error) {
                  callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
-            }else {          
-                 callback(null, { 
-                    ask: 1 , message: "Success", 
-                    referenceNumber: order.order.referenceNumber ,
-                    waybillNumber: myReponse.data.waybillNumber,
-                    trackingNumber: myReponse.data.trackingNumber,
-                    serverNumber: "",
-                    isAsynch: "N",
-                    sku:order.declarationArr[0].declareEnName, 
-                    labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`
-                });
+            }else {     
+             
+                if (myReponse.ask == 1 && myReponse.message == 'Success' ) {
+                    callback(null, { 
+                       ask: 1 , message: "Success", 
+                       referenceNumber: order.order.referenceNumber ,
+                       waybillNumber: myReponse.data.waybillNumber,
+                       trackingNumber: myReponse.data.trackingNumber,
+                       serverNumber: "",
+                       isAsynch: "N",
+                       sku:order.declarationArr[0].declareEnName, 
+                       labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`
+                   });
+                }else {
+                    callback(null, { 
+                        ask: 0 , message: "订单号（order id）有问题，请联系管理员", 
+                    });
+
 
                 // if(order.order.shippingMethodCode == "PK0006"){
                 //     callback(null, { 
@@ -157,6 +164,13 @@ const getLabel = (order, callback) => {
                 //         }
                 //     )  
                 // }
+
+
+
+                }
+
+
+
             } });
         } else {     
                 callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } ) 
