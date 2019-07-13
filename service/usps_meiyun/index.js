@@ -42,6 +42,7 @@ const createOrder_async = (params) => {
 const getLabel = (params , callback) => {
       createOrder_async(params).then(result => {    
         if(result.Msg === "Success"  || result.Msg === "该订单号已存在，无法重复添加！"){
+
             const opts = {
                 timeout: 25000,
                 headers: { "content-type": "application/json"},
@@ -53,7 +54,7 @@ const getLabel = (params , callback) => {
            };
         
         request.post(opts, (error, response, body) => {
-                    if (error) {
+             if (error) {
                         callback({ success: false, message: error.code});
                      } else if (response.statusCode === 400) {
                         callback('Unable to fetch data.');
@@ -64,7 +65,13 @@ const getLabel = (params , callback) => {
                         callback(null, myreponse)
                      }
             })
-        } 
+        }else {
+
+
+            callback(null, result)
+
+
+        }
     })
 }
 

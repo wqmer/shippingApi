@@ -3,6 +3,7 @@ const request = require('request');
 const Aftership = require('aftership')('23a9737b-d9d7-45c1-851e-f85cb58bbcbc');
 const apiKey = "29833628d495d7a5";
 const moment = require('moment')
+const image2base64 = require('image-to-base64');
 const parseString = require('xml2js').parseString;
 
 
@@ -41,13 +42,10 @@ const createOrder_async = (order) =>{
         body:   JSON.stringify(order)
       }, function(error, response, body){
         let orderId = order.order.referenceNumber
-        if(error){
-            resolve({ask : 0, message: error.code ,  referenceNumber: orderId });
-            }
-       
+        if(error){   resolve({ask : 0, message: error.code ,  referenceNumber: orderId });  }    
         try{
             resolve({...JSON.parse(response.body), referenceNumber: orderId });
-        } catch(error) { 
+          } catch(error) { 
             resolve({ask : 0, message: error ,  referenceNumber: orderId });
         }
       
@@ -98,6 +96,7 @@ const getLabel = (order, callback) => {
     createOrder_async(order).then( result => {
     if(result.ask == 0 ){
         if(result.message.includes("参考单号已存在")){
+           
             let param = {
                 "authorization": {
                 "token": order.authorization.token,
@@ -111,13 +110,12 @@ const getLabel = (order, callback) => {
                      headers: { "content-type": "application/json"},
                      url:  'http://119.23.188.252/api/v1/orders/service/getTrackingNumber',
                      body:   JSON.stringify(param)
-                }, function(error, response, body){
+            }, function(error, response, body){
+            let myReponse = JSON.parse(response.body )
             if(error) {
-                callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
-            }else {
-                let myReponse = JSON.parse( response.body )
-                // console.log(myReponse)
-                callback(null, { 
+                 callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
+            }else {          
+                 callback(null, { 
                     ask: 1 , message: "Success", 
                     referenceNumber: order.order.referenceNumber ,
                     waybillNumber: myReponse.data.waybillNumber,
@@ -127,23 +125,85 @@ const getLabel = (order, callback) => {
                     sku:order.declarationArr[0].declareEnName, 
                     labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`
                 });
-            }
 
-            });
+                // if(order.order.shippingMethodCode == "PK0006"){
+                //     callback(null, { 
+                //         ask: 1 , message: "Success", 
+                //         ...result.data,
+                //         sku:order.declarationArr[0].declareEnName, 
+                //         labelUrl:`http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}` ,
+                //         labelBase64 :''
+                //     });
+                // } else {                
+                //     image2base64(`http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`) // you can also to use url
+                //     .then(
+                //         (label) => {
+                //             callback(null, { 
+                //                 ask: 1 , message: "Success", 
+                //                 referenceNumber: order.order.referenceNumber ,
+                //                 waybillNumber: myReponse.data.waybillNumber,
+                //                 trackingNumber: myReponse.data.trackingNumber,
+                //                 serverNumber: "",
+                //                 isAsynch: "N",
+                //                 sku:order.declarationArr[0].declareEnName, 
+                //                 labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}` ,
+                //                 labelBase64 :label
+                //             });
+                //         }
+                //     )
+                //     .catch(
+                //         (error) => {
+                //             callback({ask : 0, message: "failed to convert png" ,  referenceNumber:  order.order.referenceNumber });
+                //         }
+                //     )  
+                // }
+            } });
         } else {     
-            callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } ) 
-         }
+                callback(null , {...result, referenceNumber: order.order.referenceNumber , labelUrl:'' } ) 
+              }
     
     } else {
+        if(order.order.shippingMethodCode === "PK0006"){
+            callback(null, { 
+                ask: 1 , 
+                message: "Success", 
+                ...result.data,
+                sku:order.declarationArr[0].declareEnName, 
+                labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}` ,
+                labelBase64 :''
+            });
+        } else {
+            // image2base64(`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`) 
+            // .then(
+            //     (label) => {
+            //         callback(null, { 
+            //             ask: 1 , message: "Success", 
+            //             ...result.data,
+            //             sku:order.declarationArr[0].declareEnName, 
+            //             labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`,
+            //             labelBase64 :label
+            //         });
+            //     }
+            // )
+            // .catch(
+            //     (error) => {
+            //         // throw new Error("no label to convert due to test order")
+            //         callback({ask : 0, message: "failed to convert png" ,  referenceNumber:  order.order.referenceNumber });
+            //     }
+            // )
             callback(null, { 
                 ask: 1 , message: "Success", 
                 ...result.data,
                 sku:order.declarationArr[0].declareEnName, 
                 labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`
             });
+        }
+    
     }
-    // console.log(result)
-    }).catch(err => callback(null, { ask:0 , message:"Interal error"}))
+    }).catch(err => {
+        console.log(err)
+        callback(null, { ask:0 , message: "Interal error" })
+    })
 }
 
 //设定简单地址请求信息
