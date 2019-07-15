@@ -3,11 +3,13 @@ const UPS_YI = require('../service/ups_yi')
 const TOOL = require('../service/tool')
 const PDFDocument = require('pdfkit');
 const parseString = require('xml2js').parseString;
+
 const UPS = require('../service/ups')
 const USPS = require('../service/usps')
 const FEDEX = require('../service/fedex')
 const CHUKOULA = require('../service/chukoula')
 const ENDICIA = require('../service/usps_endicia')
+
 const async = require('async');
 const base64 = require('base64topdf');
 const uuid = require('uuid')
@@ -180,7 +182,6 @@ router.post('/trackingUps', (req, res) => {
    } catch (error) {
       res.send({  "code": 500 , "message": "internal error" });       
    }
-
  })
 
 

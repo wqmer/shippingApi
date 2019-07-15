@@ -252,7 +252,6 @@ router.post('/createShippmentChukoula', (req, res) => {
     } catch (error) {
         res.send({  "code": 500 , "message": "internal error" });   
     }
-
  })
 
 

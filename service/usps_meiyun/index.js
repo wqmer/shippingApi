@@ -40,7 +40,8 @@ const createOrder_async = (params) => {
 }
 
 const getLabel = (params , callback) => {
-      createOrder_async(params).then(result => {    
+      createOrder_async(params).then(result => {   
+        const OrderId = params.OrderId 
         if(result.Msg === "Success"  || result.Msg === "该订单号已存在，无法重复添加！"){
 
             const opts = {
@@ -53,20 +54,19 @@ const getLabel = (params , callback) => {
                   }       )
            };
         
-        request.post(opts, (error, response, body) => {
-             if (error) {
+            request.post(opts, (error, response, body) => {
+                if (error) {
                         callback({ success: false, message: error.code});
                      } else if (response.statusCode === 400) {
                         callback('Unable to fetch data.');
                      } else if (response.statusCode === 200) { 
-
                         let myreponse = JSON.parse(body)
                         myreponse.Data.OrderId = params.OrderId
                         callback(null, myreponse)
                      }
             })
         }else {
-            callback(null, result)
+            callback(null, {...result, OrderId } )
         }
     })
 }
