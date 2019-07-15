@@ -45,7 +45,7 @@ const getLabel = (params , callback) => {
         if(result.Msg === "Success"  || result.Msg === "该订单号已存在，无法重复添加！"){
 
             const opts = {
-                timeout: 25000,
+                timeout: 20000,
                 headers: { "content-type": "application/json"},
                 url: 'https://www.meiyuncang.com/api/UspsDom/GetLabel',
                 body: JSON.stringify({
