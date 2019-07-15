@@ -22,7 +22,7 @@ const addSenderAddress = (params, callback) => {
 const createOrder_async = (params) => {
     return new Promise ((resolve , reject) => {  
            const opts = {
-                 timeout: 25000,
+                 timeout: 10000,
                  headers: { "content-type": "application/json"},
                  url: 'https://www.meiyuncang.com/api/UspsDom/Create',
                  body: JSON.stringify(params)
@@ -66,11 +66,7 @@ const getLabel = (params , callback) => {
                      }
             })
         }else {
-
-
             callback(null, result)
-
-
         }
     })
 }

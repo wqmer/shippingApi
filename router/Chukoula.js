@@ -243,7 +243,7 @@ router.post('/createShippmentChukoula', (req, res) => {
             orders
         } = req.body
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-        async.mapLimit(orders, 10, function (record, callback) {
+        async.mapLimit(orders, 50, function (record, callback) {
              USPS_MEIYUN.getLabel(record, callback);
          }, function (err, result) {
             if(err)console.log(err)
