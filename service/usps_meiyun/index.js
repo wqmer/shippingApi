@@ -61,9 +61,8 @@ const getLabel = (params , callback) => {
                         callback('Unable to fetch data.');
                      } else if (response.statusCode === 200) { 
                         let myreponse = JSON.parse(body)
-                        console.log(params.OrderId )
-                        myreponse.Data.OrderId = OrderId
-                        callback(null, myreponse)
+                        // console.log(params.OrderId )
+                        callback(null, {...myreponse, OrderId})
                      }
             })
         }else {
