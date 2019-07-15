@@ -22,7 +22,7 @@ const addSenderAddress = (params, callback) => {
 const createOrder_async = (params) => {
     return new Promise ((resolve , reject) => {  
            const opts = {
-                 timeout: 10000,
+                 timeout: 5000,
                  headers: { "content-type": "application/json"},
                  url: 'https://www.meiyuncang.com/api/UspsDom/Create',
                  body: JSON.stringify(params)
@@ -50,7 +50,7 @@ const getLabel = (params , callback) => {
                 url: 'https://www.meiyuncang.com/api/UspsDom/GetLabel',
                 body: JSON.stringify({
                     "OrderId": params.OrderId,
-                    "ApiKey": params.ApiKey
+                    "ApiKey":  params.ApiKey
                   }       )
            };
         
@@ -61,7 +61,8 @@ const getLabel = (params , callback) => {
                         callback('Unable to fetch data.');
                      } else if (response.statusCode === 200) { 
                         let myreponse = JSON.parse(body)
-                        myreponse.Data.OrderId = params.OrderId
+                        console.log(params.OrderId )
+                        myreponse.Data.OrderId = OrderId
                         callback(null, myreponse)
                      }
             })
