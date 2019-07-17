@@ -247,11 +247,11 @@ router.post('/createShippmentChukoula', (req, res) => {
              USPS_MEIYUN.getLabel(record, callback);
          }, function (err, result) {
             if(err)console.log(err)
-            console.log({result:result})
+            // console.log({result:result})
             res.send({result:result});
          });
     } catch (error) {
-        console.log({ "code": 500 , "message": "internal error" })
+        // console.log({ "code": 500 , "message": "internal error" })
         res.send({  "code": 500 , "message": "internal error" });   
     }
  })
