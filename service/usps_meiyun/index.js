@@ -62,7 +62,7 @@ const getLabel = (params , callback) => {
                      } else if (response.statusCode === 200) { 
                         let myreponse = JSON.parse(body)
                         // console.log(params.OrderId )
-                        delete myreponse.Data.Label
+                        // delete myreponse.Data.Label
                         callback(null, {...myreponse, Sku: params.RubberStamp1, OrderId})
                      }
             })
