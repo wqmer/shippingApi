@@ -1,8 +1,8 @@
 
 
-const reqeust_obj = (params , url ) => {
+const reqeust_obj = (timeout , params , url ) => {
       return  {  
-                  timeout: 20000,
+                  timeout,
                   method: 'POST',
                   headers: { "content-type": "application/json"},
                   url,
