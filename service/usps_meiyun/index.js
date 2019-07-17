@@ -22,7 +22,7 @@ const addSenderAddress = (params, callback) => {
 const createOrder_async = (params) => {
     return new Promise ((resolve , reject) => {  
            const opts = {
-                 timeout: 5000,
+                 timeout: 15000,
                  headers: { "content-type": "application/json"},
                  url: 'https://www.meiyuncang.com/api/UspsDom/Create',
                  body: JSON.stringify(params)
@@ -45,7 +45,7 @@ const getLabel = (params , callback) => {
         if(result.Msg === "Success"  || result.Msg === "该订单号已存在，无法重复添加！"){
 
             const opts = {
-                timeout: 20000,
+                timeout: 14000,
                 headers: { "content-type": "application/json"},
                 url: 'https://www.meiyuncang.com/api/UspsDom/GetLabel',
                 body: JSON.stringify({
