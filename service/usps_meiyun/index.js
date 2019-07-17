@@ -51,7 +51,7 @@ const getLabel = (params , callback) => {
                 body: JSON.stringify({
                     "OrderId": params.OrderId,
                     "ApiKey":  params.ApiKey
-                  }       )
+                  })
            };
         
             request.post(opts, (error, response, body) => {
