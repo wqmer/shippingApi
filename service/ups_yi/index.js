@@ -266,49 +266,49 @@ const getLabel = (order, callback) => {
                  else {     
                           //成功获取后 返回订单信息
                     if(myReponse.ask == 1 && myReponse.message == 'Success') {
-                            //  callback(null, { 
-                            //                     ask: 1 , 
-                            //                     message: "Success", 
-                            //                     referenceNumber: order.order.referenceNumber ,
-                            //                     waybillNumber: myReponse.data.waybillNumber,
-                            //                     trackingNumber: myReponse.data.trackingNumber,
-                            //                     serverNumber: "",
-                            //                     isAsynch: "N",
-                            //                     sku:order.declarationArr[0].declareEnName, 
-                            //                     labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`
-                            //                 });
+                             callback(null, { 
+                                                ask: 1 , 
+                                                message: "Success", 
+                                                referenceNumber: order.order.referenceNumber ,
+                                                waybillNumber: myReponse.data.waybillNumber,
+                                                trackingNumber: myReponse.data.trackingNumber,
+                                                serverNumber: "",
+                                                isAsynch: "N",
+                                                sku:order.declarationArr[0].declareEnName, 
+                                                labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`
+                                            });
 
                             // label 转换成 base64
-                        if(order.order.shippingMethodCode == "PK0006"){
-                             callback(null, { 
-                             ask: 1 , message: "Success", 
-                             ...result.data,
-                             sku:order.declarationArr[0].declareEnName, 
-                             labelUrl:`http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}` ,
-                             labelBase64 :''
-                           });
-                        } else {                
-                           image2base64(`http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`) // you can also to use url
-                            .then(
-                             (label) => {
-                                 callback(null, { 
-                                     ask: 1 , message: "Success", 
-                                     referenceNumber: order.order.referenceNumber ,
-                                     waybillNumber: myReponse.data.waybillNumber,
-                                     trackingNumber: myReponse.data.trackingNumber,
-                                     serverNumber: "",
-                                     isAsynch: "N",
-                                     sku:order.declarationArr[0].declareEnName, 
-                                     labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}` ,
-                                     labelBase64 :label
-                                 });
-                                }
-                            )
-                            .catch(
-                             (error) => {
-                                 callback({ask : 0, message: "failed to convert png" ,  referenceNumber:  order.order.referenceNumber });
-                            })  
-                        }
+                        // if(order.order.shippingMethodCode == "PK0006"){
+                        //      callback(null, { 
+                        //      ask: 1 , message: "Success", 
+                        //      ...result.data,
+                        //      sku:order.declarationArr[0].declareEnName, 
+                        //      labelUrl:`http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}` ,
+                        //      labelBase64 :''
+                        //    });
+                        // } else {                
+                        //    image2base64(`http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}`) // you can also to use url
+                        //     .then(
+                        //      (label) => {
+                        //          callback(null, { 
+                        //              ask: 1 , message: "Success", 
+                        //              referenceNumber: order.order.referenceNumber ,
+                        //              waybillNumber: myReponse.data.waybillNumber,
+                        //              trackingNumber: myReponse.data.trackingNumber,
+                        //              serverNumber: "",
+                        //              isAsynch: "N",
+                        //              sku:order.declarationArr[0].declareEnName, 
+                        //              labelUrl: `http://119.23.188.252/index/get-label/code/${myReponse.data.waybillNumber}` ,
+                        //              labelBase64 :label
+                        //          });
+                        //         }
+                        //     )
+                        //     .catch(
+                        //      (error) => {
+                        //          callback({ask : 0, message: "failed to convert png" ,  referenceNumber:  order.order.referenceNumber });
+                        //     })  
+                        // }
                             //获取失败 ，返回
                     }else{  
                           callback(null, {  ask: 0 , message: myReponse.message + " ,请联系管理员" ,  referenceNumber:order.order.referenceNumber });
@@ -332,30 +332,30 @@ const getLabel = (order, callback) => {
                 labelBase64 :''
             });
         } else {
-            image2base64(`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`) 
-            .then(
-                (label) => {
-                    callback(null, { 
-                        ask: 1 , message: "Success", 
-                        ...result.data,
-                        sku:order.declarationArr[0].declareEnName, 
-                        labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`,
-                        labelBase64 :label
-                    });
-                }
-            )
-            .catch(
-                (error) => {
-                    // throw new Error("no label to convert due to test order")
-                    callback({ask : 0, message: "failed to convert png" ,  referenceNumber:  order.order.referenceNumber });
-                }
-            )
-            // callback(null, { 
-            //     ask: 1 , message: "Success", 
-            //     ...result.data,
-            //     sku:order.declarationArr[0].declareEnName, 
-            //     labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`
-            // });
+            // image2base64(`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`) 
+            // .then(
+            //     (label) => {
+            //         callback(null, { 
+            //             ask: 1 , message: "Success", 
+            //             ...result.data,
+            //             sku:order.declarationArr[0].declareEnName, 
+            //             labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`,
+            //             labelBase64 :label
+            //         });
+            //     }
+            // )
+            // .catch(
+            //     (error) => {
+            //         // throw new Error("no label to convert due to test order")
+            //         callback({ask : 0, message: "failed to convert png" ,  referenceNumber:  order.order.referenceNumber });
+            //     }
+            // )
+            callback(null, { 
+                ask: 1 , message: "Success", 
+                ...result.data,
+                sku:order.declarationArr[0].declareEnName, 
+                labelUrl:`http://119.23.188.252/index/get-label/code/${result.data.waybillNumber}`
+            });
         }
     
     }
