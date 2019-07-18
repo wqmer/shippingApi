@@ -21,6 +21,7 @@
     "connect-timeout": "^1.9.0",
     "convert-units": "^2.3.4",
     "delivery-tracker": "^1.7.2",
+    "dotenv": "^8.0.0",
     "express": "^4.16.3",
     "http": "0.0.0",
     "hummus-recipe": "^1.8.7",

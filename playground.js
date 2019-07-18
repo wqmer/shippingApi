@@ -17,17 +17,19 @@ const image2base64 = require('image-to-base64');
 const parseString = require('xml2js').parseString;
 const builder = require('xmlbuilder');
 
-image2base64( "http://119.23.188.252/index/get-label/code/YMAB20190706000447") // you can also to use url
-    .then(
-        (response) => {
-            console.log(response); //cGF0aC90by9maWxlLmpwZw==
-        }
-    )
-    .catch(
-        (error) => {
-            console.log(error); //Exepection error....
-        }
-    )
+// image2base64( "http://119.23.188.252/index/get-label/code/YMAB20190706000447") // you can also to use url
+//     .then(
+//         (response) => {
+//             console.log(response); //cGF0aC90by9maWxlLmpwZw==
+//         }
+//     )
+//     .catch(
+//         (error) => {
+//             console.log(error); //Exepection error....
+//         }
+//     )
+
+console.log(process.env.UPS_USERNAME)
 
 // var optionalObj = {'fileName': 'testlabel', 'type':'png'};
 // var path = './'
