@@ -23,7 +23,7 @@ const parseString = require('xml2js').parseString;
 
 
 const createOrder = (order , callback) =>{
-      request(request_obj(20000, order , request_url.create_order) , (error, response, body) => {
+      request(request_obj(order , request_url.create_order) , (error, response, body) => {
       let orderId = order.order.referenceNumber
           error ?callback(null ,{ask:0 , message: error}) : callback(null, {...JSON.parse(response.body), referenceNumber: orderId });   
       }); 
@@ -42,7 +42,7 @@ const createOrder = (order , callback) =>{
 // }
 
 const getTrakcingNumber = (param , callback) =>{
-      request(request_obj(10000, param , request_url.get_tracking_no)  , (error, response, body) => {
+      request(request_obj(param , request_url.get_tracking_no)  , (error, response, body) => {
         error?callback(null ,{ask:0 , message: error}) : callback(null, {...JSON.parse(response.body)});   
       }); 
 }
@@ -71,7 +71,7 @@ const getTrakcingNumber = (param , callback) =>{
 
 const createOrder_async = (order) =>{
     return new Promise ((resolve , reject) => {
-    request(request_obj(20000, order , request_url.create_order), (error, response, body) => {
+    request(request_obj(order , request_url.create_order), (error, response, body) => {
            let orderId = order.order.referenceNumber
            error?resolve({ask : 0, message: error.code ,  referenceNumber: orderId }): resolve({...JSON.parse(response.body), referenceNumber: orderId });    
       }); 
@@ -258,7 +258,7 @@ const getLabel = (order, callback) => {
                           "waybillNumber": order.order.referenceNumber
              }
              //获取换单号，和运单号
-            request(request_obj(8000, param , request_url.get_tracking_no), (error, response, body) => {
+            request(request_obj(param , request_url.get_tracking_no), (error, response, body) => {
                  var myReponse = JSON.parse(body)    
                  if(error) {
                              callback({ask : 0, message: error.code ,  referenceNumber:  order.order.referenceNumber });
@@ -309,7 +309,7 @@ const getLabel = (order, callback) => {
                         //          callback({ask : 0, message: "failed to convert png" ,  referenceNumber:  order.order.referenceNumber });
                         //     })  
                         // }
-                            //获取失败 ，返回
+                    //获取失败 ，返回
                     }else{  
                           callback(null, {  ask: 0 , message: myReponse.message + " ,请联系管理员" ,  referenceNumber:order.order.referenceNumber });
                     }

@@ -29,7 +29,6 @@ var port = process.env.PORT || 5000 ;
 // app.use(timeout('2s', ))
 // app.use(haltOnTimedout);
 
-
 app.use(bodyParser.json());
 
 app.use(function(err, req, res, next) {
@@ -38,6 +37,7 @@ app.use(function(err, req, res, next) {
     } else next();
   });
 
+app.use('/label', express.static("label"));
 app.use('/', require('./router/Chukoula'));
 app.use('/', require('./router/ShippingTool.js'));
 app.use('/', require('./router/Test.js'));
