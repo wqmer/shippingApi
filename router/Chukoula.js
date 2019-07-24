@@ -5,6 +5,7 @@ const parseString = require('xml2js').parseString;
 
 const UPS_YI = require('../service/ups_yi')
 const USPS_MEIYUN = require('../service/usps_meiyun')
+const USPS_MOFANGYUN = require('../service/usps_mofangyun')
 const UPS = require('../service/ups')
 const USPS = require('../service/usps')
 const FEDEX = require('../service/fedex')
@@ -45,7 +46,7 @@ router.post('/createShippment', (req, res) => {
     try {
         let {Orders} = req.body
         // console.log(req.body)
-        async.mapLimit(Orders, 50, function (order, callback) {
+        async.mapLimit(Orders, 25, function (order, callback) {
           UPS_YI.getLabel(order, callback);
          }, function (err, result) {
             if(err)console.log(err)
@@ -256,6 +257,24 @@ router.post('/createShippmentChukoula', (req, res) => {
  })
 
 
+ router.post('/createOrderMofangYun', (req, res) => {
+    try {
+        let {
+            orders
+        } = req.body
+        // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+        async.mapLimit(orders, 15, function (record, callback) {
+            USPS_MOFANGYUN.getOrder_async(record, callback);
+         }, function (err, result) {
+            if(err)console.log(err)
+            // console.log({result:result})
+            res.send({result:result});
+         });
+    } catch (error) {
+        // console.log({ "code": 500 , "message": "internal error" })
+        res.send({  "code": 500 , "message": "internal error" });   
+    }
+ })
 
 
 

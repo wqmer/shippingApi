@@ -75,12 +75,14 @@ const getLabel = (params , callback) => {
                    let base64Str = result.Data.Label
                 //    console.log(base64Str)
                     let path ='label';
+                    let {Weight,FromAddressId,ToName,ToAddress1,ToAddress2,ToCity,ToStateCode,ToPostalCode,ToPhone,ToEmail} = params
                     let dir =  base64Img.imgSync(`data:image/png;base64,${base64Str}`, path , OrderId);
                     delete result.Data.Label
                     result.Data.LabelUrl = "http://" + ip.address()+ "/" + dir
-                    callback(null, {...result, Sku: params.RubberStamp1, OrderId})
+                    
+                    callback(null, {...result, Sku: params.RubberStamp1, OrderId, Weight,FromAddressId,ToName,ToAddress1,ToAddress2,ToCity,ToStateCode,ToPostalCode,ToPhone,ToEmail})
               }else {
-                  callback(null ,{ success: false, message: result});
+                    callback(null ,{ success: false, message: result});
               }
             }).catch(err => {
                 console.log(err)
@@ -102,7 +104,7 @@ const getLabel = (params , callback) => {
         //              }
         //     })
 
-        
+
         }else {
             callback(null, {...result, OrderId } )
         }

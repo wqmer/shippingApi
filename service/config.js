@@ -18,6 +18,10 @@ const fedex_prod  = {
       Meter_Number : process.env.FEDEX_METER_NUMBER 
 }
 
+const usps_mofangyun = {
+    appSecret : process.env.MOFANGYUN_APPSECRET
+}
+
 const usps_endicia_product = {
     wsdl_url : "https://elstestserver.endicia.com/LabelService/EwsLabelService.asmx?wsdl",
     passPhrase :  "`@198811532Ww",
@@ -41,6 +45,8 @@ const usps_endicia_test = {
       accountNumber : "2552889" 
 }
 
+
+
 const kuaidi365 = {
     apiKey : "29833628d495d7a5"
 }
@@ -49,6 +55,7 @@ const Aftership = {
 }
 
 module.exports =  {
+      usps_mofangyun,
       ups,
       fedex : process.env.NODE_ENV == 'test'? fedex_test : fedex_prod ,
       usps_endicia : process.env.NODE_ENV == 'test'? usps_endicia_test  : usps_endicia_product  ,
