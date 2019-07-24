@@ -83,7 +83,7 @@ const getLabel_async = (opts) => {
               if (error) {
                    reject({ success: false, message: error.code});
               } else if (response.statusCode === 400) {
-                   resolve('Unable to fetch data.');
+                   resolve(JSON.parse(response.body));
               } else if (response.statusCode === 200) { 
                    resolve(JSON.parse(body))
             }
