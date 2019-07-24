@@ -1,6 +1,9 @@
 const request = require('request');
 const md5 = require('md5');
 const config = require('../config')
+const Timeout = require('await-timeout')
+const timer = new Timeout();
+
 
 const createOrder = (params, callback) => {
     let { appKey , signature , requestDate , languageCode , instructionList} = params 
@@ -27,7 +30,9 @@ const createOrder = (params, callback) => {
 }
 
 const createOrder_async = (params) => {
-    let { appKey , signature , requestDate , languageCode , instructionList} = params 
+    let { appKey , requestDate , languageCode , instructionList} = params 
+    let request_body = {instructionList}
+    let signature =  md5(JSON.stringify(request_body ) + config.usps_mofangyun.appSecret + requestDate);
     return new Promise ((resolve , reject) => {  
            const opts = {
                  headers: { 
@@ -38,7 +43,7 @@ const createOrder_async = (params) => {
                      languageCode
                 },
                  url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/createExpressShipments',
-                 body: JSON.stringify({instructionList})
+                 body: JSON.stringify(request_body)
             };   
             request.post(opts, (error, response, body) => {
                  if (error) {
@@ -93,7 +98,7 @@ const getLabel_async = (opts) => {
 
 const getOrder_async = (params , callback ) => {  
       let { appKey ,  requestDate , languageCode} = params 
-      createOrder_async(params).then(result =>{
+      createOrder_async(params).then(result => {
                if(result.instructionList){
                     // console.log ('test')
                   if(result.instructionList[0].succeed ){      
@@ -113,10 +118,13 @@ const getOrder_async = (params , callback ) => {
                         url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers',
                         body: JSON.stringify(request_body)
                       };
-                        //  console.log ('test')  
-                    //console.log(request_body)
-                    //TODO
-                       getLabel_async(opts).then(result => { callback(null,result)})
+                        //console.log ('test')  
+                        //console.log(request_body)
+                        //TODO
+                        //console.log(result)
+                        // setTimeout( getLabel_async(opts).then(result => {callback(null,result) }), 1000)
+                        timer.set(3000).then(() =>  getLabel_async(opts).then(result => {callback(null,result) }) );
+                     
                    }else{
                        callback( null , result.instructionList[0].errorMessage )
                    }
