@@ -82,7 +82,7 @@ const getLabel = (params , callback) => {
                     
                     callback(null, {...result, Sku: params.RubberStamp1, OrderId, Weight,FromAddressId,ToName,ToAddress1,ToAddress2,ToCity,ToStateCode,ToPostalCode,ToPhone,ToEmail})
               }else {
-                    callback(null ,{ success: false, message: result});
+                    callback(null ,{ success: false, message: result , OrderId});
               }
             }).catch(err => {
                 console.log(err)
@@ -109,7 +109,7 @@ const getLabel = (params , callback) => {
             callback(null, {...result, OrderId } )
         }
     }).catch(err => {
-        // console.log(err)
+          console.log(err)
           callback(null, { ask:0 , message: "Interal error"  })
     })
 }

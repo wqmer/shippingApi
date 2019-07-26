@@ -118,13 +118,12 @@ const getOrder_async = (params , callback ) => {
                         url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers',
                         body: JSON.stringify(request_body)
                       };
-                        //console.log ('test')  
-                        //console.log(request_body)
-                        //TODO
-                        //console.log(result)
-                        // setTimeout( getLabel_async(opts).then(result => {callback(null,result) }), 1000)
-                        timer.set(3000).then(() =>  getLabel_async(opts).then(result => {callback(null,result) }) );
-                     
+
+                        timer.set(3000).then(() =>  getLabel_async(opts).then(result => { 
+                        let label = result.instructionList[0].shipments[0].labelUrls
+                        if(label != null)result.instructionList[0].shipments[0].labelUrls.forEach(element => element = "http://www.gokdw.com" + element )
+                        callback(null,result) }) 
+                        );                  
                    }else{
                        callback( null , result.instructionList[0].errorMessage )
                    }
