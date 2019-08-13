@@ -93,7 +93,6 @@ const TrackingUPS = (request_chukoula , callback) => {
         data : {                 
         }     
     }
-    try{
         request({
             method: 'POST',
             headers: { "content-type": "application/json"},
@@ -117,10 +116,6 @@ const TrackingUPS = (request_chukoula , callback) => {
                 callback(null, response_template)
             }
           });
-
-    } catch {
-             callback(null, {  "code": 500 , "message": "internal error" } ) 
-      }   
  }
  
 const GetUpsInTransitTime = (postcode_pairs,  callback) => {
@@ -214,7 +209,7 @@ const GetUpsInTransitTime = (postcode_pairs,  callback) => {
                    }
                 }
               }); 
-         } catch{
+         } catch(e){
             callback(null, {  "code": 500 , "message": "internal error" } )  
          }
   
