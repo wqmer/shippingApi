@@ -90,35 +90,38 @@ const TrackingUPS = (request_chukoula , callback) => {
         trackingNo:request_chukoula.trackingNumber,
         status : "failed" , 
         message:'',
-        data : { 
-                 
-        }
-      
-     }
-    request({
-        method: 'POST',
-        headers: { "content-type": "application/json"},
-        url:    'https://onlinetools.ups.com/rest/Track',
-        body:   JSON.stringify(template)
-      }, function(error, response, body){
-          let myReponse =  JSON.parse(response.body)
-        //   callback(null, myReponse)
-    
-        if(error){
-            response_template.message = error
-            callback(null, response_template) 
-        } else if(myReponse.Fault){
-            response_template.message = myReponse.Fault.detail.Errors.ErrorDetail.PrimaryErrorCode.Description
-            callback(null,  response_template)
-        } else if( myReponse.TrackResponse.Response.ResponseStatus.Code == "1"  ){ 
-            response_template.status = 'success',
-            response_template.message = 'correct query'
-            delete myReponse.TrackResponse.Shipment.Package.ReferenceNumber
-            response_template.data = myReponse.TrackResponse.Shipment.Package
-            callback(null, response_template)
-        }
-      }); 
+        data : {                 
+        }     
     }
+    try{
+        request({
+            method: 'POST',
+            headers: { "content-type": "application/json"},
+            url:    'https://onlinetools.ups.com/rest/Track',
+            body:   JSON.stringify(template)
+          }, function(error, response, body){
+              let myReponse =  JSON.parse(response.body)
+            //   callback(null, myReponse)
+        
+            if(error){
+                response_template.message = error
+                callback(null, response_template) 
+            } else if(myReponse.Fault){
+                response_template.message = myReponse.Fault.detail.Errors.ErrorDetail.PrimaryErrorCode.Description
+                callback(null,  response_template)
+            } else if( myReponse.TrackResponse.Response.ResponseStatus.Code == "1"  ){ 
+                response_template.status = 'success',
+                response_template.message = 'correct query'
+                delete myReponse.TrackResponse.Shipment.Package.ReferenceNumber
+                response_template.data = myReponse.TrackResponse.Shipment.Package
+                callback(null, response_template)
+            }
+          });
+
+    } catch {
+          callback(null, {  "code": 500 , "message": "internal error" } ) 
+      }   
+ }
  
 const GetUpsInTransitTime = (postcode_pairs,  callback) => {
 
@@ -170,44 +173,51 @@ const GetUpsInTransitTime = (postcode_pairs,  callback) => {
             }
          }
 
-         request({
-            method: 'POST',
-            headers: { "content-type": "application/json"},
-            url:    'https://onlinetools.ups.com/rest/TimeInTransit',
-            body:   JSON.stringify(template)
-          }, function(error, response, body){
-              let myReponse =  JSON.parse(response.body)
-            //   callback(null, myReponse)
-        
-            if(error){
-                response_template.message = error
-                callback(null, response_template) 
-            } else if(myReponse.Fault){
-                response_template.message = myReponse.Fault.detail.Errors.ErrorDetail.PrimaryErrorCode.Description
-                callback(null,  response_template)
-            } else if( myReponse.TimeInTransitResponse.Response.ResponseStatus.Code == "1"   ){ 
-           
-               if(myReponse.TimeInTransitResponse.hasOwnProperty('TransitResponse')){
-                let serivceList = myReponse.TimeInTransitResponse.TransitResponse.ServiceSummary
-                response_template.status = 'success',
-                response_template.message = 'correct query'
-                // delete myReponse.TrackResponse.Shipment.Package.ReferenceNumber
 
-           
-                let getGoundInTransit = serivceList.find(item => item.Service.Code == "GND")
-                // console.log(getGoundInTransit)
-                response_template.data = {
-                    'UPS 2nd day air' :  "2 busniess days" ,
-                    'UPS next day air' : "1 busniess day" ,
-                    'UPS Ground' : getGoundInTransit.EstimatedArrival.BusinessDaysInTransit + " business days"
+         try {
+            request({
+                method: 'POST',
+                headers: { "content-type": "application/json"},
+                url:    'https://onlinetools.ups.com/rest/TimeInTransit',
+                body:   JSON.stringify(template)
+              }, function(error, response, body){
+    
+                  let myReponse =  JSON.parse(response.body)
+                //   callback(null, myReponse)
+            
+                if(error){
+                    response_template.message = error
+                    callback(null, response_template) 
+                } else if(myReponse.Fault){
+                    response_template.message = myReponse.Fault.detail.Errors.ErrorDetail.PrimaryErrorCode.Description
+                    callback(null,  response_template)
+                } else if( myReponse.TimeInTransitResponse.Response.ResponseStatus.Code == "1"   ){ 
+               
+                   if(myReponse.TimeInTransitResponse.hasOwnProperty('TransitResponse')){
+                    let serivceList = myReponse.TimeInTransitResponse.TransitResponse.ServiceSummary
+                    response_template.status = 'success',
+                    response_template.message = 'correct query'
+                    // delete myReponse.TrackResponse.Shipment.Package.ReferenceNumber
+    
+               
+                    let getGoundInTransit = serivceList.find(item => item.Service.Code == "GND")
+                    // console.log(getGoundInTransit)
+                    response_template.data = {
+                        'UPS 2nd day air' :  "2 busniess days" ,
+                        'UPS next day air' : "1 busniess day" ,
+                        'UPS Ground' : getGoundInTransit.EstimatedArrival.BusinessDaysInTransit + " business days"
+                    }
+                    callback(null, response_template)        
+                   } else {
+                    response_template.message = 'no service found , check your input'
+                    callback(null, response_template)       
+                   }
                 }
-                callback(null, response_template)        
-               } else {
-                response_template.message = 'no service found , check your input'
-                callback(null, response_template)       
-               }
-            }
-          }); 
+              }); 
+         } catch{
+            callback(null, {  "code": 500 , "message": "internal error" } )  
+         }
+  
 }
 
     const GetUpsTrackingStatus = (trackingNumber , callback) => {
@@ -250,7 +260,6 @@ const GetUpsInTransitTime = (postcode_pairs,  callback) => {
                     callback(null, response_template)
                 //   info.Activity.Status.Description == 'Order Processed: Ready for UPS'?
                 }
- 
             }
           }); 
         }

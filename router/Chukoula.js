@@ -78,7 +78,6 @@ router.post('/getTrackingNo', (req, res) => {
     } catch (error) {
         res.send({  "code": 500 , "message": "internal error" });    
     }
-
 })
 
 //--易仓查询运费
@@ -263,7 +262,7 @@ router.post('/createShippmentChukoula', (req, res) => {
             orders
         } = req.body
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-        async.mapLimit(orders, 15, function (record, callback) {
+        async.mapLimit(orders, 10, function (record, callback) {
             USPS_MOFANGYUN.getOrder_async(record, callback);
          }, function (err, result) {
             if(err)console.log(err)
@@ -275,8 +274,6 @@ router.post('/createShippmentChukoula', (req, res) => {
         res.send({  "code": 500 , "message": "internal error" });   
     }
  })
-
-
 
 module.exports = router
 

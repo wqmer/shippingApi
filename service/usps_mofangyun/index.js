@@ -99,6 +99,7 @@ const getLabel_async = (opts) => {
 const getOrder_async = (params , callback ) => {  
       let { appKey ,  requestDate , languageCode} = params 
       createOrder_async(params).then(result => {
+            //    console.log(result)
                if(result.instructionList){
                     // console.log ('test')
                   if(result.instructionList[0].succeed ){      
@@ -119,11 +120,11 @@ const getOrder_async = (params , callback ) => {
                         body: JSON.stringify(request_body)
                       };
 
-                        timer.set(3000).then(() =>  getLabel_async(opts).then(result => { 
-                        let label = result.instructionList[0].shipments[0].labelUrls
-                        if(label != null)result.instructionList[0].shipments[0].labelUrls.forEach(element => element = "http://www.gokdw.com" + element )
-                        callback(null,result) }) 
-                        );                  
+                        // timer.set(3000).then(() =>  
+                        getLabel_async(opts).then(result => { 
+                        // console.log(result)
+                        callback(null,result) }).catch(error => callback (null , { success: false, message: 'internal error'})  )
+                        // );                  
                    }else{
                        callback( null , result.instructionList[0].errorMessage )
                    }

@@ -25,7 +25,7 @@ const parseString = require('xml2js').parseString;
 const createOrder = (order , callback) =>{
       request(request_obj(order , request_url.create_order) , (error, response, body) => {
       let orderId = order.order.referenceNumber
-          error ?callback(null ,{ask:0 , message: error}) : callback(null, {...JSON.parse(response.body), referenceNumber: orderId });   
+          error ? callback(null ,{ask:0 , message: error}) : callback(null, {...JSON.parse(response.body), referenceNumber: orderId });   
       }); 
 }
 
