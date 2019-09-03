@@ -30,7 +30,11 @@ const createOrder = (params, callback) => {
 }
 
 const createOrder_async = (params) => {
+   
     let { appKey , requestDate , languageCode , instructionList} = params 
+    let realId
+    instructionList[0].RealOrderID ? realId = instructionList[0].RealOrderID : realId = undefined
+    delete instructionList[0].RealOrderID
     let request_body = {instructionList}
     let signature =  md5(JSON.stringify(request_body ) + config.usps_mofangyun.appSecret + requestDate);
     return new Promise ((resolve , reject) => {  
@@ -46,6 +50,7 @@ const createOrder_async = (params) => {
                  body: JSON.stringify(request_body)
             };   
             request.post(opts, (error, response, body) => {
+                // let mybody = {}
                  if (error) {
                       resolve({ success: false, message: error.code});
                  } else if (response.statusCode === 400) {
@@ -97,7 +102,9 @@ const getLabel_async = (opts) => {
 }
 
 const getOrder_async = (params , callback ) => {  
-      let { appKey ,  requestDate , languageCode} = params 
+      let { appKey ,  requestDate , languageCode,instructionList} = params 
+      let realId
+      instructionList[0].RealOrderID ? realId = instructionList[0].RealOrderID : realId = undefined
       createOrder_async(params).then(result => {
             //    console.log(result)
                if(result.instructionList){
@@ -122,7 +129,35 @@ const getOrder_async = (params , callback ) => {
 
                         // timer.set(3000).then(() =>  
                         getLabel_async(opts).then(result => { 
-                        // console.log(result)
+                        console.log(result)
+
+                       let {
+                            succeed,
+                            errorCode,
+                            errorMessage,
+                            userOrderNumber,
+                            instructionNumber,
+                            failReason,
+                            mainTrackingNumber,
+                            shipments
+                          } 
+                          = result.instructionList[0]
+                        // let myresult =  {
+                            
+
+
+                        // }
+                        result.instructionList[0] = {
+                            succeed,
+                            errorCode,
+                            errorMessage,
+                            userOrderNumber,
+                            "RealOrderID" : realId,
+                            instructionNumber,
+                            failReason,
+                            mainTrackingNumber,
+                            shipments
+                          } 
                         callback(null,result) }).catch(error => callback (null , { success: false, message: 'internal error'})  )
                         // );                  
                    }else{
