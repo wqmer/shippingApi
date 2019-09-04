@@ -102,8 +102,9 @@ const getLabel_async = (opts) => {
 }
 
 const getOrder_async = (params , callback ) => {  
-      let { appKey ,  requestDate , languageCode,instructionList} = params 
+      let { appKey ,  requestDate , languageCode, instructionList } = params 
       let realId
+
       instructionList[0].RealOrderID ? realId = instructionList[0].RealOrderID : realId = undefined
       createOrder_async(params).then(result => {
             //    console.log(result)
@@ -129,7 +130,7 @@ const getOrder_async = (params , callback ) => {
 
                         // timer.set(3000).then(() =>  
                         getLabel_async(opts).then(result => { 
-                        console.log(result)
+                    
 
                        let {
                             succeed,
@@ -140,24 +141,91 @@ const getOrder_async = (params , callback ) => {
                             failReason,
                             mainTrackingNumber,
                             shipments
-                          } 
-                          = result.instructionList[0]
-                        // let myresult =  {
-                            
+                          } = result.instructionList[0]
 
-
-                        // }
                         result.instructionList[0] = {
-                            succeed,
-                            errorCode,
-                            errorMessage,
+                            // succeed,
+                            // errorCode,
+                            // errorMessage,
                             userOrderNumber,
                             "RealOrderID" : realId,
+                            "Sku": "Sku",
+                            "Sname": instructionList[0].recipient.contactName,
+                            "Sadd1": instructionList[0].recipient.street,
+                            "Sadd2": instructionList[0].recipient.street1,
+                            "Scity": instructionList[0].recipient.city,
+                            "Sstate": instructionList[0].recipient.state,
+                            "Spostcode": instructionList[0].recipient.zipCode,
+                            "Stel": instructionList[0].recipient.telephone, 
+
+                            "Fname": instructionList[0].sender.contactName,
+                            "Ftel":  instructionList[0].sender.telephone,
+                            "Fadd1": instructionList[0].sender.street,
+                            "Fadd2": instructionList[0].sender.street1,
+                            "Fstate": instructionList[0].sender.state,
+                            "Fcity": instructionList[0].sender.city,
+                            "Fpostcode": instructionList[0].sender.zipCode,
+                            "Weight": instructionList[0].packageDetailList[0].packageRecord.weight,
+                            "Fcountry": "US",
+                            "Method": instructionList[0].channelCode,
                             instructionNumber,
                             failReason,
                             mainTrackingNumber,
                             shipments
                           } 
+
+                        //   "RealOrderID": "123",
+                        //   "Sku": "Sku",
+                        //   "Sname": "收货人",
+                        //   "Sadd1": "收货地址1",
+                        //   "Sadd2": "收货地址2",
+                        //   "Scity": "收货城市",
+                        //   "Sstate": "收货州",
+                        //   "Spostcode": "收货邮编",
+                        //   "Stel": "收货电话",
+
+                        //   "Fname": "发货人",
+                        //   "Ftel": "发货电话",
+                        //   "Fadd1": "发货地址",
+                        //   "Fstate": "发货州",
+                        //   "Fcity": "发货城市",
+                        //   "Fpostcode": "发货邮编",
+                        //   "Weight": "打单重量",
+                        //   "Fcountry": "1234",
+
+                        // "instructionList": [
+                        //     {
+                        //         "channelCode": "SmartPost",
+                        //         "userOrderNumber":  "123",
+                        //         "RealOrderID":"123",
+                        //         "remark": "",
+                        //         "sender": {
+                        //             "contactName": "NC",
+                        //             "telephone": "5412545474",
+                        //             "countryCode": "US",
+                        //             "state": "NC",
+                        //             "city": "Raleigh",
+                        //             "street": "2434 Bertie Drive",
+                        //             "street1": "",
+                        //             "street2": "",
+                        //             "county": "",
+                        //             "zipCode": "27610",
+                        //             "zip4": ""
+                        //         },
+                        //         "recipient": {
+                        //             "contactName": "Lisa Thompson",
+                        //             "telephone": "6627926425",
+                        //             "countryCode": "US",
+                        //             "state": "MI",
+                        //             "city": "Wyoming",
+                        //             "street": "1027 Golfcrest Dr SW",
+                        //             "street1": "",
+                        //             "street2": "",
+                        //             "county": "",
+                        //             "zipCode": "49509",
+                        //             "zip4": "9573"
+                        //         },
+      
                         callback(null,result) }).catch(error => callback (null , { success: false, message: 'internal error'})  )
                         // );                  
                    }else{
