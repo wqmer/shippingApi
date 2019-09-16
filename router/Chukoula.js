@@ -256,17 +256,16 @@ router.post('/createShippmentChukoula', (req, res) => {
  })
 
 
- router.post('/createOrderMofangYun', (req, res) => {
+ router.post('/createDraftMofangYun', (req, res) => {
     try {
         let {
             orders
         } = req.body
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 10, function (record, callback) {
-            USPS_MOFANGYUN.getOrder_async(record, callback);
+            USPS_MOFANGYUN.createOrder(record, callback);
          }, function (err, result) {
             if(err)console.log(err)
-            // console.log({result:result})
             res.send({result:result});
          });
     } catch (error) {
@@ -274,6 +273,46 @@ router.post('/createShippmentChukoula', (req, res) => {
         res.send({  "code": 500 , "message": "internal error" });   
     }
  })
+
+ router.post('/createOrderMofangYun', (req, res) => {
+    try {
+        let {
+            orders
+        } = req.body
+        // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+        async.mapLimit(orders, 30, function (record, callback) {
+            USPS_MOFANGYUN.getOrder_async(record, callback);
+         }, function (err, result) {
+            if(err)console.log(err)
+            res.send({result:result});
+         });
+    } catch (error) {
+        // console.log({ "code": 500 , "message": "internal error" })
+        res.send({  "code": 500 , "message": "internal error" });   
+    }
+ })
+
+
+//todo
+ router.post('/getOrderMofangYun', (req, res) => {
+    try {
+        let {
+            orders
+        } = req.body
+        // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+        async.mapLimit(orders, 10, function (record, callback) {
+            USPS_MOFANGYUN.getLabel(record, callback);
+         }, function (err, result) {
+            if(err)console.log(err)
+            res.send({result:result});
+         });
+    } catch (error) {
+        // console.log({ "code": 500 , "message": "internal error" })
+        res.send({  "code": 500 , "message": "internal error" });   
+    }
+
+ })
+
 
 module.exports = router
 

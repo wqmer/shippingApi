@@ -6,7 +6,13 @@ const timer = new Timeout();
 
 
 const createOrder = (params, callback) => {
-    let { appKey , signature , requestDate , languageCode , instructionList} = params 
+    let { appKey , requestDate , languageCode , instructionList} = params 
+    let realId
+    instructionList[0].RealOrderID ? realId = instructionList[0].RealOrderID : realId = undefined
+    delete instructionList[0].RealOrderID
+    let request_body = {instructionList}
+    let signature =  md5(JSON.stringify(request_body ) + config.usps_mofangyun.appSecret + requestDate);
+    // console.log(params)
     const opts = {
         headers: { 
             "content-type": "application/json",
@@ -16,7 +22,7 @@ const createOrder = (params, callback) => {
              languageCode
         },
         url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/createExpressShipments',
-        body: JSON.stringify({instructionList})
+        body: JSON.stringify(request_body)
       };
     request.post(opts, (error, response, body) => {
         if (error) {
@@ -29,8 +35,35 @@ const createOrder = (params, callback) => {
     })
 }
 
+const getLabel = (params , callback) => {
+    let { appKey ,  requestDate , languageCode, instructionList } = params 
+    let request_body = {"instructionList":instructionList}
+    let signature =  md5(JSON.stringify(request_body ) + config.usps_mofangyun.appSecret + requestDate);
+
+    const opts = {
+        headers: { 
+            "content-type": "application/json",
+             appKey ,
+             signature ,
+             requestDate ,
+             languageCode
+        },
+        url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers',
+        body: JSON.stringify(request_body)
+      };
+    
+    request.post(opts, (error, response, body) => {
+        if (error) {
+            callback({ success: false, message: error.code});
+        } else if (response.statusCode === 400) {
+            callback('Unable to fetch data.');
+        } else if (response.statusCode === 200) { 
+            callback(null, JSON.parse(body))
+        }
+    })
+}
+
 const createOrder_async = (params) => {
-   
     let { appKey , requestDate , languageCode , instructionList} = params 
     let realId
     instructionList[0].RealOrderID ? realId = instructionList[0].RealOrderID : realId = undefined
@@ -62,31 +95,7 @@ const createOrder_async = (params) => {
      })
 }
 
-const getOrder = (params , callback) => {
-    const opts = {
-        headers: { 
-            "content-type": "application/json",
-             appKey ,
-             signature ,
-             requestDate ,
-             languageCode
-        },
-        url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers',
-        body: JSON.stringify({instructionList})
-      };
-    
-    request.post(opts, (error, response, body) => {
-        if (error) {
-            callback({ success: false, message: error.code});
-        } else if (response.statusCode === 400) {
-            callback('Unable to fetch data.');
-        } else if (response.statusCode === 200) { 
-            callback(null, JSON.parse(body))
-        }
-    })
-}
 
-  
 const getLabel_async = (opts) => { 
       return new Promise ((resolve , reject) => {  
          request.post(opts, (error, response, body) => {
@@ -108,10 +117,8 @@ const getOrder_async = (params , callback ) => {
       instructionList[0].RealOrderID ? realId = instructionList[0].RealOrderID : realId = undefined
       createOrder_async(params).then(result => {
             //    console.log(result)
-               if(result.instructionList){
-                    // console.log ('test')
+               if(result.instructionList){     
                   if(result.instructionList[0].succeed ){      
-                    // console.log ('test')      
                     // console.log(config.usps_mofangyun.appSecret) 
                      let request_body = {"instructionList":[{"userOrderNumber":result.instructionList[0].userOrderNumber}]}
                      let signature =  md5(JSON.stringify(request_body ) + config.usps_mofangyun.appSecret + requestDate);
@@ -240,6 +247,8 @@ const getOrder_async = (params , callback ) => {
 
 module.exports = { 
     createOrder ,
-    getOrder_async
+    getLabel,
+    getOrder_async,
+   
     // AddOrderMainToConfirm  
 }

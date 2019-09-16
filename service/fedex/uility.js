@@ -188,12 +188,7 @@ return order
 }
 
 
-
-
-
-
 const handleShipRequest = (request) => {
-
     let order = {
       "TransactionDetail" :{
           "CustomerTransactionId": request.orderID
