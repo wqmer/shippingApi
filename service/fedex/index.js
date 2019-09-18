@@ -56,7 +56,7 @@ const getTracking = (requestArgs , callback) => {
                 data: originalInfo.StatusDetail
             }    
             callback(null, myresponse);
-          }catch{
+          }catch(error){
             callback(null, { "code": 500 , "message": "Fedex response error" });
           }
         }
