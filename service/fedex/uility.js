@@ -288,8 +288,8 @@ const handleShipRequest = (request) => {
 
 
 const handleAddressValidate = (request)=> {
-
-    const args = 	{
+  
+    let args = 	{
       "WebAuthenticationDetail": { 
               "UserCredential": {
                         "Key":      "F8GMIFLD4QEFhvjh",
@@ -322,16 +322,96 @@ const handleAddressValidate = (request)=> {
               "CountryCode":"us"
             }
          }          
-  }
+    }
+ 
 }
 
+// <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v18="http://fedex.com/ws/track/v18">
+//    <soapenv:Header/>
+//    <soapenv:Body>
+//       <v18:TrackRequest>
+//          <v18:WebAuthenticationDetail>
+//             <v18:ParentCredential>
+//                <v18:Key>INPUT YOUR INFORMATION</v18:Key>
+//                <v18:Password>INPUT YOUR INFORMATION</v18:Password>
+//             </v18:ParentCredential>
+//             <v18:UserCredential>
+//                <v18:Key>INPUT YOUR INFORMATION</v18:Key>
+//                <v18:Password>INPUT YOUR INFORMATION</v18:Password>
+//             </v18:UserCredential>
+//          </v18:WebAuthenticationDetail>
+//          <v18:ClientDetail>
+//             <v18:AccountNumber>INPUT YOUR INFORMATION</v18:AccountNumber>
+//             <v18:MeterNumber>INPUT YOUR INFORMATION</v18:MeterNumber>
+//             <v18:Localization>
+//                <v18:LanguageCode>EN</v18:LanguageCode>
+//             </v18:Localization>
+//          </v18:ClientDetail>
+//          <v18:TransactionDetail>
+//             <v18:CustomerTransactionId>Track By Number_v18</v18:CustomerTransactionId>
+//             <v18:Localization>
+//                <v18:LanguageCode>EN</v18:LanguageCode>
+//                <v18:LocaleCode>US</v18:LocaleCode>
+//             </v18:Localization>
+//          </v18:TransactionDetail>
+//          <v18:Version>
+//             <v18:ServiceId>trck</v18:ServiceId>
+//             <v18:Major>18</v18:Major>
+//             <v18:Intermediate>0</v18:Intermediate>
+//             <v18:Minor>0</v18:Minor>
+//          </v18:Version>
 
+
+
+//          <v18:SelectionDetails>
+//             <v18:CarrierCode>FDXE</v18:CarrierCode>
+//             <v18:PackageIdentifier>
+//                <v18:Type>TRACKING_NUMBER_OR_DOORTAG</v18:Type>
+//                <v18:Value>INPUT YOUR INFORMATION</v18:Value>
+//             </v18:PackageIdentifier>
+//             <v18:ShipmentAccountNumber/>
+//             <v18:SecureSpodAccount/>
+//             <v18:Destination>
+//                <v18:GeographicCoordinates>rates evertitque aequora</v18:GeographicCoordinates>
+//             </v18:Destination>
+//          </v18:SelectionDetails>
+//       </v18:TrackRequest>
+//    </soapenv:Body>
+// </soapenv:Envelope>
+
+//Todo
+const handleTrackingshipment = (request)=> {
+  const args = 	{
+        "TransactionDetail" :{
+           "CustomerTransactionId": request.orderId ,
+            // "Localization" : {
+            //                   "LanguageCode" : "EN",
+            //                   "LocaleCode" : "US"
+            // }
+        },
+          
+         "Version": {
+                    "ServiceId":     "trck",
+                    "Major":          18,
+                    "Intermediate":   0,
+                    "Minor":          0
+          },
+        "SelectionDetails" : {
+               "CarrierCode":"FDXE",
+               "PackageIdentifier":{
+               "Type":"TRACKING_NUMBER_OR_DOORTAG" ,
+               "Value":request.trackingNumber ,
+          }
+       }          
+  }
+  return args
+}
 
 
 
 module.exports = { 
     FEDEXRequestAuth,
     handleShipRequest,
-    handleRateRequest
-    
+    handleRateRequest,
+    handleTrackingshipment
 }

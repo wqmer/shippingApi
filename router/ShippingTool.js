@@ -205,6 +205,25 @@ router.post('/trackingUps', (req, res) => {
 
  })
 
+ router.post('/trackShipmentFEDEX', (req, res) => {
+   try {
+      let {
+         parcels
+     } = req.body
+     // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+     async.mapLimit(parcels, 25, function (address, callback) {
+         FEDEX.getTracking(address, callback);
+      }, function (err, result) {
+         if(err)console.log(err)
+         res.send({result:result});
+      });
+      
+   } catch (error) {
+      res.send({  "code": 500 , "message": "internal error" });   
+   }
+
+ })
+
 
 
 
