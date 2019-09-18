@@ -323,7 +323,7 @@ const handleAddressValidate = (request)=> {
             }
          }          
     }
- 
+    return args
 }
 
 // <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v18="http://fedex.com/ws/track/v18">
@@ -381,13 +381,9 @@ const handleAddressValidate = (request)=> {
 
 //Todo
 const handleTrackingshipment = (request)=> {
-  const args = 	{
+      let args = 	{
         "TransactionDetail" :{
            "CustomerTransactionId": request.orderId ,
-            // "Localization" : {
-            //                   "LanguageCode" : "EN",
-            //                   "LocaleCode" : "US"
-            // }
         },
           
          "Version": {

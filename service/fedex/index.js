@@ -4,13 +4,12 @@ const path = require('path')
 const uility = require ('./uility')
 const extend = require('extend')
 
-const wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/test':'wsdl/production'
+// let wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/test':'wsdl/production'
+const wsdl = 'wsdl/test'
+// const wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/production':'wsdl/production'
 
 const addressValidation = (requestArgs , callback) => {
       soap.createClient(path.join(__dirname, wsdl, 'AddressValidationService_v4.wsdl'), function(err, client) {
-        // soap.createClient(config.fedex.Reqeuest_url, function(err, client) {
-        // if(err)console.log(err)
-        // console.log(client)
         if(err)console.log(err)
         client.addressValidation(requestArgs,  function(err, result) {
           callback(null, result);
@@ -21,7 +20,10 @@ const addressValidation = (requestArgs , callback) => {
 const processShipment = (requestArgs , callback) => {
       soap.createClient(path.join(__dirname, wsdl, 'ShipService_v23.wsdl') ,function(err, client) {
       if(err)console.log(err)
-      client.processShipment(extend(uility.FEDEXRequestAuth, uility.handleShipRequest(requestArgs)),  function(err, result) {
+      let args = {}
+      extend(args, uility.FEDEXRequestAuth, uility.handleShipRequest(requestArgs))
+      client.processShipment(args,  function(err, result) {
+        console.log(args)
           callback(null, result);
       });
   });
@@ -30,7 +32,8 @@ const processShipment = (requestArgs , callback) => {
 const getRates = (requestArgs , callback) => {
       soap.createClient(path.join(__dirname, wsdl, 'RateService_v24.wsdl'), function(err, client) {
       if(err)console.log(err)
-      let args = extend(uility.FEDEXRequestAuth, uility.handleRateRequest(requestArgs))
+      let args = {}
+      extend(args,  uility.FEDEXRequestAuth, uility.handleRateRequest(requestArgs))
         client.getRates(args,  function(err, result) {
           console.log(args)
           callback(null, result);
@@ -41,11 +44,14 @@ const getRates = (requestArgs , callback) => {
 const getTracking = (requestArgs , callback) => {
   soap.createClient(path.join(__dirname, wsdl, 'TrackService_v18.wsdl'), function(err, client) {
     if(err)console.log(err)
-      let args = extend(uility.FEDEXRequestAuth, uility.handleTrackingshipment(requestArgs))
-      client.track(args,  function(err, result) {     
+      let args = {}
+      extend(args ,  uility.FEDEXRequestAuth, uility.handleTrackingshipment(requestArgs))
+      client.track(args, function(err, result) {     
+      
         if(err){
           console.log(err)
         } else {
+          // console.log(result)
           try{
             let originalInfo = result.CompletedTrackDetails[0].TrackDetails[0]
             let myresponse = {
@@ -57,6 +63,7 @@ const getTracking = (requestArgs , callback) => {
             }    
             callback(null, myresponse);
           }catch(error){
+            // console.log(error)
             callback(null, { "code": 500 , "message": "Fedex response error" });
           }
         }

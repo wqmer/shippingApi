@@ -1,5 +1,5 @@
 const dotenv = require('dotenv')
-dotenv.config({ silent: process.env.NODE_ENV === 'prod' })
+dotenv.config({ silent: process.env.NODE_ENV === 'test' })
 
 const usps = {
     user_id : "849XUEHU5746"
@@ -57,7 +57,8 @@ const Aftership = {
 module.exports =  {
       usps_mofangyun,
       ups,
-      fedex : process.env.NODE_ENV == 'test'? fedex_test : fedex_prod ,
+      fedex :fedex_test ,
+    //   fedex : process.env.NODE_ENV == 'test'? fedex_test : fedex_prod ,
       usps_endicia : process.env.NODE_ENV == 'test'? usps_endicia_test  : usps_endicia_product  ,
       usps ,
       kuaidi365,
