@@ -4,8 +4,8 @@ const path = require('path')
 const uility = require('./uility')
 const extend = require('extend')
 
-// let wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/test':'wsdl/production'
-const wsdl = 'wsdl/test'
+let wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/test' : 'wsdl/production'
+// const wsdl = 'wsdl/test'
 // const wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/production':'wsdl/production'
 
 const addressValidation = (requestArgs, callback) => {
@@ -76,11 +76,68 @@ const getTracking = (requestArgs, callback) => {
 }
 
 
+const getFuelSurcharge = (requestArgs, callback) => {
+  let opt = {
+    "shipMethod": requestArgs.method,
+    "Fname": "Ye Zhang",
+    "Fcompany": "KYL Trade Inc",
+    "Ftel": "2155880271",
+    "Fadd1": "2777 alton Parkway",
+    "Fadd2": "Apt 347",
+    "Fcity": "Irvine",
+    "Fstate": "CA",
+    "Fpostcode": "92606",
+    "Fcountry": "us",
+    "Sname": "kimi",
+    "Scompany": "chukkoula",
+    "Stel": "2155880271",
+    "Sadd1": "2777 alton Parkway",
+    "Sadd2": "Apt 347",
+    "Scity": "Irvine",
+    "Sstate": "CA",
+    "Spostcode": "92606",
+    "Scountry": "us",
+    "OrderID": "myorderID",
+    "SKU": "123",
+    "Weight": "17",
+    "Define1": "sku"
+  }
+
+  soap.createClient(path.join(__dirname, wsdl, 'RateService_v24.wsdl'), function (err, client) {
+    // console.log(123)
+    if (err) console.log(err)
+    let args = {}
+    extend(args, uility.FEDEXRequestAuth, uility.handleRateRequest(opt))
+    client.getRates(args, function (err, result) {
+      // console.log(args)
+      let myresponse = {
+        Status: 'success',
+        Source: 'default',
+        data: {}
+      }
+      try {
+
+        let fuelcharge = result.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.FuelSurchargePercent
+        myresponse.Source = "fedEx_server"
+        requestArgs.method == 'FEDEX_2_DAY' ? myresponse.data.express = fuelcharge : myresponse.data.ground = fuelcharge
+        callback(null, myresponse);
+      } catch (error) {
+        // console.log(error)
+        myresponse.Source = "default"
+        requestArgs.method == 'FEDEX_2_DAY' ? myresponse.data.express = 7.5 : myresponse.data.ground = 7
+        callback(null, myresponse);
+      }
+    });
+  });
+}
+
+
 
 module.exports = {
   addressValidation,
   processShipment,
   getRates,
-  getTracking
+  getTracking,
+  getFuelSurcharge
   // AddOrderMainToConfirm  
 }
