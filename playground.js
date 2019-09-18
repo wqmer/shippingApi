@@ -21,10 +21,14 @@ const builder = require('xmlbuilder');
 
 
 
-let a = { }
-let b = {y : 2}
-let c = {z : 3}
-console.log(extend( a , b  , c))
+let a = {}
+let b = {
+    y: 2
+}
+let c = {
+    z: 3
+}
+console.log(extend(a, b, c))
 console.log(b)
 console.log(c)
 
@@ -35,20 +39,20 @@ console.log(c)
 // var optionalObj = {'fileName': 'label', 'type':'png'};
 
 //     base64ToImage(base64Str,path,optionalObj); 
-    
+
 // var imageInfo = base64ToImage(base64Str,path,optionalObj); 
 
-// // image2base64( "http://119.23.188.252/index/get-label/code/YMAB20190706000447") // you can also to use url
-// //     .then(
-// //         (response) => {
-// //             console.log(response); //cGF0aC90by9maWxlLmpwZw==
-// //         }
-// //     )
-// //     .catch(
-// //         (error) => {
-// //             console.log(error); //Exepection error....
-// //         }
-// //     )
+// image2base64( "http://119.23.188.252/index/get-label/code/YMAB20190706000447") // you can also to use url
+//     .then(
+//         (response) => {
+//             console.log(response); //cGF0aC90by9maWxlLmpwZw==
+//         }
+//     )
+//     .catch(
+//         (error) => {
+//             console.log(error); //Exepection error....
+//         }
+//     )
 
 // console.log(process.env.UPS_USERNAME)
 // var ip = require("ip");
@@ -122,7 +126,7 @@ console.log(c)
 //         error? console.log ({ success:false, description : error[0].Description[0]}):console.log( { success:true , zone : zoneCode[0]}) 
 //      })  
 // })
- 
+
 // var xml = builder.create('root')
 //   .ele('Revision')
 //   .ele('Package')
@@ -131,7 +135,7 @@ console.log(c)
 //   .ele('ZipDestination')
 //   .ele('repo', {'type': 'git'}, 'git://github.com/oozcitak/xmlbuilder-js.git')
 //   .end({ pretty: true});
- 
+
 // console.log(xml);
 // const stripe = require("stripe")("sk_test_DivqW1nuPGpPCn8ZvHFaTs5400A7SdV62Y");
 // const usps = new USPS({
@@ -295,7 +299,7 @@ console.log(c)
 //     //         "shipperPostcode": "92606",
 //     //         "shipperTelephone": "63312345"
 //     //     },
-    
+
 //     //     "declarationArr": [{
 //     //         "declareEnName": "NewTestByKimi",
 //     //         "declareQuantity": 1,
@@ -340,5 +344,3 @@ console.log(c)
 //   console.log('final');
 //   console.log(result);//模拟返回订单信息
 // });
-
-
