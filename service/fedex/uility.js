@@ -202,7 +202,7 @@ const handleShipRequest = (request) => {
     "RequestedShipment": {
       //    "ShipTimestamp" : moment().add(1,'days').format( "YYYY-MM-DDTHH:MM:SS").toString(),
       "ShipTimestamp": new Date(date.getTime() + (24 * 60 * 60 * 1000)).toISOString(),
-      //    "ShipTimestamp" : "2019-05-13T23:09:16",
+      // "ShipTimestamp" : "2019-11-03T23:09:16",
       "DropoffType": "REGULAR_PICKUP",
       "ServiceType": request.shipMethod, //"FEDEX_GROUND", SMART_POST
       "PackagingType": "YOUR_PACKAGING",

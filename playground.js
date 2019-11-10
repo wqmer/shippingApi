@@ -3,7 +3,6 @@
 const uuid = require('uuid')
 const request = require('request');
 const async = require('async');
-const fs = require('fs');
 const extend = require('extend');
 const base64 = require('base64topdf');
 const base64ToImage = require('base64-to-image');
@@ -17,20 +16,92 @@ const image2base64 = require('image-to-base64');
 const parseString = require('xml2js').parseString;
 const builder = require('xmlbuilder');
 
+var pdfcrowd = require("pdfcrowd");
+const mergeImg = require('merge-img')
+var fs = require('fs');
+// var pdf = require('html-pdf');
 
 
+// PDFDocument = require('pdfkit');
+// fs = require('fs');
+// doc = new PDFDocument
+
+// //Pipe its output somewhere, like to a file or HTTP response 
+// //See below for browser usage 
+// doc.pipe(fs.createWriteStream('output.pdf'))
 
 
-let a = {}
-let b = {
-    y: 2
-}
-let c = {
-    z: 3
-}
-console.log(extend(a, b, c))
-console.log(b)
-console.log(c)
+//Add an image, constrain it to a given size, and center it vertically and horizontally 
+// doc.image('./out.png', {
+//    fit: [500, 400],
+//    align: 'center',
+//    valign: 'center'
+// });
+
+// doc.image('./out.png', {
+//     fit: [500, 400],
+//     align: 'center',
+//     valign: 'center'
+//  });
+
+// doc.addPage()
+//    .image('./out.png', {
+//    fit: [500,400],
+//    align: 'center',
+//    valign: 'center'
+// });
+
+// doc.end()
+
+// -----https://stackoverflow.com/questions/46222846/how-to-write-images-from-url-to-pdfkit
+// request({ url, encoding: null }, (error, response, body) => {
+//     if (!error && response.statusCode === 200) {
+//         pdf.pipe(fs.createWriteStream('out.pdf'));
+//         var img = new Buffer(body, 'base64');
+//         pdf.image(img, 0, 0);
+//         pdf.end();
+//     }
+// });
+
+
+// create the API client instance
+// var client = new pdfcrowd.ImageToPdfClient("wqmer11532", "5dca4fbf6230418d71f577555b25d6fd");
+// client.convertUrlToFile(
+//     "http://kdwi.mofangyuncang.com//label/B95/D8C/7CD/620/B95D8C7CD6207C8A195F1163CF359E29.png",
+//     "test-label.pdf",
+//     function(err, fileName) {
+//         if (err) return console.error("Pdfcrowd Error: " + err);
+//         console.log("Success: the file was created " + fileName);
+//     });
+
+// const imagesToPdf = require("images-to-pdf")
+// async function start_convert() {
+//     await imagesToPdf([example_image_url, example_image_url], "combined.pdf") 
+// }
+// start_convert() 
+
+// var fs = require('fs');
+// var pdf = require('html-pdf');
+// var html = fs.readFileSync('./test/businesscard.html', 'utf8');
+// var options = { format: 'Letter' };
+
+// pdf.create(html, options).toFile('./example_label.pdf', function(err, res) {
+//   if (err) return console.log(err);
+//   console.log(res); // { filename: '/app/businesscard.pdf' }
+// });
+
+// let a = {}
+// let b = {
+//     y: 2
+// }
+// let c = {
+//     z: 3
+// }
+// console.log(extend(a, b, c))
+// console.log(b)
+// console.log(c)
+
+
 
 // let d = {k : 4}
 // console.log(extend(d))
@@ -64,15 +135,17 @@ console.log(c)
 // base64ToImage(base64Str,path,optionalObj); 
 
 
-// const requestData = 
+const requestData = 
+{"instructionList":[{"channelCode":"PriorityParcel","userOrderNumber":"529600000052","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":10,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
+// {"instructionList":[{"channelCode":"PriorityParcel","userOrderNumber":"529600000052","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.3,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
 // {"instructionList":[{"channelCode":"FirstParcel","userOrderNumber":"52960000005101","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.3,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
 // // {"instructionList":[{"userOrderNumber": "529600000052"}]}
 // // {"instructionList":[{"channelCode":"FirstParcel","userOrderNumber":"529600000052","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.3,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
-// const AppSecret = '/xoU5d/d7a+xDOboQmiOx/xsVRYuiOE8PfSH6OSl'
-// const date = '2019-06-26 13:15:00'
+const AppSecret = '/xoU5d/d7a+xDOboQmiOx/xsVRYuiOE8PfSH6OSl'
+const date = '2019-10-28 13:15:00'
 
 
-// console.log(md5(JSON.stringify(requestData) + AppSecret + date));
+console.log(md5(JSON.stringify(requestData) + AppSecret + date));
 // url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="${config.usps.user_id}">
 // <Revision>2</Revision>
 // <Package ID="1ST">

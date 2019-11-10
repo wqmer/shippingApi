@@ -18,13 +18,6 @@ const router = express.Router();
 
 
 
-
-
-
-
-
-
-
 router.post('/testdelay', (req , res)=> {
     res.setTimeout(6000, function(){ res.send({status:'success'}); })
 })

@@ -24,19 +24,19 @@ const base64ToImage = require('base64-to-image');
 //--易仓UPS创建订单返回单号
 router.post('/createOrders', (req, res) => {
     try {
-        let {Orders} = req.body
+        let { Orders } = req.body
         async.mapLimit(Orders, 20, function (order, callback) {
-          UPS_YI.createOrder(order, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+            UPS_YI.createOrder(order, callback);
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-         });
-        
-    } catch (error) {     
-        res.send({  "code": 500 , "message": "internal error" });   
-      
+            res.send({ result: result });
+        });
+
+    } catch (error) {
+        res.send({ "code": 500, "message": "internal error" });
+
     }
 
 })
@@ -44,19 +44,19 @@ router.post('/createOrders', (req, res) => {
 //--易仓创建订单并返回单号和label
 router.post('/createShippment', (req, res) => {
     try {
-        let {Orders} = req.body
+        let { Orders } = req.body
         // console.log(req.body)
         async.mapLimit(Orders, 25, function (order, callback) {
-          UPS_YI.getLabel(order, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+            UPS_YI.getLabel(order, callback);
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-         });
-        
+            res.send({ result: result });
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
 
 })
@@ -64,46 +64,46 @@ router.post('/createShippment', (req, res) => {
 //--易仓UPS查询运单号，订单号和转单号
 router.post('/getTrackingNo', (req, res) => {
     try {
-        let {order_id_list} = req.body
+        let { order_id_list } = req.body
         // console.log(req.body)
         async.mapLimit(order_id_list, 25, function (order, callback) {
-          UPS_YI.getTrakcingNumber(order, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+            UPS_YI.getTrakcingNumber(order, callback);
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-         });
-        
+            res.send({ result: result });
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });    
+        res.send({ "code": 500, "message": "internal error" });
     }
 })
 
 //--易仓查询运费
 router.post('/getReceivingExpense', (req, res) => {
     try {
-        let {Reference_No} = req.body
+        let { Reference_No } = req.body
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(Reference_No, 25, function (id, callback) {
             UPS_YI.getReceivingExpense(id, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-         });
-        
+            res.send({ result: result });
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
 
- })
+})
 
 
 
- //--ENDICIA 创建USPS订单
- router.post('/createShippmentUSPS', (req, res) => {
+//--ENDICIA 创建USPS订单
+router.post('/createShippmentUSPS', (req, res) => {
     try {
         let {
             orders
@@ -111,18 +111,18 @@ router.post('/getReceivingExpense', (req, res) => {
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 25, function (order, callback) {
             ENDICIA.GetPostageLabel(order, callback);
-           //  console.log(order)
-         }, function (err, result) {
-            if(err)console.log(err)
-           //  console.log(result[0].LabelRequestResponse)
+            //  console.log(order)
+        }, function (err, result) {
+            if (err) console.log(err)
+            //  console.log(result[0].LabelRequestResponse)
             // res.json(result)
-           //  base64.base64Decode(result[0].LabelRequestResponse.Base64LabelImage, 'LABEL.png');
-           //  console.log(result.LabelRequestResponse.Base64LabelImage)
-            res.send({result:result});
-         });
-        
+            //  base64.base64Decode(result[0].LabelRequestResponse.Base64LabelImage, 'LABEL.png');
+            //  console.log(result.LabelRequestResponse.Base64LabelImage)
+            res.send({ result: result });
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });    
+        res.send({ "code": 500, "message": "internal error" });
     }
 
 })
@@ -135,16 +135,16 @@ router.post('/buyPostageEndicia', (req, res) => {
         } = req.body
         async.mapLimit(orders, 50, function (order, callback) {
             ENDICIA.BuyPostage(order, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-        
-         });
-        
+            res.send({ result: result });
+
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
 
 })
@@ -158,17 +158,17 @@ router.post('/createShippmentFEDEX', (req, res) => {
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 25, function (order, callback) {
             FEDEX.processShipment(order, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
-            res.send({result:result});
-         });
-        
+            res.send({ result: result });
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });    
+        res.send({ "code": 500, "message": "internal error" });
     }
 
- })
+})
 
 //--fedex预估运费
 router.post('/getRateFEDEX', (req, res) => {
@@ -179,20 +179,20 @@ router.post('/getRateFEDEX', (req, res) => {
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(args, 25, function (arg, callback) {
             FEDEX.getRates(arg, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-         });
-        
+            res.send({ result: result });
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });     
+        res.send({ "code": 500, "message": "internal error" });
     }
 
- })
+})
 
- 
+
 
 //出口拉创建订单
 router.post('/createShippmentChukoula', (req, res) => {
@@ -203,60 +203,60 @@ router.post('/createShippmentChukoula', (req, res) => {
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 10, function (order, callback) {
             CHUKOULA.createOrder(order, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-         });
-        
+            res.send({ result: result });
+        });
+
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });    
+        res.send({ "code": 500, "message": "internal error" });
     }
- })
+})
 
 
- router.post('/addSenderAddress', (req, res) => {
+router.post('/addSenderAddress', (req, res) => {
     try {
         let {
             address
         } = req.body
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(address, 10, function (record, callback) {
-             USPS_MEIYUN.addSenderAddress(record, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+            USPS_MEIYUN.addSenderAddress(record, callback);
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log(result)
             // res.json(result)
-            res.send({result:result});
-         });
+            res.send({ result: result });
+        });
     } catch (error) {
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
 
- })
+})
 
- router.post('/createOrderMeiyun', (req, res) => {
+router.post('/createOrderMeiyun', (req, res) => {
     try {
         let {
             orders
         } = req.body
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 15, function (record, callback) {
-             USPS_MEIYUN.getLabel(record, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
+            USPS_MEIYUN.getLabel(record, callback);
+        }, function (err, result) {
+            if (err) console.log(err)
             // console.log({result:result})
-            res.send({result:result});
-         });
+            res.send({ result: result });
+        });
     } catch (error) {
         // console.log({ "code": 500 , "message": "internal error" })
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
- })
+})
 
 
- router.post('/createDraftMofangYun', (req, res) => {
+router.post('/createDraftMofangYun', (req, res) => {
     try {
         let {
             orders
@@ -264,17 +264,17 @@ router.post('/createShippmentChukoula', (req, res) => {
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 10, function (record, callback) {
             USPS_MOFANGYUN.createOrder(record, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
-            res.send({result:result});
-         });
+        }, function (err, result) {
+            if (err) console.log(err)
+            res.send({ result: result });
+        });
     } catch (error) {
         // console.log({ "code": 500 , "message": "internal error" })
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
- })
+})
 
- router.post('/createOrderMofangYun', (req, res) => {
+router.post('/createOrderMofangYun', (req, res) => {
     try {
         let {
             orders
@@ -282,19 +282,19 @@ router.post('/createShippmentChukoula', (req, res) => {
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 30, function (record, callback) {
             USPS_MOFANGYUN.getOrder_async(record, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
-            res.send({result:result});
-         });
+        }, function (err, result) {
+            if (err) console.log(err)
+            res.send({ result: result });
+        });
     } catch (error) {
         // console.log({ "code": 500 , "message": "internal error" })
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
- })
+})
 
 
 //todo
- router.post('/getOrderMofangYun', (req, res) => {
+router.post('/getOrderMofangYun', (req, res) => {
     try {
         let {
             orders
@@ -302,20 +302,27 @@ router.post('/createShippmentChukoula', (req, res) => {
         // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 10, function (record, callback) {
             USPS_MOFANGYUN.getLabel(record, callback);
-         }, function (err, result) {
-            if(err)console.log(err)
-            res.send({result:result});
-         });
+        }, function (err, result) {
+            if (err) console.log(err)
+            res.send({ result: result });
+        });
     } catch (error) {
         // console.log({ "code": 500 , "message": "internal error" })
-        res.send({  "code": 500 , "message": "internal error" });   
+        res.send({ "code": 500, "message": "internal error" });
     }
+})
 
- })
+router.post('/getChannelMofangYun', (req, res) => {
+    USPS_MOFANGYUN.getChannel_async(req.body).then((result) => res.send(result))
+        .catch(err => {
+            console.log(err)
+            res.send({ "code": 500, "message": "internal error" })
+        })
+})
 
 
 module.exports = router
 
-  
-  
-  
+
+
+
