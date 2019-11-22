@@ -22,9 +22,9 @@ const router = express.Router();
 router.get('/trackingAndShow/:id', (req, res) => {
    let num = req.params.id
    TOOL.detectCarrier(num).then(result => {
-         if (result === 'sf-express') result = 'shunfeng'
-         res.redirect(`https://www.kuaidi100.com/chaxun?com=${result}&nu=${num}`)
-      })
+      if (result === 'sf-express') result = 'shunfeng'
+      res.redirect(`https://www.kuaidi100.com/chaxun?com=${result}&nu=${num}`)
+   })
       .catch(err => console.log(err))
 })
 
@@ -247,7 +247,6 @@ router.post('/verifyAddressFEDEX', (req, res) => {
       let {
          addresList
       } = req.body
-      // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
       async.mapLimit(addresList, 25, function (address, callback) {
          FEDEX.addressValidation(address, callback);
       }, function (err, result) {
@@ -263,7 +262,6 @@ router.post('/verifyAddressFEDEX', (req, res) => {
          "message": "internal error"
       });
    }
-
 })
 
 
@@ -291,11 +289,11 @@ router.post('/trackShipmentFEDEX', (req, res) => {
    }
 })
 
-router.get('/getFuelSurcharegeFEDEX', (req, res) => {  
+router.get('/getFuelSurcharegeFEDEX', (req, res) => {
    try {
       let args = [
-         { method : "FEDEX_GROUND"},
-         { method : "FEDEX_2_DAY"},
+         { method: "FEDEX_GROUND" },
+         { method: "FEDEX_2_DAY" },
       ]
       async.mapLimit(args, 25, function (record, callback) {
          FEDEX.getFuelSurcharge(record, callback);
@@ -313,6 +311,26 @@ router.get('/getFuelSurcharegeFEDEX', (req, res) => {
    }
 })
 
+router.post('/isResidentialFedex', (req, res) => {
+   try {
+      let {
+         addresList
+      } = req.body
+      async.mapLimit(addresList, 25, function (address, callback) {
+         FEDEX.isResidential(address, callback);
+      }, function (err, result) {
+         if (err) console.log(err)
+         res.send({
+            result: result
+         });
+      });
+   } catch (error) {
+      res.send({
+         "code": 500,
+         "message": "internal error"
+      });
+   }
+})
 
 
 

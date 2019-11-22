@@ -279,7 +279,6 @@ router.post('/createOrderMofangYun', (req, res) => {
         let {
             orders
         } = req.body
-        // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
         async.mapLimit(orders, 30, function (record, callback) {
             USPS_MOFANGYUN.getOrder_async(record, callback);
         }, function (err, result) {
@@ -287,7 +286,6 @@ router.post('/createOrderMofangYun', (req, res) => {
             res.send({ result: result });
         });
     } catch (error) {
-        // console.log({ "code": 500 , "message": "internal error" })
         res.send({ "code": 500, "message": "internal error" });
     }
 })

@@ -8,11 +8,32 @@ let wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/test' : 'wsdl/production'
 // const wsdl = 'wsdl/test'
 // const wsdl = process.env.NODE_ENV == 'test' ? 'wsdl/production':'wsdl/production'
 
+//use test environment only
 const addressValidation = (requestArgs, callback) => {
-  soap.createClient(path.join(__dirname, wsdl, 'AddressValidationService_v4.wsdl'), function (err, client) {
+  soap.createClient(path.join(__dirname, 'wsdl/test', 'AddressValidationService_v4.wsdl'), function (err, client) {
     if (err) console.log(err)
-    client.addressValidation(requestArgs, function (err, result) {
+    client.addressValidation(uility.handleAddressValidate(requestArgs), function (err, result) {
       callback(null, result);
+    });
+  });
+}
+
+const isResidential = (requestArgs, callback) => {
+  soap.createClient(path.join(__dirname, 'wsdl/test', 'AddressValidationService_v4.wsdl'), function (err, client) {
+    if (err) console.log(err)
+    client.addressValidation(uility.handleAddressValidate(requestArgs), function (err, result) {
+      let myresponse = {
+        status: 'success',
+      }
+      try {
+        myresponse.addressType = result.AddressResults[0].Classification
+        callback(null, myresponse);
+      } catch (error) {
+        callback(null, {
+          "code": 500,
+          "message": "Fedex response error"
+        });
+      }
     });
   });
 }
@@ -22,8 +43,9 @@ const processShipment = (requestArgs, callback) => {
     if (err) console.log(err)
     let args = {}
     extend(args, uility.FEDEXRequestAuth, uility.handleShipRequest(requestArgs))
+    // console.log(uility.FEDEXRequestAuth)
     client.processShipment(args, function (err, result) {
-      console.log(args)
+      // console.log(args)
       callback(null, result);
     });
   });
@@ -138,6 +160,7 @@ module.exports = {
   processShipment,
   getRates,
   getTracking,
-  getFuelSurcharge
+  getFuelSurcharge,
+  isResidential
   // AddOrderMainToConfirm  
 }
