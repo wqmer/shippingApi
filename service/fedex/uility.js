@@ -341,7 +341,7 @@ const handleTrackingshipment = (request) => {
       "Minor": 0
     },
     "SelectionDetails": {
-      "CarrierCode": "FDXE",
+      "CarrierCode": request.trackingNumber.length > 12 ? "FXSP" : "FDXE",
       "PackageIdentifier": {
         "Type": "TRACKING_NUMBER_OR_DOORTAG",
         "Value": request.trackingNumber,
