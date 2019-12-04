@@ -241,6 +241,44 @@ router.post('/getUpsTrackingStatus', (req, res) => {
 })
 
 
+
+//--Fedex获取运单物流状态
+router.post('/getFedexTrackingStatus', (req, res) => {
+   try {
+      let {
+         trackings
+      } = req.body
+      // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+      async.mapLimit(trackings, 25, function (tracking, callback) {
+         let track_req = {'trackingNumber':tracking}
+         FEDEX.getTracking(track_req, callback);
+      }, function (err, result) {
+         if (err) console.log(err)
+         var created_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'OC' }}).map(item => item.trackingNo)
+         var intransit_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType != 'OC' && item.data[0].EventType != 'DL' }}).map(item => item.trackingNo)
+         var devlivery_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'DL' }}).map(item => item.trackingNo)
+         var no_information_array = result.filter(item => {  return item.data == undefined }).map(item => item.trackingNo)
+
+         res.send({
+            result: {
+               created: created_array,
+               in_transit: intransit_array,
+               delivery: devlivery_array,
+               no_information: no_information_array,
+            }
+         });
+         // res.send('ok')
+      });
+
+   } catch (error) {
+      res.send({
+         "code": 500,
+         "message": "internal error"
+      });
+   }
+})
+
+
 //--FEDEX验证地址
 router.post('/verifyAddressFEDEX', (req, res) => {
    try {

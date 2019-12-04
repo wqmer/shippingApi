@@ -64,6 +64,7 @@ const getRates = (requestArgs, callback) => {
 }
 
 const getTracking = (requestArgs, callback) => {
+  console.log(requestArgs)
   soap.createClient(path.join(__dirname, wsdl, 'TrackService_v18.wsdl'), function (err, client) {
     if (err) console.log(err)
     let args = {}
