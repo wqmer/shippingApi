@@ -192,8 +192,6 @@ router.post('/getRateFEDEX', (req, res) => {
 
 })
 
-
-
 //出口拉创建订单
 router.post('/createShippmentChukoula', (req, res) => {
     try {
@@ -215,7 +213,7 @@ router.post('/createShippmentChukoula', (req, res) => {
     }
 })
 
-
+//美云仓添加地址
 router.post('/addSenderAddress', (req, res) => {
     try {
         let {
@@ -236,6 +234,7 @@ router.post('/addSenderAddress', (req, res) => {
 
 })
 
+//美云仓创建订单
 router.post('/createOrderMeiyun', (req, res) => {
     try {
         let {
@@ -256,6 +255,7 @@ router.post('/createOrderMeiyun', (req, res) => {
 })
 
 
+//kdw魔方云创建草稿
 router.post('/createDraftMofangYun', (req, res) => {
     try {
         let {
@@ -274,6 +274,7 @@ router.post('/createDraftMofangYun', (req, res) => {
     }
 })
 
+//Kdw魔方云创建订单并获取label
 router.post('/createOrderMofangYun', (req, res) => {
     try {
         let {
@@ -291,7 +292,7 @@ router.post('/createOrderMofangYun', (req, res) => {
 })
 
 
-//todo
+//KDW魔方云获取订单信息
 router.post('/getOrderMofangYun', (req, res) => {
     try {
         let {
@@ -310,6 +311,7 @@ router.post('/getOrderMofangYun', (req, res) => {
     }
 })
 
+//KDW魔方云获取可用渠道
 router.post('/getChannelMofangYun', (req, res) => {
     USPS_MOFANGYUN.getChannel_async(req.body).then((result) => res.send(result))
         .catch(err => {

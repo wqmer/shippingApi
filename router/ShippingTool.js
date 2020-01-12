@@ -241,7 +241,6 @@ router.post('/getUpsTrackingStatus', (req, res) => {
 })
 
 
-
 //--Fedex获取运单物流状态
 router.post('/getFedexTrackingStatus', (req, res) => {
    try {
@@ -250,14 +249,14 @@ router.post('/getFedexTrackingStatus', (req, res) => {
       } = req.body
       // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
       async.mapLimit(trackings, 25, function (tracking, callback) {
-         let track_req = {'trackingNumber':tracking}
+         let track_req = { 'trackingNumber': tracking }
          FEDEX.getTracking(track_req, callback);
       }, function (err, result) {
          if (err) console.log(err)
-         var created_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'OC' }}).map(item => item.trackingNo)
-         var intransit_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType != 'OC' && item.data[0].EventType != 'DL' }}).map(item => item.trackingNo)
-         var devlivery_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'DL' }}).map(item => item.trackingNo)
-         var no_information_array = result.filter(item => {  return item.data == undefined }).map(item => item.trackingNo)
+         var created_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'OC' } }).map(item => item.trackingNo)
+         var intransit_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType != 'OC' && item.data[0].EventType != 'DL' } }).map(item => item.trackingNo)
+         var devlivery_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'DL' } }).map(item => item.trackingNo)
+         var no_information_array = result.filter(item => { return item.data == undefined }).map(item => item.trackingNo)
 
          res.send({
             result: {
@@ -310,7 +309,7 @@ router.post('/trackShipmentFEDEX', (req, res) => {
          parcels
       } = req.body
       // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
-      async.mapLimit(parcels, 25, function (address, callback) {
+      async.mapLimit(parcels, 100, function (address, callback) {
          FEDEX.getTracking(address, callback);
       }, function (err, result) {
          if (err) console.log(err)
@@ -327,6 +326,7 @@ router.post('/trackShipmentFEDEX', (req, res) => {
    }
 })
 
+//FedEx 获取燃油比例
 router.get('/getFuelSurcharegeFEDEX', (req, res) => {
    try {
       let args = [
@@ -349,6 +349,7 @@ router.get('/getFuelSurcharegeFEDEX', (req, res) => {
    }
 })
 
+//判断是否住宅地址
 router.post('/isResidentialFedex', (req, res) => {
    try {
       let {
@@ -367,6 +368,62 @@ router.post('/isResidentialFedex', (req, res) => {
          "code": 500,
          "message": "internal error"
       });
+   }
+})
+
+
+//fedex预估邮费
+router.post('/getRateFEDEX', (req, res) => {
+   try {
+      let {
+         args
+      } = req.body
+      // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+      async.mapLimit(args, 25, function (arg, callback) {
+         FEDEX.getRates(arg, callback);
+      }, function (err, result) {
+         if (err) console.log(err)
+         // console.log(result)
+         // res.json(result)
+         res.send({ result: result });
+      });
+
+   } catch (error) {
+      res.send({ "code": 500, "message": "internal error" });
+   }
+})
+
+//fedex判断计费区域
+router.post('/getRateZoneFedex', (req, res) => {
+   try {
+      let {
+         Zone_Pairs
+      } = req.body
+
+     
+      // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
+      async.mapLimit(Zone_Pairs, 25, function (zone_pair, callback) {
+         let request_arg = {
+            "referenceNumber":zone_pair.referenceNumber,
+            "shipMethod":"FEDEX_GROUND",
+            "Fpostcode": zone_pair.from?zone_pair.from:'',
+            "Fcountry": "us",
+            "Spostcode": zone_pair.to?zone_pair.to:'',
+            "Scountry": "us",
+            "Weight": "17",
+         }
+         // console.log(request_arg)
+         FEDEX.getZone(request_arg, callback);
+      }, function (err, result) {
+         console.log(result)
+         // if (err) console.log(err)
+         // console.log(result)
+         // res.json(result)
+         res.send({ result: result });
+      });
+
+   } catch (error) {
+      res.send({ "code": 500, "message": "internal error" });
    }
 })
 

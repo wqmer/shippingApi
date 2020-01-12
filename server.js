@@ -28,8 +28,11 @@ var port = process.env.PORT || 5000 ;
 // };
 // app.use(timeout('2s', ))
 // app.use(haltOnTimedout);
+app.use(bodyParser.json({ limit: '10mb', extended: true }))
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
 
-app.use(bodyParser.json());
 
 app.use(function(err, req, res, next) {
     if (err instanceof SyntaxError && err.status === 400 && "body" in err) {

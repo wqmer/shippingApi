@@ -57,8 +57,29 @@ const getRates = (requestArgs, callback) => {
     let args = {}
     extend(args, uility.FEDEXRequestAuth, uility.handleRateRequest(requestArgs))
     client.getRates(args, function (err, result) {
-      console.log(args)
-      callback(null, result);
+      callback(null, { referenceNumber: requestArgs.referenceNumber, result });
+    });
+  });
+}
+
+const getZone = (requestArgs, callback) => {
+  soap.createClient(path.join(__dirname, 'wsdl/test', 'RateService_v24.wsdl'), function (err, client) {
+    if (err) console.log(err)
+    let args = {}
+    extend(args, uility.FEDEXRequestTestAuth, uility.handleRateTestRequest(requestArgs))
+    client.getRates(args, function (err, result) {
+      let myrespone = {
+        "referenceNumber": requestArgs.referenceNumber,
+        "success": false,
+      }
+      if (result.HighestSeverity == "ERROR") {
+        myrespone.description = result.Notifications[0].Message
+        callback(null, myrespone)
+      } else {
+        myrespone.success = true
+        myrespone.zone = result.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.RateZone
+        callback(null, myrespone);
+      }
     });
   });
 }
@@ -74,8 +95,9 @@ const getTracking = (requestArgs, callback) => {
       if (err) {
         console.log(err)
       } else {
-        // console.log(result)
+
         try {
+
           let originalInfo = result.CompletedTrackDetails[0].TrackDetails[0]
           let myresponse = {
             orderId: requestArgs.orderId,
@@ -97,7 +119,6 @@ const getTracking = (requestArgs, callback) => {
     });
   });
 }
-
 
 const getFuelSurcharge = (requestArgs, callback) => {
   let opt = {
@@ -160,6 +181,7 @@ module.exports = {
   addressValidation,
   processShipment,
   getRates,
+  getZone,
   getTracking,
   getFuelSurcharge,
   isResidential

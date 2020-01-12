@@ -76,6 +76,23 @@ const FEDEXRequestAuth = {
   }
 }
 
+const FEDEXRequestTestAuth = {
+  "WebAuthenticationDetail": {
+    //  "ParentCredential": {
+    //     "Key": config.fedex.Prod_key,
+    //     "Password": config.fedex.Prod_password                        
+    //   },
+    "UserCredential": {
+      "Key": "SjgF06iYpTJ9hyFz",
+      "Password": "nDL641ljD029QgVj459viquRc"
+    }
+  },
+  "ClientDetail": {
+    "AccountNumber": "510087640",
+    "MeterNumber": "119152006",
+  }
+}
+
 
 
 // "Version": {
@@ -89,7 +106,7 @@ const FEDEXRequestAuth = {
 const handleRateRequest = (request) => {
   let order = {
     "TransactionDetail": {
-      "CustomerTransactionId": request.orderID
+      "CustomerTransactionId": request.referenceNumber ? request.referenceNumber : ''
     },
 
     "Version": {
@@ -109,34 +126,34 @@ const handleRateRequest = (request) => {
       "PreferredCurrency": "USD",
       "Shipper": {
         "Contact": {
-          "PersonName": request.Fname,
-          "PhoneNumber": request.Ftel
+          "PersonName": request.Fname ? request.Fname : '',
+          "PhoneNumber": request.Ftel ? request.Ftel : ''
         },
         "Address": {
           "StreetLines": [
-            request.Fadd1,
-            request.Fadd2
+            request.Fadd1 ? request.Fadd1 : '',
+            request.Fadd2 ? request.Fadd2 : '',
           ],
-          "City": request.Fcity,
-          "StateOrProvinceCode": request.Fstate,
-          "PostalCode": request.Fpostcode,
-          "CountryCode": request.Fcountry
+          "City": request.Fcity ? request.Fcity : '',
+          "StateOrProvinceCode": request.Fstate ? request.Fstate : '',
+          "PostalCode": request.Fpostcode ? request.Fpostcode : '',
+          "CountryCode": request.Fcountry ? request.Fcountry : ''
         }
       },
       "Recipient": {
         "Contact": {
-          "PersonName": request.Sname,
-          "PhoneNumber": request.Stel
+          "PersonName": request.Sname ? request.Sname : '',
+          "PhoneNumber": request.Stel ? request.Stel : ''
         },
         "Address": {
           "StreetLines": [
-            request.Sadd1,
-            request.Sadd2
+            request.Sadd1 ? request.Sadd1 : '',
+            request.Sadd2 ? request.Sadd2 : '',
           ],
-          "City": request.Scity,
-          "StateOrProvinceCode": request.Sstate,
-          "PostalCode": request.Spostcode,
-          "CountryCode": request.Scountry
+          "City": request.Scity ? request.Scity : '',
+          "StateOrProvinceCode": request.Sstate ? request.Sstate : '',
+          "PostalCode": request.Spostcode ? request.Spostcode : '',
+          "CountryCode": request.Scountry ? request.Scountry : '',
         }
       },
       "ShippingChargesPayment": {
@@ -185,6 +202,104 @@ const handleRateRequest = (request) => {
   return order
 }
 
+const handleRateTestRequest = (request) => {
+  let order = {
+    "TransactionDetail": {
+      "CustomerTransactionId": request.referenceNumber ? request.referenceNumber : ''
+    },
+
+    "Version": {
+      "ServiceId": "crs",
+      "Major": 24,
+      "Intermediate": 0,
+      "Minor": 0
+    },
+
+    "RequestedShipment": {
+      //    "ShipTimestamp" : moment().add(1,'days').format( "YYYY-MM-DDTHH:MM:SS").toString(),
+      "ShipTimestamp": new Date(date.getTime() + (24 * 60 * 60 * 1000)).toISOString(),
+      //    "ShipTimestamp" : "2019-05-13T23:09:16",
+      "DropoffType": "REGULAR_PICKUP",
+      "ServiceType": request.shipMethod, //FEDEX_GROUND, SMART_POST
+      "PackagingType": "YOUR_PACKAGING",
+      "PreferredCurrency": "USD",
+      "Shipper": {
+        "Contact": {
+          "PersonName": request.Fname ? request.Fname : '',
+          "PhoneNumber": request.Ftel ? request.Ftel : ''
+        },
+        "Address": {
+          "StreetLines": [
+            request.Fadd1 ? request.Fadd1 : '',
+            request.Fadd2 ? request.Fadd2 : '',
+          ],
+          "City": request.Fcity ? request.Fcity : '',
+          "StateOrProvinceCode": request.Fstate ? request.Fstate : '',
+          "PostalCode": request.Fpostcode ? request.Fpostcode : '',
+          "CountryCode": request.Fcountry ? request.Fcountry : ''
+        }
+      },
+      "Recipient": {
+        "Contact": {
+          "PersonName": request.Sname ? request.Sname : '',
+          "PhoneNumber": request.Stel ? request.Stel : ''
+        },
+        "Address": {
+          "StreetLines": [
+            request.Sadd1 ? request.Sadd1 : '',
+            request.Sadd2 ? request.Sadd2 : '',
+          ],
+          "City": request.Scity ? request.Scity : '',
+          "StateOrProvinceCode": request.Sstate ? request.Sstate : '',
+          "PostalCode": request.Spostcode ? request.Spostcode : '',
+          "CountryCode": request.Scountry ? request.Scountry : '',
+        }
+      },
+      "ShippingChargesPayment": {
+        "PaymentType": "SENDER",
+        "Payor": {
+          "ResponsibleParty": {
+            "AccountNumber": '510087640'
+          }
+        }
+      },
+
+      "SmartPostDetail": {
+        "Indicia": "PARCEL_SELECT",
+        "AncillaryEndorsement": "ADDRESS_CORRECTION",
+        "HubId": "5531"
+      },
+      "LabelSpecification": {
+        "LabelFormatType": "COMMON2D",
+        "ImageType": "PDF",
+        "LabelStockType": "STOCK_4X6"
+      },
+      "PackageCount": "1",
+      "RequestedPackageLineItems": [{
+        "SequenceNumber": 1,
+        "GroupPackageCount": 1,
+        "Weight": {
+          "Units": "LB",
+          "Value": convert(request.Weight).from('oz').to('lb')
+        },
+        "Dimensions": {
+          "Length": 6,
+          "Width": 4,
+          "Height": 1,
+          "Units": "IN"
+        },
+        "CustomerReferences": {
+          "CustomerReferenceType": "CUSTOMER_REFERENCE",
+          "Value": request.Define1
+        }
+      }]
+
+    }
+  }
+
+  if (request.shipMethod == 'FEDEX_GROUND') delete order.RequestedShipment.SmartPostDetail
+  return order
+}
 
 const handleShipRequest = (request) => {
   let order = {
@@ -283,9 +398,6 @@ const handleShipRequest = (request) => {
   return order
 }
 
-
-
-
 const handleAddressValidate = (request) => {
 
   const args = {
@@ -325,9 +437,6 @@ const handleAddressValidate = (request) => {
   return args
 }
 
-
-
-//Todo
 const handleTrackingshipment = (request) => {
   const args = {
     "TransactionDetail": {
@@ -341,6 +450,7 @@ const handleTrackingshipment = (request) => {
       "Minor": 0
     },
     "SelectionDetails": {
+      //跟踪号如果大于12位，是smarpost服务，小于12位就是ground和express服务
       "CarrierCode": request.trackingNumber.length > 12 ? "FXSP" : "FDXE",
       "PackageIdentifier": {
         "Type": "TRACKING_NUMBER_OR_DOORTAG",
@@ -356,9 +466,11 @@ const handleTrackingshipment = (request) => {
 
 
 module.exports = {
+  FEDEXRequestTestAuth,
   FEDEXRequestAuth,
   handleShipRequest,
   handleRateRequest,
   handleTrackingshipment,
-  handleAddressValidate
+  handleAddressValidate,
+  handleRateTestRequest
 }
