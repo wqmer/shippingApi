@@ -261,16 +261,12 @@ router.post('/getFedexTrackingStatus', (req, res) => {
          // var intransit_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType != 'OC' && item.data[0].EventType != 'DL' } }).map(item => item.trackingNo)
          // var devlivery_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType == 'DL' } }).map(item => item.trackingNo)
          // var no_information_array = result.filter(item => { return item.data.Events == undefined }).map(item => item.trackingNo)
-     console.log(result)
 
             no_information_array = result.filter(item => { return !Array.isArray(item.data.DatesOrTimes)  }).map(item => item.trackingNo)
-            created_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes) ) { return item.data.DatesOrTimes[0].Type == 'ACTUAL_TENDER' } }).map(item => item.trackingNo)
-            intransit_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes)) { return item.data.DatesOrTimes[0].Type != "ACTUAL_TENDER" && item.data.DatesOrTimes[0].Type != "ACTUAL_DELIVERY" } }).map(item => item.trackingNo)
+            created_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes) ) { return item.data.DatesOrTimes[0].Type == 'ANTICIPATED_TENDER' } }).map(item => item.trackingNo)
+            intransit_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes)) { return item.data.DatesOrTimes[0].Type != "ANTICIPATED_TENDER" && item.data.DatesOrTimes[0].Type != "ACTUAL_DELIVERY" } }).map(item => item.trackingNo)
             devlivery_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes)) { return item.data.DatesOrTimes[0].Type == "ACTUAL_DELIVERY" } }).map(item => item.trackingNo)
          
-
-
-
          res.send({
             result: {
                created: created_array,
