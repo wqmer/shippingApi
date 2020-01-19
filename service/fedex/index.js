@@ -85,17 +85,13 @@ const getZone = (requestArgs, callback) => {
 }
 
 const getTracking = (requestArgs, callback) => {
-  console.log(requestArgs)
   soap.createClient(path.join(__dirname, wsdl, 'TrackService_v18.wsdl'), function (err, client) {
     if (err) console.log(err)
     let args = {}
     extend(args, uility.FEDEXRequestAuth, uility.handleTrackingshipment(requestArgs))
     client.track(args, function (err, result) {
-
       if (err) {
-        console.log(err)
       } else {
-
         try {
 
           let originalInfo = result.CompletedTrackDetails[0].TrackDetails[0]
@@ -104,12 +100,12 @@ const getTracking = (requestArgs, callback) => {
             trackingNo: originalInfo.TrackingNumber,
             status: originalInfo.Notification.Severity,
             message: originalInfo.Notification.Message,
-            data: originalInfo.Events
+            data: { 'DatesOrTimes': originalInfo.DatesOrTimes, 'Events': originalInfo.Events }
           }
           // callback(null, result);
           callback(null, myresponse);
         } catch (error) {
-          // console.log(error)
+          console.log(error)
           callback(null, {
             "code": 500,
             "message": "Fedex response error"

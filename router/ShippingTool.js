@@ -252,11 +252,24 @@ router.post('/getFedexTrackingStatus', (req, res) => {
          let track_req = { 'trackingNumber': tracking }
          FEDEX.getTracking(track_req, callback);
       }, function (err, result) {
+         var no_information_array 
+         var created_array 
+         var intransit_array
+         var devlivery_array
          if (err) console.log(err)
-         var created_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'OC' } }).map(item => item.trackingNo)
-         var intransit_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType != 'OC' && item.data[0].EventType != 'DL' } }).map(item => item.trackingNo)
-         var devlivery_array = result.filter(item => { if (item.data != undefined) { return item.data[0].EventType == 'DL' } }).map(item => item.trackingNo)
-         var no_information_array = result.filter(item => { return item.data == undefined }).map(item => item.trackingNo)
+         // var created_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType == 'OC' } }).map(item => item.trackingNo)
+         // var intransit_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType != 'OC' && item.data[0].EventType != 'DL' } }).map(item => item.trackingNo)
+         // var devlivery_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType == 'DL' } }).map(item => item.trackingNo)
+         // var no_information_array = result.filter(item => { return item.data.Events == undefined }).map(item => item.trackingNo)
+     console.log(result)
+
+            no_information_array = result.filter(item => { return !Array.isArray(item.data.DatesOrTimes)  }).map(item => item.trackingNo)
+            created_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes) ) { return item.data.DatesOrTimes[0].Type == 'ACTUAL_TENDER' } }).map(item => item.trackingNo)
+            intransit_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes)) { return item.data.DatesOrTimes[0].Type != "ACTUAL_TENDER" && item.data.DatesOrTimes[0].Type != "ACTUAL_DELIVERY" } }).map(item => item.trackingNo)
+            devlivery_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes)) { return item.data.DatesOrTimes[0].Type == "ACTUAL_DELIVERY" } }).map(item => item.trackingNo)
+         
+
+
 
          res.send({
             result: {
