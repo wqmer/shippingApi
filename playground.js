@@ -19,6 +19,7 @@ const builder = require('xmlbuilder');
 var pdfcrowd = require("pdfcrowd");
 const mergeImg = require('merge-img')
 var fs = require('fs');
+const _ = require('lodash')
 // var pdf = require('html-pdf');
 
 
@@ -26,126 +27,103 @@ var fs = require('fs');
 // fs = require('fs');
 // doc = new PDFDocument
 
-// //Pipe its output somewhere, like to a file or HTTP response 
-// //See below for browser usage 
-// doc.pipe(fs.createWriteStream('output.pdf'))
 
 
-//Add an image, constrain it to a given size, and center it vertically and horizontally 
-// doc.image('./out.png', {
-//    fit: [500, 400],
-//    align: 'center',
-//    valign: 'center'
-// });
+const data =
+    [
+        {
+            orderId: undefined,
+            trackingNo: '78985112312312859331',
+            status: 'ERROR',
+            message:
+                'This tracking number cannot be found. Please check the number or contact the sender.',
+            data: { DatesOrTimes: undefined, Events: undefined }
+        },
+        {
+            orderId: undefined,
+            trackingNo: '778456167529',
+            status: 'SUCCESS',
+            message: 'Request was successfully processed.',
+            data: {
+                DatesOrTimes: [{
+                    Type: 'ANTICIPATED_TENDER',
+                    DateOrTimestamp: '2019-12-05T00:00:00'
+                }]
+            }
+        },
+        {
+            orderId: undefined,
+            trackingNo: '778160486089',
+            status: 'SUCCESS',
+            message: 'Request was successfully processed.',
+            data: {
+                DatesOrTimes: [{
+                    Type: 'ACTUAL_DELIVERY',
+                    DateOrTimestamp: '2019-11-27T16:17:00-05:00'
+                },
+                {
+                    Type: 'ACTUAL_PICKUP',
+                    DateOrTimestamp: '2019-11-25T20:01:00-08:00'
+                },
+                { Type: 'SHIP', DateOrTimestamp: '2019-11-25T00:00:00' },
+                {
+                    Type: 'ACTUAL_TENDER',
+                    DateOrTimestamp: '2019-11-25T17:36:00-08:00'
+                }]
+            }
+        },
+        {
+            orderId: undefined,
+            trackingNo: '789851859331',
+            status: 'SUCCESS',
+            message: 'Request was successfully processed.',
+            data: {
+                DatesOrTimes: [{
+                    Type: 'ACTUAL_PICKUP',
+                    DateOrTimestamp: '2019-09-17T00:00:00'
+                },
+                { Type: 'SHIP', DateOrTimestamp: '2019-09-17T00:00:00' }]
+            }
+        },
+        {
+            orderId: undefined,
+            trackingNo: '780847581243',
+            status: 'SUCCESS',
+            message: 'Request was successfully processed.',
+            data: {
+                DatesOrTimes: [{
+                    Type: 'ANTICIPATED_TENDER',
+                    DateOrTimestamp: '2019-11-12T00:00:00'
+                }]
+            }
+        }]
 
-// doc.image('./out.png', {
-//     fit: [500, 400],
-//     align: 'center',
-//     valign: 'center'
-//  });
-
-// doc.addPage()
-//    .image('./out.png', {
-//    fit: [500,400],
-//    align: 'center',
-//    valign: 'center'
-// });
-
-// doc.end()
-
-// -----https://stackoverflow.com/questions/46222846/how-to-write-images-from-url-to-pdfkit
-// request({ url, encoding: null }, (error, response, body) => {
-//     if (!error && response.statusCode === 200) {
-//         pdf.pipe(fs.createWriteStream('out.pdf'));
-//         var img = new Buffer(body, 'base64');
-//         pdf.image(img, 0, 0);
-//         pdf.end();
-//     }
-// });
-
-
-// create the API client instance
-// var client = new pdfcrowd.ImageToPdfClient("wqmer11532", "5dca4fbf6230418d71f577555b25d6fd");
-// client.convertUrlToFile(
-//     "http://kdwi.mofangyuncang.com//label/B95/D8C/7CD/620/B95D8C7CD6207C8A195F1163CF359E29.png",
-//     "test-label.pdf",
-//     function(err, fileName) {
-//         if (err) return console.error("Pdfcrowd Error: " + err);
-//         console.log("Success: the file was created " + fileName);
-//     });
-
-// const imagesToPdf = require("images-to-pdf")
-// async function start_convert() {
-//     await imagesToPdf([example_image_url, example_image_url], "combined.pdf") 
-// }
-// start_convert() 
-
-// var fs = require('fs');
-// var pdf = require('html-pdf');
-// var html = fs.readFileSync('./test/businesscard.html', 'utf8');
-// var options = { format: 'Letter' };
-
-// pdf.create(html, options).toFile('./example_label.pdf', function(err, res) {
-//   if (err) return console.log(err);
-//   console.log(res); // { filename: '/app/businesscard.pdf' }
-// });
-
-// let a = {}
-// let b = {
-//     y: 2
-// }
-// let c = {
-//     z: 3
-// }
-// console.log(extend(a, b, c))
-// console.log(b)
-// console.log(c)
-
-
-
-// let d = {k : 4}
-// console.log(extend(d))
-// var base64Str = "Add valid base64 str";
-// var path ='./public';
-// var optionalObj = {'fileName': 'label', 'type':'png'};
-
-//     base64ToImage(base64Str,path,optionalObj); 
-
-// var imageInfo = base64ToImage(base64Str,path,optionalObj); 
-
-// image2base64( "http://119.23.188.252/index/get-label/code/YMAB20190706000447") // you can also to use url
-//     .then(
-//         (response) => {
-//             console.log(response); //cGF0aC90by9maWxlLmpwZw==
-//         }
-//     )
-//     .catch(
-//         (error) => {
-//             console.log(error); //Exepection error....
-//         }
-//     )
-
-// console.log(process.env.UPS_USERNAME)
-// var ip = require("ip");
-// console.log( ip.address() );
-
-// var optionalObj = {'fileName': 'testlabel', 'type':'png'};
-// var path = './'
-// var base64Str = 
-// base64ToImage(base64Str,path,optionalObj); 
-
-
-const requestData = 
-{"instructionList":[{"channelCode":"PriorityParcel","userOrderNumber":"529600000052","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":10,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
-// {"instructionList":[{"channelCode":"PriorityParcel","userOrderNumber":"529600000052","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.3,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
-// {"instructionList":[{"channelCode":"FirstParcel","userOrderNumber":"52960000005101","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.3,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
-// // {"instructionList":[{"userOrderNumber": "529600000052"}]}
-// // {"instructionList":[{"channelCode":"FirstParcel","userOrderNumber":"529600000052","remark":"","sender":{"contactName":"NC","telephone":"5412545474","countryCode":"US","state":"NC","city":"Raleigh","street":"2434 Bertie Drive","street1":"","street2":"","county":"","zipCode":"27610","zip4":""},"recipient":{"contactName":"Lisa Thompson","telephone":"6627926425","countryCode":"US","state":"MS","city":"West","street":"2071 Attala Road#3009","street1":"","street2":"","county":"","zipCode":"39192","zip4":""},"packageDetailList":[{"packageRecord":{"sonOrderNumber":"","boxNumber":"","weight":0.3,"length":1,"width":1,"height":1},"itemList":[{"productName":"test","productNameEn":"test","productSku":"","hsCode":1,"quantity":"1","unitPrice":"10","unitWeight":1}]}]}]}
-const AppSecret = '/xoU5d/d7a+xDOboQmiOx/xsVRYuiOE8PfSH6OSl'
-const date = '2019-10-28 13:15:00'
-
-
-console.log(md5(JSON.stringify(requestData) + AppSecret + date));
+let filter_data =
+_.chain(data)
+   .groupBy(function (item) {
+      if (Array.isArray(item.data.DatesOrTimes)) {
+         let type_name = item.data.DatesOrTimes[0].Type
+         if (type_name == "ACTUAL_DELIVERY") return 'Delivery'
+         if (type_name == "ANTICIPATED_TENDER") return 'Created'
+         return 'In_Transit'
+      } else {
+         return 'No_Information'
+      }
+   })
+   .mapValues(array => array.map( item => item.trackingNo ) )
+   .value()
+  
+console.log(filter_data);
+// console.log(
+//     _.chain(data)
+//         // Group the elements of Array based on `color` property
+//         .mapValues()
+//         .groupBy("")
+//         // `key` is group's name (color), `value` is the array of objects
+//         .map((value, key) => ({ color: key, users: value }))
+//         .value()
+// );
+// console.log(md5(JSON.stringify(requestData) + AppSecret + date));
 // url: `http://production.shippingapis.com/ShippingAPI.dll?API=RateV4&XML=<RateV4Request USERID="${config.usps.user_id}">
 // <Revision>2</Revision>
 // <Package ID="1ST">

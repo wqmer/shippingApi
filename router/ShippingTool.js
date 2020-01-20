@@ -15,7 +15,7 @@ const base64 = require('base64topdf');
 const uuid = require('uuid')
 const request = require('request');
 const router = express.Router();
-
+const _ = require('lodash')
 
 
 //---跳转至快递100单号信息查询，自适应判断运单号 顺丰，UPS,USPS,FEDEX,DHL
@@ -252,27 +252,28 @@ router.post('/getFedexTrackingStatus', (req, res) => {
          let track_req = { 'trackingNumber': tracking }
          FEDEX.getTracking(track_req, callback);
       }, function (err, result) {
-         var no_information_array 
-         var created_array 
-         var intransit_array
-         var devlivery_array
          if (err) console.log(err)
-         // var created_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType == 'OC' } }).map(item => item.trackingNo)
-         // var intransit_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType != 'OC' && item.data[0].EventType != 'DL' } }).map(item => item.trackingNo)
-         // var devlivery_array = result.filter(item => { if (item.data.Events != undefined) { return item.data[0].EventType == 'DL' } }).map(item => item.trackingNo)
-         // var no_information_array = result.filter(item => { return item.data.Events == undefined }).map(item => item.trackingNo)
+         let filter_data =
+            _.chain(result)
+               .groupBy(function (item) {
+                  if (Array.isArray(item.data.DatesOrTimes)) {
+                     let type_name = item.data.DatesOrTimes[0].Type
+                     if (type_name == "ACTUAL_DELIVERY") return 'Delivery'
+                     if (type_name == "ANTICIPATED_TENDER") return 'Created'
+                     return 'In_Transit'
+                  } else {
+                     return 'No_Information'
+                  }
+               })
+               .mapValues(array => array.map(item => item.trackingNo))
+               .value()
 
-            no_information_array = result.filter(item => { return !Array.isArray(item.data.DatesOrTimes)  }).map(item => item.trackingNo)
-            created_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes) ) { return item.data.DatesOrTimes[0].Type == 'ANTICIPATED_TENDER' } }).map(item => item.trackingNo)
-            intransit_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes)) { return item.data.DatesOrTimes[0].Type != "ANTICIPATED_TENDER" && item.data.DatesOrTimes[0].Type != "ACTUAL_DELIVERY" } }).map(item => item.trackingNo)
-            devlivery_array = result.filter(item => { if (Array.isArray(item.data.DatesOrTimes)) { return item.data.DatesOrTimes[0].Type == "ACTUAL_DELIVERY" } }).map(item => item.trackingNo)
-         
          res.send({
             result: {
-               created: created_array,
-               in_transit: intransit_array,
-               delivery: devlivery_array,
-               no_information: no_information_array,
+               created: filter_data['Created'],
+               in_transit: filter_data['In_Transit'],
+               delivery: filter_data['Delivery'],
+               no_information: filter_data['No_Information'],
             }
          });
          // res.send('ok')
@@ -409,15 +410,15 @@ router.post('/getRateZoneFedex', (req, res) => {
          Zone_Pairs
       } = req.body
 
-     
+
       // Reference_No = [ "1676941641013" , "1645030501014" , "1677061012013"]
       async.mapLimit(Zone_Pairs, 25, function (zone_pair, callback) {
          let request_arg = {
-            "referenceNumber":zone_pair.referenceNumber,
-            "shipMethod":"FEDEX_GROUND",
-            "Fpostcode": zone_pair.from?zone_pair.from:'',
+            "referenceNumber": zone_pair.referenceNumber,
+            "shipMethod": "FEDEX_GROUND",
+            "Fpostcode": zone_pair.from ? zone_pair.from : '',
             "Fcountry": "us",
-            "Spostcode": zone_pair.to?zone_pair.to:'',
+            "Spostcode": zone_pair.to ? zone_pair.to : '',
             "Scountry": "us",
             "Weight": "17",
          }
