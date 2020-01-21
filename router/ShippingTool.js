@@ -278,8 +278,8 @@ router.post('/getFedexTrackingStatus', (req, res) => {
          });
          // res.send('ok')
       });
-
    } catch (error) {
+      
       res.send({
          "code": 500,
          "message": "internal error"
