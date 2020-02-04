@@ -1,5 +1,5 @@
 const Easypost = require('@easypost/api');
-const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3MxJzQ');
+
 
 /* Either objects or ids can be passed in for addresses and
  * shipments. If the object does not have an id, it will be
@@ -7,10 +7,13 @@ const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3M
 
 
 const create_order = (request) => {
-    let { toAddress, fromAddress, parcels } = request
-
+    let { api_key, carrier, service, fromAddress, toAddress, parcels } = request
+    const api = new Easypost(api_key);
     return new Promise((resolve, reject) => {
         try {
+            const from_Address = new api.Address({ ...fromAddress });
+            const to_Address = new api.Address({ ...toAddress });
+
             const get_ships = (parcels) => {
                 let array = []
                 parcels.forEach(item => {
@@ -22,15 +25,19 @@ const create_order = (request) => {
                 return array
             }
             const order = new api.Order({
-                to_address: toAddress,
-                from_address: fromAddress,
+                to_address: to_Address,
+                from_address: from_Address,
                 shipments: get_ships(parcels)
             })
 
             order.save()
-                .then(result => resolve(result))
+                .then(result => {
+                    api.Order.retrieve(result.id).then(order => {
+                        order.buy(carrier, service).then(result => resolve(result))
+                            .catch(error => reject(error))
+                    });
+                })
                 .catch(error => reject(error))
-
         } catch (error) {
             reject(error)
         }

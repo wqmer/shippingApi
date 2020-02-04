@@ -292,7 +292,6 @@ router.post('/createOrderMofangYun', (req, res) => {
     }
 })
 
-
 //KDW魔方云获取订单信息
 router.post('/getOrderMofangYun', (req, res) => {
     try {
@@ -322,13 +321,12 @@ router.post('/getChannelMofangYun', (req, res) => {
 })
 //Easypost 创建订单
 router.post('/createOrderEasyPost', (req, res) => {
-    EasyPost.create_order(req.body).then(result =>
-        res.send({ "code": 200, "message": "success", 'data': result })
-    )
-        .catch(err => {
-            console.log(err)
-            res.send({ "code": 500, "message": "internal error" })
-        })
+    EasyPost.create_order(req.body)
+        .then(result => res.send({ "code": 200, "message": "success", 'data': result }))
+            .catch(err => {
+                console.log(err)
+                res.status(500).send({ "code": 500, "message":err.name, ...err.error })
+            })
 })
 
 

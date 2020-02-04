@@ -35,28 +35,39 @@ const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3M
 const toAddress = 'adr_...';
 const fromAddress = 'adr_...';
 
-const order = new api.Order({
-    to_address: toAddress,
-    from_address: fromAddress,
-    shipments: [
-        new api.Shipment({
-            parcel: {
-                predefined_package: 'FedExBox',
-                weight: 10.2
-            }
-        }),
-        new api.Shipment({
-            parcel: {
-                predefined_package: 'FedExBox',
-                weight: 17.5
-            }
-        })
-    ]
-});
+// const order = new api.Order({
+//     to_address: toAddress,
+//     from_address: fromAddress,
+//     shipments: [
+//         new api.Shipment({
+//             parcel: {
+//                 predefined_package: 'FedExBox',
+//                 weight: 10.2
+//             }
+//         }),
+//         new api.Shipment({
+//             parcel: {
+//                 predefined_package: 'FedExBox',
+//                 weight: 17.5
+//             }
+//         })
+//     ]
+// });
 
-order.save()
-    .then(console.log)
-    .catch(error => console.log(error) ) 
+// order.save()
+//     .then(console.log)
+//     .catch(error => console.log(error) ) 
+const address = new api.Address({
+    street1: '417 MONTGOMERY ST',
+    street2: 'FLOOR 5',
+    city: 'SAN FRANCISCO',
+    state: 'CA',
+    zip: '94104',
+    country: 'US',
+    company: 'EasyPost',
+    phone: '415-123-4567',
+  });
+
 
 
 // const data =
