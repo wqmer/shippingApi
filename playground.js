@@ -26,94 +26,124 @@ const _ = require('lodash')
 // PDFDocument = require('pdfkit');
 // fs = require('fs');
 // doc = new PDFDocument
+const Easypost = require('@easypost/api');
+const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3MxJzQ');
+
+/* Either objects or ids can be passed in for addresses and
+ * shipments. If the object does not have an id, it will be
+ * created. */
+const toAddress = 'adr_...';
+const fromAddress = 'adr_...';
+
+const order = new api.Order({
+    to_address: toAddress,
+    from_address: fromAddress,
+    shipments: [
+        new api.Shipment({
+            parcel: {
+                predefined_package: 'FedExBox',
+                weight: 10.2
+            }
+        }),
+        new api.Shipment({
+            parcel: {
+                predefined_package: 'FedExBox',
+                weight: 17.5
+            }
+        })
+    ]
+});
+
+order.save()
+    .then(console.log)
+    .catch(error => console.log(error) ) 
 
 
+// const data =
+//     [
+//         {
+//             orderId: undefined,
+//             trackingNo: '78985112312312859331',
+//             status: 'ERROR',
+//             message:
+//                 'This tracking number cannot be found. Please check the number or contact the sender.',
+//             data: { DatesOrTimes: undefined, Events: undefined }
+//         },
+//         {
+//             orderId: undefined,
+//             trackingNo: '778456167529',
+//             status: 'SUCCESS',
+//             message: 'Request was successfully processed.',
+//             data: {
+//                 DatesOrTimes: [{
+//                     Type: 'ANTICIPATED_TENDER',
+//                     DateOrTimestamp: '2019-12-05T00:00:00'
+//                 }]
+//             }
+//         },
+//         {
+//             orderId: undefined,
+//             trackingNo: '778160486089',
+//             status: 'SUCCESS',
+//             message: 'Request was successfully processed.',
+//             data: {
+//                 DatesOrTimes: [{
+//                     Type: 'ACTUAL_DELIVERY',
+//                     DateOrTimestamp: '2019-11-27T16:17:00-05:00'
+//                 },
+//                 {
+//                     Type: 'ACTUAL_PICKUP',
+//                     DateOrTimestamp: '2019-11-25T20:01:00-08:00'
+//                 },
+//                 { Type: 'SHIP', DateOrTimestamp: '2019-11-25T00:00:00' },
+//                 {
+//                     Type: 'ACTUAL_TENDER',
+//                     DateOrTimestamp: '2019-11-25T17:36:00-08:00'
+//                 }]
+//             }
+//         },
+//         {
+//             orderId: undefined,
+//             trackingNo: '789851859331',
+//             status: 'SUCCESS',
+//             message: 'Request was successfully processed.',
+//             data: {
+//                 DatesOrTimes: [{
+//                     Type: 'ACTUAL_PICKUP',
+//                     DateOrTimestamp: '2019-09-17T00:00:00'
+//                 },
+//                 { Type: 'SHIP', DateOrTimestamp: '2019-09-17T00:00:00' }]
+//             }
+//         },
+//         {
+//             orderId: undefined,
+//             trackingNo: '780847581243',
+//             status: 'SUCCESS',
+//             message: 'Request was successfully processed.',
+//             data: {
+//                 DatesOrTimes: [{
+//                     Type: 'ANTICIPATED_TENDER',
+//                     DateOrTimestamp: '2019-11-12T00:00:00'
+//                 }]
+//             }
+//         }]
 
-const data =
-    [
-        {
-            orderId: undefined,
-            trackingNo: '78985112312312859331',
-            status: 'ERROR',
-            message:
-                'This tracking number cannot be found. Please check the number or contact the sender.',
-            data: { DatesOrTimes: undefined, Events: undefined }
-        },
-        {
-            orderId: undefined,
-            trackingNo: '778456167529',
-            status: 'SUCCESS',
-            message: 'Request was successfully processed.',
-            data: {
-                DatesOrTimes: [{
-                    Type: 'ANTICIPATED_TENDER',
-                    DateOrTimestamp: '2019-12-05T00:00:00'
-                }]
-            }
-        },
-        {
-            orderId: undefined,
-            trackingNo: '778160486089',
-            status: 'SUCCESS',
-            message: 'Request was successfully processed.',
-            data: {
-                DatesOrTimes: [{
-                    Type: 'ACTUAL_DELIVERY',
-                    DateOrTimestamp: '2019-11-27T16:17:00-05:00'
-                },
-                {
-                    Type: 'ACTUAL_PICKUP',
-                    DateOrTimestamp: '2019-11-25T20:01:00-08:00'
-                },
-                { Type: 'SHIP', DateOrTimestamp: '2019-11-25T00:00:00' },
-                {
-                    Type: 'ACTUAL_TENDER',
-                    DateOrTimestamp: '2019-11-25T17:36:00-08:00'
-                }]
-            }
-        },
-        {
-            orderId: undefined,
-            trackingNo: '789851859331',
-            status: 'SUCCESS',
-            message: 'Request was successfully processed.',
-            data: {
-                DatesOrTimes: [{
-                    Type: 'ACTUAL_PICKUP',
-                    DateOrTimestamp: '2019-09-17T00:00:00'
-                },
-                { Type: 'SHIP', DateOrTimestamp: '2019-09-17T00:00:00' }]
-            }
-        },
-        {
-            orderId: undefined,
-            trackingNo: '780847581243',
-            status: 'SUCCESS',
-            message: 'Request was successfully processed.',
-            data: {
-                DatesOrTimes: [{
-                    Type: 'ANTICIPATED_TENDER',
-                    DateOrTimestamp: '2019-11-12T00:00:00'
-                }]
-            }
-        }]
+// let filter_data =
+// _.chain(data)
+//    .groupBy(function (item) {
+//       if (Array.isArray(item.data.DatesOrTimes)) {
+//          let type_name = item.data.DatesOrTimes[0].Type
+//          if (type_name == "ACTUAL_DELIVERY") return 'Delivery'
+//          if (type_name == "ANTICIPATED_TENDER") return 'Created'
+//          return 'In_Transit'
+//       } else {
+//          return 'No_Information'
+//       }
+//    })
+//    .mapValues(array => array.map( item => item.trackingNo ) )
+//    .value()
 
-let filter_data =
-_.chain(data)
-   .groupBy(function (item) {
-      if (Array.isArray(item.data.DatesOrTimes)) {
-         let type_name = item.data.DatesOrTimes[0].Type
-         if (type_name == "ACTUAL_DELIVERY") return 'Delivery'
-         if (type_name == "ANTICIPATED_TENDER") return 'Created'
-         return 'In_Transit'
-      } else {
-         return 'No_Information'
-      }
-   })
-   .mapValues(array => array.map( item => item.trackingNo ) )
-   .value()
-  
-console.log(filter_data);
+// console.log(filter_data);
 // console.log(
 //     _.chain(data)
 //         // Group the elements of Array based on `color` property

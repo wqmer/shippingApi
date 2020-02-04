@@ -11,6 +11,7 @@ const USPS = require('../service/usps')
 const FEDEX = require('../service/fedex')
 const CHUKOULA = require('../service/chukoula')
 const ENDICIA = require('../service/usps_endicia')
+const EasyPost = require('../service/easypost')
 
 const async = require('async');
 const base64 = require('base64topdf');
@@ -314,6 +315,16 @@ router.post('/getOrderMofangYun', (req, res) => {
 //KDW魔方云获取可用渠道
 router.post('/getChannelMofangYun', (req, res) => {
     USPS_MOFANGYUN.getChannel_async(req.body).then((result) => res.send(result))
+        .catch(err => {
+            console.log(err)
+            res.send({ "code": 500, "message": "internal error" })
+        })
+})
+//Easypost 创建订单
+router.post('/createOrderEasyPost', (req, res) => {
+    EasyPost.create_order(req.body).then(result =>
+        res.send({ "code": 200, "message": "success", 'data': result })
+    )
         .catch(err => {
             console.log(err)
             res.send({ "code": 500, "message": "internal error" })
