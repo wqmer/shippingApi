@@ -60,7 +60,6 @@ const getLabel = (params , callback) => {
       createOrder_async(params).then(result => {   
         const OrderId = params.OrderId 
         if(result.Msg === "Success"  || result.Msg === "该订单号已存在，无法重复添加！"){
-
             const opts = {
                 headers: { "content-type": "application/json"},
                 url: 'https://www.meiyuncang.com/api/UspsDom/GetLabel',

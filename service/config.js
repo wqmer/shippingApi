@@ -45,8 +45,6 @@ const usps_endicia_test = {
       accountNumber : "2552889" 
 }
 
-
-
 const kuaidi365 = {
     apiKey : "29833628d495d7a5"
 }

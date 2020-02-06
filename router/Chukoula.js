@@ -1,8 +1,7 @@
-const express = require('express');
+
 const TOOL = require('../service/tool')
 const PDFDocument = require('pdfkit');
 const parseString = require('xml2js').parseString;
-
 const UPS_YI = require('../service/ups_yi')
 const USPS_MEIYUN = require('../service/usps_meiyun')
 const USPS_MOFANGYUN = require('../service/usps_mofangyun')
@@ -16,9 +15,11 @@ const EasyPost = require('../service/easypost')
 const async = require('async');
 const base64 = require('base64topdf');
 const uuid = require('uuid')
-const request = require('request');
-const router = express.Router();
 const base64ToImage = require('base64-to-image');
+const request = require('request');
+
+const express = require('express');
+const router = express.Router();
 
 
 
@@ -100,8 +101,6 @@ router.post('/getReceivingExpense', (req, res) => {
     }
 
 })
-
-
 
 //--ENDICIA 创建USPS订单
 router.post('/createShippmentUSPS', (req, res) => {
@@ -255,7 +254,6 @@ router.post('/createOrderMeiyun', (req, res) => {
     }
 })
 
-
 //kdw魔方云创建草稿
 router.post('/createDraftMofangYun', (req, res) => {
     try {
@@ -319,6 +317,7 @@ router.post('/getChannelMofangYun', (req, res) => {
             res.send({ "code": 500, "message": "internal error" })
         })
 })
+
 //Easypost 创建订单
 router.post('/createOrderEasyPost', (req, res) => {
     EasyPost.create_order(req.body)

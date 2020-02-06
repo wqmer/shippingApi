@@ -32,8 +32,111 @@ const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3M
 /* Either objects or ids can be passed in for addresses and
  * shipments. If the object does not have an id, it will be
  * created. */
-const toAddress = 'adr_...';
-const fromAddress = 'adr_...';
+// const toAddress = 'adr_...';
+// const fromAddress = 'adr_...';
+
+/* Either objects or ids can be passed in for addresses and
+ * shipments. If the object does not have an id, it will be
+ * created. */
+// const address = 'adr_...';
+// const shipment = 'shp_...';
+
+// const shipment = new api.Shipment({
+//     parcel: {
+//         predefined_package: 'FedExBox',
+//         weight: 10.2
+//     }
+// })
+
+const customsInfo = new api.CustomsInfo({
+    eel_pfc: 'NOEEI 30.37(a)',
+    customs_certify: true,
+    customs_signer: 'Steve Brule',
+    contents_type: 'merchandise',
+    contents_explanation: '',
+    restriction_type: 'none',
+    restriction_comments: '',
+    non_delivery_option: 'abandon',
+
+    /* customs_items can be passed in as instances or ids.
+    *  if the item does not have an id, it will be created. */
+    customs_items: [
+      new api.CustomsItem({
+      'description': 'Sweet shirts',
+      'quantity': 2,
+      'weight': 11,
+      'value': 23,
+      'hs_tariff_number': '654321',
+      'origin_country': 'US'
+    })],
+  });
+
+  customsInfo.save().then(console.log);
+
+// const toAddress = new api.Address({
+//     street1: '417 MONTGOMERY ST',
+//     street2: 'FLOOR 5',
+//     city: 'SAN FRANCISCO',
+//     state: 'CA',
+//     zip: '94104',
+//     country: 'US',
+//     company: 'EasyPost',
+//     phone: '415-123-4567',
+// });
+
+// const fromAddress = new api.Address({
+//     street1: '417 MONTGOMERY ST',
+//     street2: 'FLOOR 5',
+//     city: 'SAN FRANCISCO',
+//     state: 'CA',
+//     zip: '94104',
+//     country: 'US',
+//     company: 'EasyPost',
+//     phone: '415-123-4567',
+// });
+// const parcel = new api.Parcel({
+//     length: 20.2,
+//     width: 10.9,
+//     height: 5,
+//     weight: 65.9
+//   });
+
+
+// const shipment = new api.Shipment({
+//     to_address : toAddress,
+//     from_address : fromAddress,
+//     parcel: parcel,
+// });
+
+// shipment.save().then( result =>console.log(result));
+
+
+
+// const address = new api.Address({
+//     street1: '417 MONTGOMERY ST',
+//     street2: 'FLOOR 5',
+//     city: 'SAN FRANCISCO',
+//     state: 'CA',
+//     zip: '94104',
+//     country: 'US',
+//     company: 'EasyPost',
+//     phone: '415-123-4567',
+// });
+
+// console.log(shipment)
+
+// const pickup = new api.Pickup({
+//     address,
+//     shipment,
+//     reference: 'my-first-pickup',
+//     min_datetime: '2020-2-21 10:30:00',
+//     max_datetime: '2014-2-22 10:30:00',
+//     is_account_address: false,
+//     instructions: 'Special pickup instructions',
+// });
+
+// pickup.save().then(console.log)
+//     .catch(error => console.log(error))
 
 // const order = new api.Order({
 //     to_address: toAddress,
@@ -57,16 +160,55 @@ const fromAddress = 'adr_...';
 // order.save()
 //     .then(console.log)
 //     .catch(error => console.log(error) ) 
-const address = new api.Address({
-    street1: '417 MONTGOMERY ST',
-    street2: 'FLOOR 5',
-    city: 'SAN FRANCISCO',
-    state: 'CA',
-    zip: '94104',
-    country: 'US',
-    company: 'EasyPost',
-    phone: '415-123-4567',
-  });
+
+
+
+// request({
+//     //所有需要请求的内容，方法
+//     method,
+//     url,
+//     body,
+// })
+//     .then(result => {
+//         //使用拿到的结果去写数据库 ，connection 需要改写 promise ，原生没有这个方法
+//         connection.query(...).then(result => {
+//             //用result 判断， callback 正确 response
+//             callback(...)
+//         }).catch(err => {
+//             //如果出错再去callback 错误的返回，这个错误是返回写数据出现的错误
+//             callback(...)
+//         })
+//     })
+//     .catch(err => {
+//         //如果出错再去callback 错误的返回，这个错误是返回 request 出现的错误
+//     });
+
+
+
+
+
+// const query_all = 'SELECT * FROM test';
+
+// const db_qurey = (query) => {
+//     return new Promise((resolve, reject) => {
+//         connection.query(query, function (err, results) {
+//             if (err) {
+//                 reject(err)
+//                 // throw err;
+//             }
+//             resolve(results);
+//         });
+//     })
+// }
+
+// db_qurey(query_all)
+//     .then(result => console.log(result)) // 处理resolve穿过来的结果››
+//     .catch(error => console.log(eror))//处理reject 的错误
+
+
+// app.use('/', require('./router/Chukoula'));
+
+
 
 
 
