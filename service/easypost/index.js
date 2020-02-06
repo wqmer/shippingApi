@@ -13,50 +13,31 @@ const create_order = (request) => {
         try {
 
             // const get_custom_items = (item) => {
-            //     let array = []
-            //     if( Array.isArray( item.customs_items )){
-            //         item.customs_items.forEach(item => {
-            //             array.push(new api.CustomsItem({ ...item }))
-            //         })
-            //         return array
-            //     }else{
+            //     if (Array.isArray(item.customs_items)) {
+            //         return (item.customs_items.map(item => new api.CustomsItem({ ...item })))
+            //     } else {
             //         return []
-            //     }  
+            //     }
             // }
 
-            const get_custom_items = (item) => {
-                if (Array.isArray(item.customs_items)) {
-                    return  ( item.customs_items.map(item => new api.CustomsItem({ ...item })) )
-                } else {
-                    return []
-                }
-            }
 
-
-            let customs_info = undefined
-            let obj = undefined
-            if (customsInfo) {
-                let customs_items_array = get_custom_items(customsInfo)
-                obj = { ...customsInfo, customs_items: customs_items_array }
-            }
-
-            const get_ships = (parcels) => parcels.map(item => new api.Shipment({ parcel: item, customs_info: new api.CustomsInfo(obj) }))
-            
-            // const get_ships = (parcels) => {
-            //     let array = []
-            //     parcels.forEach(item => {
-            //         array.push(
-            //             new api.Shipment({
-            //                 parcel: item,
-            //                 customs_info: new api.CustomsInfo(obj)                        
-            //             }))
-            //     })
-            //     return array
+            // let customs_info = undefined
+            // let obj = undefined
+            // if (customsInfo) {
+            //     let customs_items_array = get_custom_items(customsInfo)
+            //     obj = { ...customsInfo, customs_items: customs_items_array }
             // }
 
-            // const object = { ...customsInfo, customs_items: get_custom_items(customsInfo) }
-            // console.log(object)
 
+
+            const get_custom_items = (item, index) => {
+                let custom_item = new api.CustomsItem({ ...item.customs_items[index] })
+                let obj =  { ...customsInfo, customs_items: [custom_item] }
+                return new api.CustomsInfo(obj)
+            }
+
+            // const get_ships = (parcels) => parcels.map(item , index => new api.Shipment({ parcel: item, customs_info: new api.CustomsInfo(obj) }))
+            const get_ships = (parcels) => parcels.map( (item , index) => new api.Shipment({ parcel: item, customs_info: get_custom_items(customsInfo , index) }))
             const from_Address = new api.Address({ ...fromAddress });
             const to_Address = new api.Address({ ...toAddress });
             const order = new api.Order({

@@ -16,27 +16,24 @@ const router = express.Router();
 
 
 
-
-
-router.post('/testdelay', (req , res)=> {
-    res.setTimeout(6000, function(){ res.send({status:'success'}); })
+router.post('/test_timeout_10', (req , res)=> {
+    res.setTimeout(10000, function(){ res.send({status:'success' , message:'10秒后返回！'}); })
 })
 
-// router.post('/testSelf', (req , res)=> {
-//         request({
-//             timeout: 5000 ,
-//             method: 'POST',
-//             // url:     'https://chukoula-api-update.herokuapp.com/testdelay',
-//             url:     'http://localhost:5000/testdelay',
-//           }, function(error, response, body){
-//             // console.log(error)
-//             try {  
-//                      res.send(JSON.parse(body));
-//               } catch {
-//                      res.send({ask:0 ,message:error.code})
-//               } 
-//           }); 
-// })
+router.post('/test_timeout_15', (req , res)=> {
+    res.setTimeout(15000, function(){ res.send({status:'success' , message:'15秒后返回！'}); })
+})
+
+router.post('/test_timeout_25', (req , res)=> {
+    res.setTimeout(25000, function(){ res.send({status:'success' , message:'25秒后返回！'}); })
+})
+
+router.post('/test_timeout_30', (req , res)=> {
+    res.setTimeout(30000, function(){ res.send({status:'success' , message:'30秒后返回！'}); })
+})
+
+
+
 
 
 
