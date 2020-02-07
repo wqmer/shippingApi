@@ -2,32 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const PDFDocument = require('pdfkit');
 const parseString = require('xml2js').parseString;
-var   async = require('async');
 var timeout = require('connect-timeout')
-
+var ip = require('ip');
 require('body-parser-xml')(bodyParser);
 
 var app = express();
 var port = process.env.PORT || 5000 ;
 
-// app.use(bodyParser.xml({
-//     limit: '1MB',   // Reject payload bigger than 1 MB
-//     xmlParseOptions: {
-//       normalize: true,     // Trim whitespace inside text nodes
-//       normalizeTags: true, // Transform tags to lowercase
-//       explicitArray: false // Only put nodes in array if >1
-//     }
-//   }));
-
-// function haltOnTimedout(req,res,next) {
-//     if (req.timedout) {
-//         res.send('timeout!')
-//     } else {
-//         next();
-//     }
-// };
-// app.use(timeout('2s', ))
-// app.use(haltOnTimedout);
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
@@ -50,10 +31,31 @@ app.get('/', (req, res) => {
     res.send(hello),(e) => res.sendStatus(400) ; 
 })
 
-
 app.listen(port, () => {
     console.log(`Started up at port ${port}`);
 });
+
+console.log(ip.address())
+
+
+// app.use(bodyParser.xml({
+//     limit: '1MB',   // Reject payload bigger than 1 MB
+//     xmlParseOptions: {
+//       normalize: true,     // Trim whitespace inside text nodes
+//       normalizeTags: true, // Transform tags to lowercase
+//       explicitArray: false // Only put nodes in array if >1
+//     }
+//   }));
+
+// function haltOnTimedout(req,res,next) {
+//     if (req.timedout) {
+//         res.send('timeout!')
+//     } else {
+//         next();
+//     }
+// };
+// app.use(timeout('2s', ))
+// app.use(haltOnTimedout);
 
 
   

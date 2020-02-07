@@ -11,6 +11,7 @@ const FEDEX = require('../service/fedex')
 const CHUKOULA = require('../service/chukoula')
 const ENDICIA = require('../service/usps_endicia')
 const EasyPost = require('../service/easypost')
+const Deftship = require('../service/ups_deft_ship')
 
 const async = require('async');
 const base64 = require('base64topdf');
@@ -322,10 +323,34 @@ router.post('/getChannelMofangYun', (req, res) => {
 router.post('/createOrderEasyPost', (req, res) => {
     EasyPost.create_order(req.body)
         .then(result => res.send({ "code": 200, "message": "success", 'data': result }))
-            .catch(err => {
-                console.log(err)
-                res.status(500).send({ "code": 500, "message":err.name, ...err.error })
-            })
+        .catch(err => {
+            console.log(err)
+            res.status(500).send({ "code": 500, "message": err.name, ...err.error })
+        })
+})
+
+router.post('/AuthDeftShip', (req, res) => {
+    Deftship.auth(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result)}))
+        .catch(err => {
+            console.log(err)
+            res.send({ "code": 500, "message": "internal error" })
+        })
+})
+
+router.post('/CreateOrderDeftShip', (req, res) => {
+    Deftship.create(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+        .catch(err => {
+            console.log(err)
+            res.send({ "code": 500, "message": "internal error" })
+        })
+})
+
+router.post('/GetLabelDeftShip', (req, res) => {
+    Deftship.get_label(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+        .catch(err => {
+            console.log(err)
+            res.send({ "code": 500, "message": "internal error" })
+        })
 })
 
 

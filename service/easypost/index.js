@@ -11,25 +11,6 @@ const create_order = (request) => {
     const api = new Easypost(api_key);
     return new Promise((resolve, reject) => {
         try {
-
-            // const get_custom_items = (item) => {
-            //     if (Array.isArray(item.customs_items)) {
-            //         return (item.customs_items.map(item => new api.CustomsItem({ ...item })))
-            //     } else {
-            //         return []
-            //     }
-            // }
-
-
-            // let customs_info = undefined
-            // let obj = undefined
-            // if (customsInfo) {
-            //     let customs_items_array = get_custom_items(customsInfo)
-            //     obj = { ...customsInfo, customs_items: customs_items_array }
-            // }
-
-
-
             const get_custom_items = (item, index) => {
                 let custom_item = new api.CustomsItem({ ...item.customs_items[index] })
                 let obj =  { ...customsInfo, customs_items: [custom_item] }
