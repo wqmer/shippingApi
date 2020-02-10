@@ -23,8 +23,8 @@ app.use(function(err, req, res, next) {
 
 app.use('/label', express.static("label"));
 app.use('/', require('./router/Chukoula'));
-// app.use('/deftShip/production', require('./router/deftShip/production.js'));
-// app.use('/deftShip/sandbox', require('./router/deftShip/sandbox.js'));
+app.use('/deftShip/production', require('./router/deftship/production.js'));
+app.use('/deftShip/sandbox', require('./router/deftship/sandbox.js'));
 app.use('/', require('./router/ShippingTool.js'));
 app.use('/', require('./router/Test.js'));
 
