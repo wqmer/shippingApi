@@ -1,6 +1,20 @@
 const request = require('request');
 
 
+const url = {
+    product: {
+        auth: 'https://deftship.com/api/authenticate',
+        create: 'https://deftship.com/api/ups/package/ship',
+        rate: 'https://deftship.com/api/ups/package/rating',
+        label: 'https://deftship.com/api/labels'
+    },
+    sandbox: {
+        create: 'https://deftship.com/api/ups/package/ship?sandbox',
+        rate: ' https://deftship.com/api/ups/package/ship?sandbox',
+       label: 'https://deftship.com/api/labels?sandbox'
+    },
+}
+
 const auth = (request_body) => {
     let obj = {
         method: 'POST',
@@ -8,7 +22,7 @@ const auth = (request_body) => {
             "content-type": "application/json",
             'Accept': 'application/json'
         },
-        url: 'https://deftship.com/api/authenticate',
+        url: url.product.auth,
         body: JSON.stringify(request_body),
     }
     return new Promise((resolve, reject) => {
@@ -19,7 +33,7 @@ const auth = (request_body) => {
     })
 }
 
-const create = (request_body) => {
+const create = (request_body , isTest = false) => {
     // console.log(request_body.access_token)
     let obj = {
         method: 'POST',
@@ -28,7 +42,27 @@ const create = (request_body) => {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        url: 'https://deftship.com/api?sandbox/ups/package/ship',
+        url: isTest? url.sandbox.create : url.product.create,
+        body: JSON.stringify(request_body),
+    }
+    return new Promise((resolve, reject) => {
+        request(obj, (error, response, body) => {
+            if (error) reject(error)
+            resolve(response.body)
+        });
+    })
+}
+
+const rate = (request_body, isTest = false) => {
+    // console.log(request_body.access_token)
+    let obj = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${request_body.access_token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        url: isTest? url.sandbox.rate : url.product.rate,
         body: JSON.stringify(request_body),
     }
     return new Promise((resolve, reject) => {
@@ -40,7 +74,7 @@ const create = (request_body) => {
 }
 
 
-const get_label = (request_body) => {
+const get_label = (request_body , isTest = false) => {
     // console.log(request_body.access_token)
     let obj = {
         method: 'POST',
@@ -49,7 +83,7 @@ const get_label = (request_body) => {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        url: 'https://deftship.com/api?sandbox/labels',
+        url: isTest? url.sandbox.label : url.product.label,
         body: JSON.stringify(request_body),
     }
     return new Promise((resolve, reject) => {
@@ -63,5 +97,6 @@ const get_label = (request_body) => {
 module.exports = {
     auth,
     create,
-    get_label
+    get_label,
+    rate
 }
