@@ -177,7 +177,23 @@ router.post('/trackingUps', (req, res) => {
          "message": "internal error"
       });
    }
+})
 
+//--ups获取报价
+router.post('/getRateUps', (req, res) => {
+   UPS.GetRate(req.body).then(result => res.send(result))
+   .catch(error => res.send({
+      "code": 500,
+      "message": "internal error"
+   }))
+})
+//--ups判断地址类型
+router.post('/getAddressType', (req, res) => {
+   UPS.GetAddressType(req.body).then(result => res.send(result))
+      .catch(error => res.send({
+         "code": 500,
+         "message": "internal error"
+      }))
 })
 
 //--UPS获取服务时效
@@ -240,7 +256,6 @@ router.post('/getUpsTrackingStatus', (req, res) => {
    }
 })
 
-
 //--Fedex获取运单物流状态
 router.post('/getFedexTrackingStatus', (req, res) => {
    try {
@@ -279,14 +294,13 @@ router.post('/getFedexTrackingStatus', (req, res) => {
          // res.send('ok')
       });
    } catch (error) {
-      
+
       res.send({
          "code": 500,
          "message": "internal error"
       });
    }
 })
-
 
 //--FEDEX验证地址
 router.post('/verifyAddressFEDEX', (req, res) => {
@@ -310,7 +324,6 @@ router.post('/verifyAddressFEDEX', (req, res) => {
       });
    }
 })
-
 
 //FedEx 获取物流信息
 router.post('/trackShipmentFEDEX', (req, res) => {
@@ -380,7 +393,6 @@ router.post('/isResidentialFedex', (req, res) => {
       });
    }
 })
-
 
 //fedex预估邮费
 router.post('/getRateFEDEX', (req, res) => {

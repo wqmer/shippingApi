@@ -45,8 +45,6 @@ var getUspsZone = (zipcode_pair, callback) => {
     },
   };
 
-
-
   request(opts, (error, response, body) => {
     if (error) {
       callback({ success: false, message: error.code });
@@ -62,6 +60,62 @@ var getUspsZone = (zipcode_pair, callback) => {
   })
 }
 
+
+var getUspsZonePromise = (req) => {
+  const param = {
+    Package: {
+      '@ID': '1ST',
+      Service: 'PRIORITY',
+      ZipOrigination: req.from,
+      ZipDestination: req.to,
+      Pounds: '1',
+      Ounces: '0',
+      Container: 'VARIABLE',
+      Size: 'REGULAR',
+      Machinable: true
+    }
+  };
+  const obj = {
+    ['RateV4Request']: {
+      // Until jshint 2.10.0 comes out, we have to explicitly ignore spread operators in objects
+      // jshint ignore:start
+      ...param,
+      // jshint ignore:end
+      ['@USERID']: config.usps.user_id
+    }
+  };
+  const xml = builder.create(obj).end();
+
+  const opts = {
+    timeout: 25000,
+    url: 'http://production.shippingapis.com/ShippingAPI.dll',
+    qs: {
+      API: 'RateV4',
+      XML: xml
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    request(opts, (error, response, body) => {
+      if (error) {
+        reject({ success: false, message: error.code });
+      } else if (response.statusCode === 400) {
+        reject('Unable to fetch data.');
+      } else if (response.statusCode === 200) {
+        parseString(response.body, (err, result) => {
+          if (err) reject(err)
+          try {
+            let error = result.RateV4Response.Package[0].Error
+            let zoneCode = result.RateV4Response.Package[0].Zone
+            error ? resolve({ success: false, description: error[0].Description[0] }) : resolve({ success: true, zone: zoneCode[0] })
+          } catch (error) {
+            reject(error)
+          }
+        })
+      }
+    })
+  })
+}
 
 var getUspsZoneUpdate = (zipcode_pair, callback) => {
   request({
@@ -92,7 +146,7 @@ var getUspsZoneUpdate = (zipcode_pair, callback) => {
 
       parseString(response.body, (err, result) => {
         console.log(result.Error)
-        if (result.Error){
+        if (result.Error) {
           callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, description: result.Error.Description[0] })
         } else {
           let error = result.RateV4Response.Package[0].Error
@@ -103,7 +157,6 @@ var getUspsZoneUpdate = (zipcode_pair, callback) => {
     }
   })
 }
-
 
 const varifyAddress = (args, callback) => {
   let myResponse = {
@@ -179,5 +232,6 @@ const varifyAddress = (args, callback) => {
 module.exports = {
   varifyAddress,
   getUspsZone,
-  getUspsZoneUpdate
+  getUspsZoneUpdate,
+  getUspsZonePromise
 }

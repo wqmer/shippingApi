@@ -43,6 +43,7 @@
     "pngjs": "^3.4.0",
     "querystring": "^0.2.0",
     "request": "^2.87.0",
+    "request-promise": "^4.2.5",
     "s": "^1.0.0",
     "shipit": "^1.0.2",
     "shipmethod": "^2.1.2",

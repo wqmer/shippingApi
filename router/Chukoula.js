@@ -21,7 +21,7 @@ const request = require('request');
 
 const express = require('express');
 const router = express.Router();
-
+const middleWare = require('../middleware')
 
 
 //--易仓UPS创建订单返回单号
@@ -36,12 +36,9 @@ router.post('/createOrders', (req, res) => {
             // res.json(result)
             res.send({ result: result });
         });
-
     } catch (error) {
         res.send({ "code": 500, "message": "internal error" });
-
     }
-
 })
 
 //--易仓创建订单并返回单号和label
@@ -319,6 +316,14 @@ router.post('/getChannelMofangYun', (req, res) => {
         })
 })
 
+//KDW魔方云获取报价
+router.post('/getRateMofangYun', (req, res) => {
+    USPS_MOFANGYUN.getRate(req.body).then((result) => res.send(result))
+        .catch(err => {
+            res.send({ "code": 500, "message": "internal error" })
+        })
+})
+
 //Easypost 创建订单
 router.post('/createOrderEasyPost', (req, res) => {
     EasyPost.create_order(req.body)
@@ -329,7 +334,10 @@ router.post('/createOrderEasyPost', (req, res) => {
         })
 })
 
-
+//test 中间件 
+router.post('/middle', middleWare.getZone, (req, res) => {
+    res.send({ "code": 200, "message": "success", 'data': req.body })
+})
 
 module.exports = router
 

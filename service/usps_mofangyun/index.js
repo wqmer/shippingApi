@@ -35,6 +35,36 @@ const createOrder = (params, callback) => {
     })
 }
 
+const getRate = (params) => {
+    let { appKey, requestDate, languageCode, instructionList } = params
+    let request_body = { instructionList }
+    let signature = md5(JSON.stringify(request_body.instructionList) + config.usps_mofangyun.appSecret + requestDate);
+    // console.log(JSON.stringify(request_body) )
+    // console.log(params)
+    const opts = {
+        headers: {
+            "content-type": "application/json",
+            appKey,
+            signature,
+            requestDate,
+            languageCode
+        },
+        url: 'http://47.75.131.124:8129/wgs/v1/openapi/rateProvider',
+        body: JSON.stringify(request_body.instructionList)
+    };
+
+    return new Promise((resolve, reject) => {
+        request.post(opts, (error, response, body) => {
+            if (error) {
+                console.log(error)
+                reject({ success: false, message: error.code });
+            } else if (response.statusCode === 200) {
+                resolve(JSON.parse(response.body))   
+            }       
+        })
+    })
+}
+
 const getLabel = (params, callback) => {
     let { appKey, requestDate, languageCode, instructionList } = params
     let request_body = { "instructionList": instructionList }
@@ -221,7 +251,8 @@ module.exports = {
     createOrder,
     getLabel,
     getOrder_async,
-    getChannel_async
+    getChannel_async,
+    getRate,
 
     // AddOrderMainToConfirm  
 }

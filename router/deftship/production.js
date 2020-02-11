@@ -45,6 +45,14 @@ router.post('/Label', (req, res) => {
         })
 })
 
+router.post('/Void', (req, res) => {
+    Deftship.void_label(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+        .catch(err => {
+            console.log(err)
+            res.send({ "code": 500, "message": "internal error" })
+        })
+})
+
 
 
 

@@ -1,9 +1,10 @@
 const request = require('request');
 const uility = require('./uility')
 const moment = require('moment')
+const rp = require('request-promise');
+const _= require('lodash')
 
 const verifyAddressUPS = (request_chukoula, callback) => {
-
     let template = {
         ...uility.UPSRequestAuth,
         "XAVRequest": {
@@ -114,7 +115,7 @@ const TrackingUPS = (request_chukoula, callback) => {
             callback(null, response_template)
         } else if (myReponse.TrackResponse.Response.ResponseStatus.Code == "1") {
             response_template.status = 'success',
-            response_template.message = 'correct query'
+                response_template.message = 'correct query'
             delete myReponse.TrackResponse.Shipment.Package.ReferenceNumber
             response_template.data = myReponse.TrackResponse.Shipment.Package
             callback(null, response_template)
@@ -266,10 +267,155 @@ const GetUpsTrackingStatus = (trackingNumber, callback) => {
     });
 }
 
+const GetRate = (request_body) => {
+    // console.log(request_body)
+    let template = {
+        "RateRequest": {
+            "Request": {
+                "SubVersion": "1703",
+                "TransactionReference": {
+                    "CustomerContext": "myorder"
+                }
+            },
+            "Shipment": {
+                "ShipmentServiceOptions": {
+                },
+                "ShipmentRatingOptions": {
+                    // "NegotiatedRatesIndicator": "TRUE",
+                    // "UserLevelDiscountIndicator": "TRUE",
+                    "RateChartIndicator": 'TRUE'
+                },
+                "Shipper": {
+                    "Name": "Billy Blanks",
+                    "ShipperNumber": "1931WE",
+                    "Address": {
+                        "AddressLine": request_body.from.addressline,
+                        "City": request_body.from.city,
+                        "StateProvinceCode": request_body.from.state,
+                        "PostalCode": request_body.from.zipcode,
+                        "CountryCode": "US"
+                    }
+                },
+                "ShipTo": {
+                    "Name": "Sarita Lynn",
+                    "Address": {
+                        // "ResidentialAddressIndicator":'TRUE',
+                        "AddressLine": request_body.to.addressline,
+                        "City": request_body.to.city,
+                        "StateProvinceCode": request_body.to.state,
+                        "PostalCode": request_body.to.zipcode,
+                        "CountryCode": "US"
+                    }
+                },
+                "ShipFrom": {
+                    "Name": "Billy Blanks",
+                    "Address": {
+                        "AddressLine": request_body.from.addressline,
+                        "City": request_body.from.city,
+                        "StateProvinceCode": request_body.from.state,
+                        "PostalCode": request_body.from.zipcode,
+                        "CountryCode": "US"
+                    }
+                },
+                "Service": {
+                    "Code": "03",
+                    "Description": "Ground"
+                },
+                "ShipmentTotalWeight": {
+                    "UnitOfMeasurement": {
+                        "Code": "LBS",
+                        "Description": "Pounds"
+                    },
+                    "Weight": "3",
+                },
+                "Package": {
+                    "PackagingType": {
+                        "Code": "02",
+                        "Description": "Package"
+                    },
+                    "Dimensions": {
+                        "UnitOfMeasurement": {
+                            "Code": "IN"
+                        },
+                        "Length": "5",
+                        "Width": "5",
+                        "Height": "5"
+                    },
+                    "PackageWeight": {
+                        "UnitOfMeasurement": {
+                            "Code": "LBS"
+                        },
+                        "Weight": "1"
+                    }
+                },
+            }
+
+
+        }
+    }
+    let options = {
+        method: 'POST',
+        headers: {
+            "content-type": "application/json",
+            "AccessLicenseNumber": '3D49FA354B0943B8',
+            "Password": '14113Cerritos',
+            "Username": 'Ebuysinotrans',
+            "transId": "Tran123",
+            "transactionSrc": "123",
+        },
+        url: 'https://onlinetools.ups.com/ship/v1/rating/Rate',
+        body: JSON.stringify(template)
+    };
+
+    return new Promise((resolve, reject) => {
+        request(options, function (error, response, body) {
+            // console.log(response.body)
+            if (error) {
+                reject(response.body)
+            }
+            resolve(JSON.parse(response.body))
+        })
+    })
+}
+
+const GetAddressType = (request_body) => {
+    // console.log(request_body)
+    let myReponse = {
+        is_residence: undefined,
+        is_delivery_area_extend: undefined,
+    }
+
+    return new Promise((resolve, reject) => {
+        GetRate(request_body).then(result => {
+            // console.log(result["RateResponse"]["Response"].ResponseStatus.Code == '1')
+            if (result["RateResponse"]["Response"].ResponseStatus.Code === '1') {
+                let surcharge_code = []
+                // surcharge_code.concat(surcharge_code_one).concat(surcharge_code_two)
+                let surcharge_code_one = result.RateResponse.RatedShipment.ItemizedCharges
+                let surcharge_code_two = result.RateResponse.RatedShipment.RatedPackage.ItemizedCharges
+                surcharge_code = _.without(surcharge_code.concat(surcharge_code_one).concat(surcharge_code_two), undefined);
+                console.log(surcharge_code)
+                myReponse.is_residence = surcharge_code.map(item => item.Code).includes('270')
+                myReponse.is_delivery_area_extend = surcharge_code.map(item => item.Code).includes('376')
+                resolve(myReponse)
+            } else {
+                resolve(myReponse)
+            }
+            // console.log(myReponse)
+
+        }).catch(error => {
+            console.log(error)
+            reject(error)
+        }
+        )
+    })
+}
 
 module.exports = {
     verifyAddressUPS,
     TrackingUPS,
     GetUpsInTransitTime,
     GetUpsTrackingStatus,
+    GetRate,
+    GetAddressType
 }
