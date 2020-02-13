@@ -183,19 +183,49 @@ router.post('/trackingUps', (req, res) => {
 //--ups获取报价
 router.post('/getRateUps', (req, res) => {
    UPS.GetRate(req.body).then(result => res.send(result))
-   .catch(error => res.send({
-      "code": 500,
-      "message": "internal error"
-   }))
-})
-
-//--ups判断地址类型
-router.post('/getAddressType', middleWare.getZone, (req, res) => {
-   UPS.GetAddressType(req.body).then(result =>  res.send({...result , zone : req.body.zone}))
       .catch(error => res.send({
          "code": 500,
          "message": "internal error"
       }))
+})
+
+//--ups判断地址类型
+// router.post('/getAddressType', middleWare.getZone, (req, res) => {
+//    UPS.GetAddressType(req.body).then(result =>  res.send({...result , zone : req.body.zone}))
+//       .catch(error => res.send({
+//          "code": 500,
+//          "message": "internal error"
+//       }))
+// })
+
+router.post('/getAddressType', (req, res) => {
+   let {
+      from,
+      to
+   } = req.body
+   let Address_Pairs = req.body.to.map(
+      item => {
+         return { from, 'to': item }
+      })
+   console.log(Address_Pairs)
+
+   try {
+      async.mapLimit(Address_Pairs, 100, function (record, callback) {
+         UPS.GetAddressTypeaAlter(record, callback);
+      }, function (err, result) {
+         if (err) console.log(err)
+         // console.log(result)
+         // res.json(result)
+         res.send({
+            result: result
+         });
+      });
+   } catch (error) {
+      res.send({
+         "code": 500,
+         "message": "internal error"
+      });
+   }
 })
 
 //--UPS获取服务时效
@@ -221,7 +251,6 @@ router.post('/inTransitTimeUps', (req, res) => {
          "message": "internal error"
       });
    }
-
 })
 
 //--UPS获取运单物流状态

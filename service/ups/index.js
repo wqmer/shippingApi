@@ -1,8 +1,10 @@
 const request = require('request');
 const uility = require('./uility')
 const moment = require('moment')
+const usps = require('../usps')
 const rp = require('request-promise');
-const _= require('lodash')
+const _ = require('lodash')
+
 
 const verifyAddressUPS = (request_chukoula, callback) => {
     let template = {
@@ -75,7 +77,6 @@ const verifyAddressUPS = (request_chukoula, callback) => {
         }
     });
 }
-
 
 const TrackingUPS = (request_chukoula, callback) => {
     let template = {
@@ -378,6 +379,49 @@ const GetRate = (request_body) => {
     })
 }
 
+const GetAddressTypeaAlter = (request_body, callback) => {
+    let zipcode = {
+        from: request_body.from.zipcode,
+        to: request_body.to.zipcode,
+    }
+
+    let myReponse = {
+        order_id: request_body.to.orderid,
+        status:'error',
+        is_residence: undefined,
+        is_delivery_area_extend: undefined,
+        zone: undefined
+    }
+    usps.getUspsZonePromise(zipcode).then(result => {
+        myReponse.zone = result.zone
+        GetRate(request_body).then(result => {
+            // console.log(result["RateResponse"]["Response"].ResponseStatus.Code == '1')
+            if (result["RateResponse"]["Response"].ResponseStatus.Code === '1') {
+                let surcharge_code = []
+                // surcharge_code.concat(surcharge_code_one).concat(surcharge_code_two)
+                let surcharge_code_one = result.RateResponse.RatedShipment.ItemizedCharges
+                let surcharge_code_two = result.RateResponse.RatedShipment.RatedPackage.ItemizedCharges
+                surcharge_code = _.without(surcharge_code.concat(surcharge_code_one).concat(surcharge_code_two), undefined);
+                console.log(surcharge_code)
+                myReponse.is_residence = surcharge_code.map(item => item.Code).includes('270')
+                myReponse.is_delivery_area_extend = surcharge_code.map(item => item.Code).includes('376')
+                myReponse.status = 'success'
+                callback(null, myReponse)
+            } else {
+                callback(null, myReponse)
+            }
+            // console.log(myReponse)  
+        }).catch(error => {
+            console.log(error)
+            callback(null, myReponse)
+        })
+    }).catch(error => {
+        console.log(error)
+        callback(null, myReponse)
+    })
+    // console.log(request_body)
+}
+
 const GetAddressType = (request_body) => {
     // console.log(request_body)
     let myReponse = {
@@ -417,5 +461,6 @@ module.exports = {
     GetUpsInTransitTime,
     GetUpsTrackingStatus,
     GetRate,
-    GetAddressType
+    GetAddressType,
+    GetAddressTypeaAlter
 }
