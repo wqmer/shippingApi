@@ -14,7 +14,7 @@ const router = express.Router();
 
 
 router.post('/Auth', (req, res) => {
-    Deftship.auth(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result)}))
+    Deftship.auth(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
         .catch(err => {
             console.log(err)
             res.send({ "code": 500, "message": "internal error" })
@@ -46,7 +46,14 @@ router.post('/Label', (req, res) => {
 })
 
 router.post('/Void', (req, res) => {
-    Deftship.void_label(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+    Deftship.void_label(req.body).then(result => {
+        let data = JSON.parse(result)
+        if (data.message === "Shipment is voided successfully and refund is made to account") {
+            res.send({ "code": 200, "message": "success", 'data': data })
+        } else {
+            res.status(400).send({ "code": 400, "message": "error", 'data': data })
+        }
+    })
         .catch(err => {
             console.log(err)
             res.send({ "code": 500, "message": "internal error" })

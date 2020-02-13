@@ -2,7 +2,13 @@
 const USPS = require('../service/usps')
 const getZone = async (req, res, next) => {
     try {
-        const data = await USPS.getUspsZonePromise(req.body)
+        let address = {
+            to : undefined,
+            form : undefined,
+        }
+        address.from = req.body.from.zipcode
+        address.to = req.body.to.zipcode
+        const data = await USPS.getUspsZonePromise(address)
         req.body.zone = data.zone
         next()
     } catch (error) {

@@ -9,6 +9,7 @@ const USPS = require('../service/usps')
 const FEDEX = require('../service/fedex')
 const CHUKOULA = require('../service/chukoula')
 const ENDICIA = require('../service/usps_endicia')
+const middleWare = require('../middleware')
 
 const async = require('async');
 const base64 = require('base64topdf');
@@ -187,9 +188,10 @@ router.post('/getRateUps', (req, res) => {
       "message": "internal error"
    }))
 })
+
 //--ups判断地址类型
-router.post('/getAddressType', (req, res) => {
-   UPS.GetAddressType(req.body).then(result => res.send(result))
+router.post('/getAddressType', middleWare.getZone, (req, res) => {
+   UPS.GetAddressType(req.body).then(result =>  res.send({...result , zone : req.body.zone}))
       .catch(error => res.send({
          "code": 500,
          "message": "internal error"
