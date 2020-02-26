@@ -5,7 +5,6 @@ const usps = require('../usps')
 const rp = require('request-promise');
 const _ = require('lodash')
 
-
 const verifyAddressUPS = (request_chukoula, callback) => {
     let template = {
         ...uility.UPSRequestAuth,

@@ -152,7 +152,6 @@ const createOrder_async = (params) => {
     })
 }
 
-
 const getLabel_async = (opts) => {
     return new Promise((resolve, reject) => {
         request.post(opts, (error, response, body) => {

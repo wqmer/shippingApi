@@ -28,7 +28,8 @@ const _ = require('lodash')
 // doc = new PDFDocument
 const Easypost = require('@easypost/api');
 const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3MxJzQ');
-
+let signature = md5("o4uuLVijNjMQh5ejK8k6AAfdIXoKFDUbyVnK9AoJ"+"2020-02-20 13:15:00");
+console.log(signature)
 /* Either objects or ids can be passed in for addresses and
  * shipments. If the object does not have an id, it will be
  * created. */
@@ -48,30 +49,30 @@ const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3M
 //     }
 // })
 
-const customsInfo = new api.CustomsInfo({
-    eel_pfc: 'NOEEI 30.37(a)',
-    customs_certify: true,
-    customs_signer: 'Steve Brule',
-    contents_type: 'merchandise',
-    contents_explanation: '',
-    restriction_type: 'none',
-    restriction_comments: '',
-    non_delivery_option: 'abandon',
+// const customsInfo = new api.CustomsInfo({
+//     eel_pfc: 'NOEEI 30.37(a)',
+//     customs_certify: true,
+//     customs_signer: 'Steve Brule',
+//     contents_type: 'merchandise',
+//     contents_explanation: '',
+//     restriction_type: 'none',
+//     restriction_comments: '',
+//     non_delivery_option: 'abandon',
 
-    /* customs_items can be passed in as instances or ids.
-    *  if the item does not have an id, it will be created. */
-    customs_items: [
-      new api.CustomsItem({
-      'description': 'Sweet shirts',
-      'quantity': 2,
-      'weight': 11,
-      'value': 23,
-      'hs_tariff_number': '654321',
-      'origin_country': 'US'
-    })],
-  });
+//     /* customs_items can be passed in as instances or ids.
+//     *  if the item does not have an id, it will be created. */
+//     customs_items: [
+//       new api.CustomsItem({
+//       'description': 'Sweet shirts',
+//       'quantity': 2,
+//       'weight': 11,
+//       'value': 23,
+//       'hs_tariff_number': '654321',
+//       'origin_country': 'US'
+//     })],
+//   });
 
-  customsInfo.save().then(console.log);
+//   customsInfo.save().then(console.log);
 
 // const toAddress = new api.Address({
 //     street1: '417 MONTGOMERY ST',
