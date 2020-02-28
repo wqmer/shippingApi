@@ -386,7 +386,7 @@ const GetAddressTypeaAlter = (request_body, callback) => {
 
     let myReponse = {
         order_id: request_body.to.orderid,
-        status:'error',
+        status: 'error',
         is_residence: undefined,
         is_delivery_area_extend: undefined,
         zone: undefined
@@ -454,6 +454,27 @@ const GetAddressType = (request_body) => {
     })
 }
 
+const do_request = (request_body) => {
+    let { method, AccessLicenseNumber, Username, Password } = request_body
+    return new Promise((resolve, reject) => {
+        request({
+            method,
+            headers: {
+                "content-type": "application/json",
+                AccessLicenseNumber,
+                Username,
+                Password,
+            },
+            url: request_body.url,
+            body: JSON.stringify(request_body.request_data)
+        }, function (error, response, body) {
+            if (error) reject(error)
+            resolve(response)
+        });
+    })
+}
+
+
 module.exports = {
     verifyAddressUPS,
     TrackingUPS,
@@ -461,5 +482,6 @@ module.exports = {
     GetUpsTrackingStatus,
     GetRate,
     GetAddressType,
-    GetAddressTypeaAlter
+    GetAddressTypeaAlter,
+    do_request
 }

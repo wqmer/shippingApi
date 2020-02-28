@@ -13,18 +13,10 @@ const express = require('express');
 const router = express.Router();
 
 
-router.post('/Auth', (req, res) => {
-    Deftship.auth(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
-        .catch(err => {
-            console.log(err)
-            res.send({ "code": 500, "message": "internal error" })
-        })
-})
-
 router.post('/Ship', (req, res) => {
     Deftship.create(req.body).then(result => res.status(result.statusCode).send({
         "code": result.statusCode,
-        "message": result.statusCode == 200 ?"success" : 'remote server error',
+        "message": result.statusCode == 200 ? "success" : 'remote server error',
         'data': JSON.parse(result.body)
     }))
         .catch(err => {
