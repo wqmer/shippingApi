@@ -455,7 +455,8 @@ const GetAddressType = (request_body) => {
 }
 
 const do_request = (request_body) => {
-    let { method, AccessLicenseNumber, Username, Password } = request_body
+    let { method, AccessLicenseNumber, Username, Password, transactionSrc } = request_body
+    // console.log(JSON.stringify(request_body))
     return new Promise((resolve, reject) => {
         request({
             method,
@@ -464,6 +465,7 @@ const do_request = (request_body) => {
                 AccessLicenseNumber,
                 Username,
                 Password,
+                transactionSrc
             },
             url: request_body.url,
             body: JSON.stringify(request_body.request_data)
