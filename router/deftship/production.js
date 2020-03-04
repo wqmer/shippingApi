@@ -25,6 +25,14 @@ router.post('/Ship', (req, res) => {
         })
 })
 
+router.post('/Auth', (req, res) => {
+    Deftship.auth(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+        .catch(err => {
+            console.log(err)
+            res.send({ "code": 500, "message": "internal error" })
+        })
+})
+
 router.post('/Rate', (req, res) => {
     Deftship.rate(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
         .catch(err => {
