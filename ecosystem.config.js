@@ -20,7 +20,10 @@ module.exports = {
   deploy : {
     production : {
       user : 'root',                                                             //也可以useradd另建用户
-      host : '447.240.4.209',                                                  // 服务器地址
+      host : '447.240.4.209',     
+      ssh_options: [
+        'Port=80',
+      ],                                           // 服务器地址
       ref  : 'huodaiOs/master',
       repo : 'git@github.com:wqmer/huodaiOS_hongKong_middle.git',            // github上的项目地址
       path : '/home/HuodaiOS_Middle_v3/deploy',                                                //  服务器上放项目的目录
