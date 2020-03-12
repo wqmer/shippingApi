@@ -20,10 +20,9 @@ module.exports = {
   deploy: {
     production: {
       user: 'root',                                                             //也可以useradd另建用户
-      host: ['hk.huodaios.com'],    
-      ssh_options: "StrictHostKeyChecking=no",                                   // 服务器地址
+      host: ['hk.huodaios.com'],                                // 服务器地址
       ref: 'huodaiOs/master',
-      repo: 'https://github.com/wqmer/huodaiOS_hongKong_middle.git',            // github上的项目地址
+      repo: 'git@github.com:wqmer/huodaiOS_hongKong_middle.git',            // github上的项目地址
       path: '/home/HuodaiOS_Middle_v3/deploy',                                                //  服务器上放项目的目录
       'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production'
     }
