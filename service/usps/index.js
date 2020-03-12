@@ -60,7 +60,6 @@ var getUspsZone = (zipcode_pair, callback) => {
   })
 }
 
-
 var getUspsZonePromise = (req) => {
   const param = {
     Package: {

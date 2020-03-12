@@ -26,10 +26,25 @@ const _ = require('lodash')
 // PDFDocument = require('pdfkit');
 // fs = require('fs');
 // doc = new PDFDocument
-const Easypost = require('@easypost/api');
-const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3MxJzQ');
-let signature = md5("o4uuLVijNjMQh5ejK8k6AAfdIXoKFDUbyVnK9AoJ"+"2020-02-20 13:15:00");
-console.log(signature)
+// const Easypost = require('@easypost/api');
+// const api = new Easypost('EZTKbbd59c4c5c9e418c88d60a0f9a1c3af4mnXJ3zNOfSAICBgN3MxJzQ');
+// let signature = md5("o4uuLVijNjMQh5ejK8k6AAfdIXoKFDUbyVnK9AoJ"+"2020-02-20 13:15:00");
+// console.log(signature)
+
+
+var PDFImage = require("pdf-image").PDFImage;
+var pdfImage = new PDFImage("./label/example.pdf", {
+  convertOptions: {
+    "-resize": "100%",
+    "-quality": "4",
+    "-density":'200'
+  },
+  // combinedImage: true
+});
+
+pdfImage.convertFile().then(result => console.log(result))
+   // /tmp/slide.png 
+
 /* Either objects or ids can be passed in for addresses and
  * shipments. If the object does not have an id, it will be
  * created. */

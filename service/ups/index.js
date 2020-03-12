@@ -282,7 +282,7 @@ const GetRate = (request_body) => {
                 },
                 "ShipmentRatingOptions": {
                     // "NegotiatedRatesIndicator": "TRUE",
-                    // "UserLevelDiscountIndicator": "TRUE",
+                    "UserLevelDiscountIndicator": "TRUE",
                     "RateChartIndicator": 'TRUE'
                 },
                 "Shipper": {
@@ -299,7 +299,7 @@ const GetRate = (request_body) => {
                 "ShipTo": {
                     "Name": "Sarita Lynn",
                     "Address": {
-                        // "ResidentialAddressIndicator":'TRUE',
+                        "ResidentialAddressIndicator":'',
                         "AddressLine": request_body.to.addressline,
                         "City": request_body.to.city,
                         "StateProvinceCode": request_body.to.state,

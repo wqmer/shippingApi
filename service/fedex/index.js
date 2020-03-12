@@ -42,10 +42,13 @@ const processShipment = (requestArgs, callback) => {
   soap.createClient(path.join(__dirname, wsdl, 'ShipService_v23.wsdl'), function (err, client) {
     if (err) console.log(err)
     let args = {}
+    //合并请求的auth
     extend(args, uility.FEDEXRequestAuth, uility.handleShipRequest(requestArgs))
+    console.log(args)
     // console.log(uility.FEDEXRequestAuth)
     client.processShipment(args, function (err, result) {
       // console.log(args)
+      console.log(result)
       callback(null, result);
     });
   });

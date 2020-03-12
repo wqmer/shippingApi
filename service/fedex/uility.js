@@ -78,10 +78,6 @@ const FEDEXRequestAuth = {
 
 const FEDEXRequestTestAuth = {
   "WebAuthenticationDetail": {
-    //  "ParentCredential": {
-    //     "Key": config.fedex.Prod_key,
-    //     "Password": config.fedex.Prod_password                        
-    //   },
     "UserCredential": {
       "Key": "SjgF06iYpTJ9hyFz",
       "Password": "nDL641ljD029QgVj459viquRc"
