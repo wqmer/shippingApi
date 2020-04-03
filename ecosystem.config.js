@@ -20,3 +20,6 @@ module.exports = {
     }
   }
 };
+
+
+//一键部署 pm2 deploy production update

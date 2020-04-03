@@ -47,15 +47,19 @@ var getUspsZone = (zipcode_pair, callback) => {
 
   request(opts, (error, response, body) => {
     if (error) {
-      callback({ referenceNumber:zipcode_pair.referenceNumber ,success: false, message: error.code });
+      callback({ referenceNumber: zipcode_pair.referenceNumber, success: false, message: error.code });
     } else if (response.statusCode === 400) {
       callback('Unable to fetch data.');
     } else if (response.statusCode === 200) {
-      parseString(response.body, (err, result) => {
-        let error = result.RateV4Response.Package[0].Error
-        let zoneCode = result.RateV4Response.Package[0].Zone
-        error ? callback(null, { referenceNumber:zipcode_pair.referenceNumber ,success: false, description: error[0].Description[0] }) : callback(null, { referenceNumber:zipcode_pair.referenceNumber , success: true, zone: zoneCode[0] })
-      })
+      try {
+        parseString(response.body, (err, result) => {
+          let error = result.RateV4Response.Package[0].Error
+          let zoneCode = result.RateV4Response.Package[0].Zone
+          error ? callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, description: error[0].Description[0] }) : callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: true, zone: zoneCode[0] })
+        })
+      } catch (error) {
+        callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, description: "internal error" })
+      }
     }
   })
 }
