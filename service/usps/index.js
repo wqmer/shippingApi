@@ -37,7 +37,6 @@ var getUspsZone = (zipcode_pair, callback) => {
   const xml = builder.create(obj).end();
 
   const opts = {
-    timeout: 25000,
     url: 'http://production.shippingapis.com/ShippingAPI.dll',
     qs: {
       API: 'RateV4',
@@ -53,6 +52,7 @@ var getUspsZone = (zipcode_pair, callback) => {
     } else if (response.statusCode === 200) {
       try {
         parseString(response.body, (err, result) => {
+          console.log(result)
           let error = result.RateV4Response.Package[0].Error
           let zoneCode = result.RateV4Response.Package[0].Zone
           error ? callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, description: error[0].Description[0] }) : callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: true, zone: zoneCode[0] })
