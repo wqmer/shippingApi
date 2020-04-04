@@ -111,7 +111,7 @@ router.post('/zoneLookUp', (req, res) => {
       let {
          Zone_Pairs
       } = req.body
-      async.mapLimit(Zone_Pairs, 100, function (record, callback) {
+      async.mapLimit(Zone_Pairs, 500, function (record, callback) {
          USPS.getUspsZone(record, callback);
       }, function (err, result) {
          if (err) console.log(err)
