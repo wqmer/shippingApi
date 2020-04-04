@@ -46,16 +46,20 @@ var getUspsZone = (zipcode_pair, callback) => {
 
   request(opts, (error, response, body) => {
     if (error) {
-      callback({ referenceNumber: zipcode_pair.referenceNumber, success: false, message: error.code });
+      callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, message: error.code });
     } else if (response.statusCode === 400) {
-      callback('Unable to fetch data.');
+      callback(null ,{ referenceNumber: zipcode_pair.referenceNumber, success: false, message: "unable to fetch data" });
     } else if (response.statusCode === 200) {
       try {
         parseString(response.body, (err, result) => {
-          console.log(result)
-          let error = result.RateV4Response.Package[0].Error
-          let zoneCode = result.RateV4Response.Package[0].Zone
-          error ? callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, description: error[0].Description[0] }) : callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: true, zone: zoneCode[0] })
+          if(result.RateV4Response){
+            let error = result.RateV4Response.Package[0].Error
+            let zoneCode = result.RateV4Response.Package[0].Zone
+            error ? callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, description: error[0].Description[0] }) : callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: true, zone: zoneCode[0] })
+          } else {
+            console.log(result)
+            callback(null , { referenceNumber: zipcode_pair.referenceNumber, success: false, message: "No response for reomote server , try agian laber" });
+          }
         })
       } catch (error) {
         callback(null, { referenceNumber: zipcode_pair.referenceNumber, success: false, description: "internal error" })
