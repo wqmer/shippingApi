@@ -37,6 +37,7 @@ var getUspsZone = (zipcode_pair, callback) => {
   const xml = builder.create(obj).end();
 
   const opts = {
+    timeout: 15000,
     url: 'http://production.shippingapis.com/ShippingAPI.dll',
     qs: {
       API: 'RateV4',
