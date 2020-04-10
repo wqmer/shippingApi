@@ -19,7 +19,8 @@ const fedex_prod  = {
 }
 
 const usps_mofangyun = {
-    appSecret : process.env.MOFANGYUN_APPSECRET
+    appSecret : process.env.MOFANGYUN_APPSECRET,
+    apiEndport : "http://47.56.163.236:8129"
 }
 
 const usps_endicia_product = {

@@ -78,7 +78,7 @@ const getLabel = (params, callback) => {
             requestDate,
             languageCode
         },
-        url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers',
+        url: `${config.usps_mofangyun.apiEndport}/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers`,
         body: JSON.stringify(request_body)
     };
 
@@ -105,7 +105,7 @@ const getChannel_async = (params) => {
                 requestDate,
                 languageCode
             },
-            url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/getExpressChannel',
+            url: `${config.usps_mofangyun.apiEndport}/wgs/v1/internationalexpress/getExpressChannel`,
         };
 
         request.get(opts, (error, response, body) => {
@@ -136,7 +136,7 @@ const createOrder_async = (params) => {
                 requestDate,
                 languageCode
             },
-            url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/createExpressShipments',
+            url: `${config.usps_mofangyun.apiEndport}/wgs/v1/internationalexpress/createExpressShipments`,
             body: JSON.stringify(request_body)
         };
         request.post(opts, (error, response, body) => {
@@ -186,7 +186,8 @@ const getOrder_async = (params, callback) => {
                         requestDate,
                         languageCode
                     },
-                    url: 'http://47.75.131.124:8129/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers',
+                    
+                    url: `${config.usps_mofangyun.apiEndport}/wgs/v1/internationalexpress/exprssShipmentTrackingNumbers`,
                     body: JSON.stringify(request_body)
                 };
 
