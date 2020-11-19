@@ -2,7 +2,9 @@ const dotenv = require('dotenv')
 dotenv.config({ silent: process.env.NODE_ENV === 'prod' })
 
 const usps = {
-    user_id : "849XUEHU5746"
+    user_id : "849XUEHU5746",
+    // user_id : "46SMART4217"
+    //46SMART4217
 }
 
 const ups = {
@@ -20,7 +22,8 @@ const fedex_prod  = {
 
 const usps_mofangyun = {
     appSecret : process.env.MOFANGYUN_APPSECRET,
-    apiEndport : "http://47.56.163.236:8129"
+    apiEndport : "http://47.56.163.236:8129",
+    // apiDaDanEndport : "http://47.56.163.236:8119",
 }
 
 const usps_endicia_product = {

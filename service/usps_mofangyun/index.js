@@ -49,7 +49,7 @@ const getRate = (params) => {
             requestDate,
             languageCode
         },
-        url: 'http://47.75.131.124:8129/wgs/v1/openapi/rateProvider',
+        url: `${config.usps_mofangyun.apiEndport}/wgs/v1/openapi/rateProvider`,
         body: JSON.stringify(request_body.instructionList)
     };
 
@@ -245,6 +245,9 @@ const getOrder_async = (params, callback) => {
         }
     }).catch(error => callback(null, error))
 }
+
+
+
 
 
 module.exports = {

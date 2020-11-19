@@ -31,7 +31,7 @@ const auth = (request_body) => {
         request(obj, (error, response, body) => {
             if (error) reject(error)
             // console.log(response.statusCode)
-            resolve(response.body)
+            resolve(response)
         });
     })
 }
@@ -71,7 +71,7 @@ const rate = (request_body, isTest = false) => {
     return new Promise((resolve, reject) => {
         request(obj, (error, response, body) => {
             if (error) reject(error)
-            resolve(response.body)
+            resolve(response)
         });
     })
 }
@@ -91,7 +91,7 @@ const get_label = (request_body, isTest = false) => {
     return new Promise((resolve, reject) => {
         request(obj, (error, response, body) => {
             if (error) reject(error)
-            resolve(response.body)
+            resolve(response)
         });
     })
 }
@@ -112,7 +112,7 @@ const void_label = (request_body, isTest = false) => {
         request(obj, (error, response, body) => {
             if (error) reject(error)
             console.log(response.statusCode)
-            resolve(response.body)
+            resolve(response)
         });
     })
 }

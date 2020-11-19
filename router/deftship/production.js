@@ -16,7 +16,7 @@ const router = express.Router();
 router.post('/Ship', (req, res) => {
     Deftship.create(req.body).then(result => res.status(result.statusCode).send({
         "code": result.statusCode,
-        "message": result.statusCode == 200 ? "success" : 'remote server error',
+        "message": result.statusCode == 200 || result.statusCode == 201 ? "success" : 'error',
         'data': JSON.parse(result.body)
     }))
         .catch(err => {
@@ -26,36 +26,54 @@ router.post('/Ship', (req, res) => {
 })
 
 router.post('/Auth', (req, res) => {
-    Deftship.auth(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+    Deftship.auth(req.body).then(result => {
+        if (result.statusCode == 200 || result.statusCode == 201) {
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "success", 'data': JSON.parse(result.body) })
+        } else {
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "error", 'data': {} })
+        }
+    })
         .catch(err => {
             console.log(err)
-            res.send({ "code": 500, "message": "internal error" })
+            res.status(500).send({ "code": 500, "message": "internal error" })
         })
 })
 
 router.post('/Rate', (req, res) => {
-    Deftship.rate(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+    Deftship.rate(req.body).then(result => {
+        if (result.statusCode == 200 || result.statusCode == 201) {
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "success", 'data': JSON.parse(result.body) })
+        } else {
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "error", 'data': JSON.parse(result.body) })
+        }
+    })
         .catch(err => {
             console.log(err)
-            res.send({ "code": 500, "message": "internal error" })
+            res.status(500).send({ "code": 500, "message": "internal error" })
         })
 })
 
 router.post('/Label', (req, res) => {
-    Deftship.get_label(req.body).then(result => res.send({ "code": 200, "message": "success", 'data': JSON.parse(result) }))
+    Deftship.get_label(req.body).then(result => {
+        if (result.statusCode == 200) {
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "success", 'data': JSON.parse(result.body) })
+        } else {
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "error", 'data': {} })
+        }
+    })
         .catch(err => {
             console.log(err)
-            res.send({ "code": 500, "message": "internal error" })
+            res.status(500).send({ "code": 500, "message": "internal error" })
         })
 })
 
 router.post('/Void', (req, res) => {
     Deftship.void_label(req.body).then(result => {
-        let data = JSON.parse(result)
+        let data = JSON.parse(result.body)
         if (data.message === "Shipment is voided successfully and refund is made to account") {
-            res.send({ "code": 200, "message": "success", 'data': data })
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "success", 'data': data })
         } else {
-            res.status(400).send({ "code": 400, "message": "error", 'data': data })
+            res.status(result.statusCode).send({ "code": result.statusCode, "message": "error", 'data': data })
         }
     })
         .catch(err => {
