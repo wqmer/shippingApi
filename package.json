@@ -25,7 +25,7 @@
     "delivery-tracker": "^1.7.2",
     "dotenv": "^8.0.0",
     "express": "^4.16.3",
-    "html-pdf": "^2.2.0",
+    "html-pdf": "^3.0.1",
     "http": "0.0.0",
     "hummus-recipe": "^1.8.7",
     "image-to-base64": "^2.0.1",
